@@ -32,6 +32,32 @@ Deferred (reason):
 
 ---
 
+## Implementation status — 2026-06-20 (pass 2: /plan-eng-review + Codex outside voice)
+
+Decisions locked: **freeze Bilibili** (no investment; delete pre-public), **invest in
+the GSAV shell**. Landed + verified this pass (`tsc --noEmit` clean, **84 vitest tests green**):
+
+- [x] **T1** GSAV WebView trust boundary — allowlist-positive nav gate + message-origin
+  trust gate (`isAllowedGsavNavigation` / `isTrustedBridgeOrigin` in `gsavBridge`),
+  `mixedContentMode:'never'` in prod, external links via `Linking`; unit-tested.
+- [x] **T3** fail-loud prod URL — `getConfiguredGsavWebUrl` returns `null` in production
+  (no localhost fallback); shell renders a "GSAV not configured" panel; test updated.
+- [x] **T4** exhaustive GSAV unit coverage + a **direct** `app.config.js` cleartext-flip test.
+- [x] **T5** bridge contract fixes — `GSAV_FIRST_FRAME` payload type aligned; empty `sceneId` rejected.
+- [x] **T6** dropped `RECORD_AUDIO`; kept `REQUEST_INSTALL_PACKAGES` (self-updater) + `MODIFY_AUDIO_SETTINGS`.
+- [x] **T7** ADR → `Accepted` (Option A) with deletion gate + MIT-public hard trigger + permission rationale.
+- [x] **T8** secret-history scan — only the known Sentry token present (no other secrets).
+- [x] **T2** release pipeline — gated via reusable `quality.yml` (`needs:`); reordered to
+  build → verify artifact (configured origin baked, cleartext off) → bump/commit/Release;
+  refuses to publish when `GSAV_WEB_URL` is unset. **(YAML validated; needs a real CI run to verify end-to-end.)**
+
+Still owner/external:
+- **T9** 👤 rotate the Sentry auth token in the Sentry dashboard — required before going public.
+- **T12** 🔀 delete the Bilibili client — gated on GSAV prod origin live + launcher validated on `preview`.
+- **P2-4** ⛔ set the `GSAV_WEB_URL` secret (needs `../gsav-hosting` origin) — releases are intentionally blocked until then.
+
+---
+
 ## Decisions & owner actions (do these to unblock the rest)
 
 - [ ] 👤 **P0-1 owner step** — rotate the Sentry auth token in the Sentry dashboard, issue a new one, store it as a GitHub Actions secret
@@ -228,6 +254,24 @@ Deferred (reason):
 
 - [ ] **M1** `git grep -nE 'sntrys_[A-Za-z0-9]' -- . ':!*.md'` == 0 **and** old token returns `401`
 - [ ] **M2** `tsc --noEmit` == 0 **and** `vitest run` green in a **required** CI job; `utils/` coverage ≥ baseline
-- [ ] **M3** release APK: `grep -c '127.0.0.1:5191'` == 0, real https origin present, manifest `usesCleartextTraffic="false"`
+- [ ] **M3** release APK bakes the **configured https origin** (positive assert — `grep '127.0.0.1' == 0` is unreliable: the localhost default is a source constant always in the bundle), manifest `usesCleartextTraffic="false"`
 - [ ] **M4** GSAV shell loads to first frame on a **physical Android device** from the release APK
-- [ ] **M5** DG-1 ADR `Accepted` + deletion date; GSAV is home launcher; checklist `:142-161` production-gate boxes ticked
+- [ ] **M5** DG-1 ADR `Accepted` (done) + deletion gate; GSAV is home launcher (pending P3-3); checklist `:142-161` production-gate boxes ticked
+
+---
+
+## GSTACK REVIEW REPORT
+
+| Review | Trigger | Why | Runs | Status | Findings |
+|--------|---------|-----|------|--------|----------|
+| CEO Review | `/plan-ceo-review` | Scope & strategy | 0 | — | not run |
+| Codex Review | `/codex review` | Independent 2nd opinion | 1 | issues_found | 10 real + 1 false positive; folded into T1/T2/T3/T6/T7 |
+| Eng Review | `/plan-eng-review` | Architecture & tests (required) | 1 | issues_open | 12 issues, 2 critical gaps — both fixed + verified this branch |
+| Design Review | `/plan-design-review` | UI/UX gaps | 0 | — | n/a (no UI change) |
+| DX Review | `/plan-devex-review` | Developer experience gaps | 0 | — | not run |
+
+- **CODEX:** outside voice (`gpt-5.5`) independently confirmed both P1 findings (release pipeline + WebView trust boundary); surfaced the fake-safety-net (T3), `mixedContentMode` hole (T1), version-bump ordering (T2), permission minimization (T6). One false positive (mojibake — PowerShell ANSI read of clean UTF-8, verified byte-level).
+- **CROSS-MODEL:** strong agreement, no genuine tension — both reviewers converged on the release pipeline and the GSAV WebView shell as the two weak spots.
+- **VERDICT:** ENG review complete. P1 code fixes landed + verified (tsc clean, 84 tests). Before ship: a CI run to verify the new release pipeline, and set `GSAV_WEB_URL` (P2-4); rotate the Sentry token (T9) before going public.
+
+NO UNRESOLVED DECISIONS

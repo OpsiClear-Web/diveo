@@ -1,8 +1,8 @@
 # ADR 0001 — Pivot from Bilibili client to GSAV native shell
 
-- **Status:** Proposed _(awaiting owner decision — see "Decision gate" below)_
+- **Status:** Accepted - **Option A (Freeze & quarantine)**
 - **Date:** 2026-06-20
-- **Deciders:** _(project owner)_
+- **Deciders:** project owner
 
 ## Context
 
@@ -24,12 +24,34 @@ audit (2026-06-20) traced ~80% of findings to this unmanaged dual state.
 | B — Delete legacy | Remove the Bilibili surface entirely (largest debt reduction; only after GSAV is a usable product). |
 | C — Keep both | Rejected — this is the status quo that generated the audit. |
 
-**Recommendation: Option A**, with a literal deletion date (e.g. _delete legacy by
-v1.1.0 / TBD_). Rule once accepted: any legacy-only refactor whose payoff horizon
-exceeds the deletion date is dropped.
+**Decision (accepted 2026-06-20): Option A - Freeze & quarantine.** The Bilibili
+surface receives no further investment; any legacy-only refactor whose payoff
+horizon exceeds the deletion gate below is dropped. Phase 4/5 task scope in
+`IMPROVEMENT_PLAN.md` follows from this.
 
-> To accept: change Status to `Accepted`, pick the option, and fill in the date.
-> Phase 4/5 task scope in `IMPROVEMENT_PLAN.md` is a function of this choice.
+### Deletion gate (the "literal date" DG-1 asks for)
+
+The Bilibili API client (`services/bilibili.ts` + WBI signing) and the rest of the
+legacy surface are deleted when **all** of these hold (target: **v1.1.0 / by
+2026-08-31**, revise when the GSAV origin lands):
+
+1. The GSAV production origin (`../gsav-hosting`) is live (HTTPS, byte-range + CORS).
+2. A real GSAV launcher (not the hard-coded `/watch/test`) is validated on the
+   `preview` channel, and a `legacy-final` tag is cut.
+
+**Hard trigger (overrides the target date):** this repo is MIT-licensed and the
+Bilibili cease-and-desist is specifically "do not copy the API." The Bilibili API
+client and WBI signing **MUST be removed before the repository is ever made public**
+- publishing an MIT-licensed reverse-engineered copy of their API is the most
+redistributable form of exactly what they objected to. The leaked Sentry auth token
+(still in history at `9bffc16`) must also be rotated before publishing.
+
+### Android permission posture (pre-public)
+
+`RECORD_AUDIO` is dropped (nothing records audio). `MODIFY_AUDIO_SETTINGS` is kept
+for legacy native playback during the freeze (remove it with the Bilibili surface).
+`REQUEST_INSTALL_PACKAGES` is retained intentionally - it backs the in-app APK
+self-updater (`hooks/useCheckUpdate.ts`).
 
 ## Ownership boundary (catalog contract) — P2-7
 
