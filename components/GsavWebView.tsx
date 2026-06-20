@@ -67,9 +67,17 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
   function handleBridgeMessage(event: WebViewMessageEvent) {
     const message = parseBridgeMessage(event.nativeEvent.data);
     if (!message) return;
-    playbackSnapshotRef.current = updatePlaybackSnapshot(playbackSnapshotRef.current, message);
-    const nextStatus = getBridgeStatusLabel(message);
-    if (nextStatus) setCapabilityLabel(nextStatus);
+    const snapshot = (playbackSnapshotRef.current = updatePlaybackSnapshot(
+      playbackSnapshotRef.current,
+      message,
+    ));
+    // Surface live playback progress in the header subtitle while playing, so the
+    // accumulated snapshot drives the UI; otherwise show the event's status label.
+    const playbackLabel =
+      snapshot.state === "playing" && typeof snapshot.progressPercent === "number"
+        ? `Playing · ${Math.round(snapshot.progressPercent)}%`
+        : getBridgeStatusLabel(message);
+    if (playbackLabel) setCapabilityLabel(playbackLabel);
 
     if (message.type === "GSAV_ERROR") {
       const payload = message.payload as { message?: unknown };
