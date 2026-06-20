@@ -1,11 +1,14 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
   buildNativeCommandScript,
   buildNativeEmbedUrl,
   buildGsavWatchPath,
+  DEFAULT_GSAV_WEB_URL,
+  firstParam,
   getBridgeStatusLabel,
   getCapabilityLabel,
+  getConfiguredGsavWebUrl,
   getOrigin,
   getUnsupportedReason,
   parseBridgeMessage,
@@ -216,5 +219,51 @@ describe("GSAV capability helpers", () => {
     expect(getCapabilityLabel({ supported: false, renderer: "webgpu" })).toBe("Unsupported");
     expect(getUnsupportedReason({ reasons: [false, "WebGPU unavailable"] })).toBe("WebGPU unavailable");
     expect(getUnsupportedReason({ reasons: [false] })).toBeUndefined();
+  });
+});
+
+describe("firstParam", () => {
+  it("returns the value for a plain string", () => {
+    expect(firstParam("elly")).toBe("elly");
+  });
+
+  it("returns the first element of an array", () => {
+    expect(firstParam(["a", "b"])).toBe("a");
+  });
+
+  it("returns undefined for undefined input", () => {
+    expect(firstParam(undefined)).toBeUndefined();
+  });
+});
+
+describe("getConfiguredGsavWebUrl", () => {
+  const original = process.env.EXPO_PUBLIC_GSAV_WEB_URL;
+
+  afterEach(() => {
+    if (original === undefined) delete process.env.EXPO_PUBLIC_GSAV_WEB_URL;
+    else process.env.EXPO_PUBLIC_GSAV_WEB_URL = original;
+    vi.restoreAllMocks();
+  });
+
+  it("returns the configured origin when set", () => {
+    process.env.EXPO_PUBLIC_GSAV_WEB_URL = "https://gsav.example";
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(getConfiguredGsavWebUrl()).toBe("https://gsav.example");
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("falls back to the dev default and warns loudly when unset (non-dev)", () => {
+    delete process.env.EXPO_PUBLIC_GSAV_WEB_URL;
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    // __DEV__ is undefined under vitest, so the non-dev warning path runs.
+    expect(getConfiguredGsavWebUrl()).toBe(DEFAULT_GSAV_WEB_URL);
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("treats an empty string as unset and warns", () => {
+    process.env.EXPO_PUBLIC_GSAV_WEB_URL = "";
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(getConfiguredGsavWebUrl()).toBe(DEFAULT_GSAV_WEB_URL);
+    expect(warn).toHaveBeenCalledTimes(1);
   });
 });

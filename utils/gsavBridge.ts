@@ -47,7 +47,25 @@ export type GsavPlaybackSnapshot = {
 };
 
 export function getConfiguredGsavWebUrl() {
-  return process.env.EXPO_PUBLIC_GSAV_WEB_URL ?? DEFAULT_GSAV_WEB_URL;
+  const configured = process.env.EXPO_PUBLIC_GSAV_WEB_URL;
+  if (configured) return configured;
+  // No origin configured: fall back to the localhost dev default. In a production
+  // build this means the WebView would point at an unreachable 127.0.0.1, so warn
+  // loudly instead of silently shipping a dead player. (Empty string is treated as
+  // unset here, covering a misconfigured/empty build env var.)
+  const isDev = typeof __DEV__ !== "undefined" && __DEV__;
+  if (!isDev) {
+    console.warn(
+      `[gsav] EXPO_PUBLIC_GSAV_WEB_URL is not set; falling back to ${DEFAULT_GSAV_WEB_URL}. ` +
+        "Production builds must set it to the real GSAV web origin.",
+    );
+  }
+  return DEFAULT_GSAV_WEB_URL;
+}
+
+/** expo-router params may be string | string[]; take the first value. */
+export function firstParam(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
 }
 
 export function getOrigin(uri: string) {
