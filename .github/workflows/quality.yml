@@ -1,0 +1,32 @@
+name: Quality
+
+# Reusable quality gate (tsc + unit tests). Called by both ci.yml (PRs/pushes) and
+# release.yml (so the published artifact is gated, not just merges). Keeping it in one
+# place means CI and Release can never drift out of sync.
+on:
+  workflow_call:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type-check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      # TODO(P1-2): add `npx expo lint` once an eslint config is committed.
+      # TODO(P1-3): add `vitest run --coverage` once @vitest/coverage-v8 is installed.

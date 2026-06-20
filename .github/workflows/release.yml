@@ -6,18 +6,24 @@ on:
       - master
 
 jobs:
+  # Gate the artifact on the same tsc + test quality gate as PRs (not just merges).
+  quality:
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    uses: ./.github/workflows/quality.yml
+
   release:
+    needs: quality
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
     permissions:
       contents: write
 
-    # Production env for the raw prebuild + Gradle build (this pipeline does NOT
-    # use `eas build`, so eas.json env never applies). EXPO_PUBLIC_APP_ENV flips
+    # Production env for the raw prebuild + Gradle build (this pipeline does NOT use
+    # `eas build`, so eas.json env never applies). EXPO_PUBLIC_APP_ENV flips
     # android.usesCleartextTraffic=false at prebuild (app.config.js); the
     # EXPO_PUBLIC_* values are inlined into the JS bundle during assembleRelease.
-    # GSAV_WEB_URL / SENTRY_DSN come from repo secrets (empty until configured —
-    # an empty GSAV URL falls back to the dev default with a loud warn).
+    # The build is REFUSED below when GSAV_WEB_URL is unset, so a release can never
+    # ship a non-functional localhost player (until the secret is configured, P2-4).
     env:
       EXPO_PUBLIC_APP_ENV: production
       EXPO_PUBLIC_GSAV_WEB_URL: ${{ secrets.GSAV_WEB_URL }}
@@ -39,26 +45,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # Advisory until the production GSAV origin is configured (P2-4). Currently
-      # exits non-zero because EXPO_PUBLIC_GSAV_WEB_URL is unset — do NOT make this
-      # required (continue-on-error) or it would block every release today.
-      - name: Verify native production config (advisory)
-        continue-on-error: true
+      - name: Require a real GSAV origin (no localhost releases)
+        run: |
+          if [ -z "${EXPO_PUBLIC_GSAV_WEB_URL}" ]; then
+            echo "::error::GSAV_WEB_URL secret is not set. Refusing to publish a release that would ship a non-functional player. Set the secret (P2-4) to enable releases."
+            exit 1
+          fi
+
+      - name: Verify native production config (required gate)
         run: npm run verify:native-production-config
-
-      - name: Bump version
-        id: bump
-        run: |
-          NEW_VERSION=$(node scripts/bump-version.js)
-          echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-
-      - name: Commit version bump
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add app.json package.json
-          git commit -m "chore: bump version to v${{ steps.bump.outputs.version }} [skip ci]"
-          git push
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
@@ -68,6 +63,15 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+
+      # Apply the bump locally BEFORE the build so the APK carries the new version,
+      # but do NOT commit/push it until the build + artifact checks pass (below). A
+      # failed build therefore never leaves master with a consumed version number.
+      - name: Compute and apply version bump (local only)
+        id: bump
+        run: |
+          NEW_VERSION=$(node scripts/bump-version.js)
+          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Expo Prebuild
         run: npx expo prebuild --platform android --no-install
@@ -81,6 +85,32 @@ jobs:
         run: |
           cd android
           ./gradlew assembleRelease --no-daemon
+
+      - name: Verify built artifact
+        run: |
+          set -eu
+          APK=android/app/build/outputs/apk/release/app-release.apk
+          # Positive check: the configured production origin must be inlined in the JS
+          # bundle. NOTE: a naive `grep 127.0.0.1` would false-positive — the localhost
+          # default is a source constant always present in the bundle. The real
+          # guarantee is that production resolves to the configured origin and never the
+          # localhost fallback (see utils/gsavBridge.ts getConfiguredGsavWebUrl).
+          if ! unzip -p "$APK" 'assets/*.bundle' | grep -qF "$EXPO_PUBLIC_GSAV_WEB_URL"; then
+            echo "::error::Release APK does not bake the configured GSAV origin ($EXPO_PUBLIC_GSAV_WEB_URL)"
+            exit 1
+          fi
+          if grep -q 'usesCleartextTraffic="true"' android/app/src/main/AndroidManifest.xml; then
+            echo "::error::Merged AndroidManifest has usesCleartextTraffic=true"
+            exit 1
+          fi
+
+      - name: Commit version bump (only after a verified build)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add app.json package.json
+          git commit -m "chore: bump version to v${{ steps.bump.outputs.version }} [skip ci]"
+          git push
 
       - name: Create GitHub Release
         env:

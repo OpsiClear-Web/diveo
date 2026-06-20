@@ -1,9 +1,9 @@
 name: CI
 
-# Quality gate: type-check + unit tests on every PR and push.
-# This intentionally does NOT build/publish (that is release.yml). To make this
-# a required check, enable branch protection for `master` and select the
-# "quality" job (repo-admin / owner step).
+# Quality gate: type-check + unit tests on every PR and push, via the shared
+# reusable workflow (also invoked by release.yml so the artifact is gated too).
+# To make this a required check, enable branch protection for `master` and select
+# the "quality / quality" job (repo-admin / owner step).
 on:
   pull_request:
   push:
@@ -12,25 +12,4 @@ on:
 
 jobs:
   quality:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Type-check
-        run: npx tsc --noEmit
-
-      - name: Unit tests
-        run: npm test
-
-      # TODO(P1-2): add `npx expo lint` once an eslint config is committed.
-      # TODO(P1-3): add `vitest run --coverage` once @vitest/coverage-v8 is installed.
+    uses: ./.github/workflows/quality.yml
