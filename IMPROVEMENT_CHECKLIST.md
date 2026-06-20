@@ -52,7 +52,7 @@ the GSAV shell**. Landed + verified this pass (`tsc --noEmit` clean, **84 vitest
   refuses to publish when `GSAV_WEB_URL` is unset. **(YAML validated; needs a real CI run to verify end-to-end.)**
 
 Still owner/external:
-- **T9** 👤 rotate the Sentry auth token in the Sentry dashboard — required before going public.
+- **T9** 👤 rotate the Sentry auth token (hygiene only — repo stays private and only the APK ships; the token is build-time, never bundled. Rotate when convenient; no history scrub).
 - **T12** 🔀 delete the Bilibili client — gated on GSAV prod origin live + launcher validated on `preview`.
 - **P2-4** ⛔ set the `GSAV_WEB_URL` secret (needs `../gsav-hosting` origin) — releases are intentionally blocked until then.
 
@@ -272,6 +272,6 @@ Still owner/external:
 
 - **CODEX:** outside voice (`gpt-5.5`) independently confirmed both P1 findings (release pipeline + WebView trust boundary); surfaced the fake-safety-net (T3), `mixedContentMode` hole (T1), version-bump ordering (T2), permission minimization (T6). One false positive (mojibake — PowerShell ANSI read of clean UTF-8, verified byte-level).
 - **CROSS-MODEL:** strong agreement, no genuine tension — both reviewers converged on the release pipeline and the GSAV WebView shell as the two weak spots.
-- **VERDICT:** ENG review complete. P1 code fixes landed + verified (tsc clean, 84 tests). Before ship: a CI run to verify the new release pipeline, and set `GSAV_WEB_URL` (P2-4); rotate the Sentry token (T9) before going public.
+- **VERDICT:** ENG review complete. P1 code fixes landed + verified (tsc clean, 84 tests; CI quality gate green on PR #1). Before releases resume: set `GSAV_WEB_URL` (P2-4). Repo stays private and only the APK ships, so the Bilibili-client deletion is a product decision (not a legal gate) and the token rotation (T9) is optional hygiene.
 
 NO UNRESOLVED DECISIONS

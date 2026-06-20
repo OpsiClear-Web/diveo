@@ -39,12 +39,16 @@ legacy surface are deleted when **all** of these hold (target: **v1.1.0 / by
 2. A real GSAV launcher (not the hard-coded `/watch/test`) is validated on the
    `preview` channel, and a `legacy-final` tag is cut.
 
-**Hard trigger (overrides the target date):** this repo is MIT-licensed and the
-Bilibili cease-and-desist is specifically "do not copy the API." The Bilibili API
-client and WBI signing **MUST be removed before the repository is ever made public**
-- publishing an MIT-licensed reverse-engineered copy of their API is the most
-redistributable form of exactly what they objected to. The leaked Sentry auth token
-(still in history at `9bffc16`) must also be rotated before publishing.
+**Distribution note (the repo stays private):** only the compiled APK is distributed,
+never the source, so there is no "public source" trigger and the MIT license does not
+expose the Bilibili client. The remaining cease-and-desist consideration is the
+*shipped binary*, which still contains and uses the Bilibili API during the freeze.
+That exposure is already bounded: (a) `release.yml` refuses to publish until
+`GSAV_WEB_URL` is set, so no new APKs ship today, and (b) GSAV becomes the shipped
+default before releases resume. Deleting the Bilibili client is therefore a product
+decision on the timeline above, not a legal hard-gate. Rotating the leaked Sentry
+token (`9bffc16`) is low-urgency hygiene (private repo, build-time token never bundled
+into the APK) and needs no history rewrite.
 
 ### Android permission posture (pre-public)
 
