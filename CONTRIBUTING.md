@@ -86,6 +86,10 @@ docs: 更新 README 快速开始步骤
 - **不接受**涉及自动化批量操作、绕过 B 站反爬的 PR
 - 新增功能请优先开 Issue 讨论，避免重复劳动
 - 涉及 API 参数变更时，请同步更新 `services/bilibili.ts` 中的注释
+- **注释 / 字符串语言规范**：新增代码请使用英文注释与英文用户可见字符串（与现有 GSAV 代码一致）；旧 B 站代码中的中文注释保持原样，不必批量改写。
+  Comment/string language policy: write new code with English comments and
+  English user-facing strings (matching the GSAV code); leave legacy Bilibili
+  Chinese comments as-is.
 
 ---
 

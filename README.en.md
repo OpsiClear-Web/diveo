@@ -4,9 +4,14 @@
 
 # JKVideo
 
-**A feature-rich third-party Bilibili React Native client**
+**A native shell for the GSAV 4DGS web player — formerly a third-party Bilibili client (that surface is now frozen)**
 
-*DASH playback · Real-time danmaku · WBI signing · Live streaming · Cross-platform*
+*GSAV WebView shell · (frozen) DASH playback · danmaku · WBI signing · live · Cross-platform*
+
+> ⚠️ **Notice:** The Bilibili-client functionality is frozen following a Bilibili
+> cease-and-desist — it is kept for reference only and no longer accepts feature
+> Issues/PRs. Active development continues as the **GSAV native shell**
+> (see [GSAV Native Shell](#gsav-native-shell)).
 
 ---
 
@@ -205,7 +210,9 @@ utils/                 # Utilities (format, image proxy, MPD builder)
 
 ## Contributing
 
-Issues and PRs are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
+The **Bilibili-client surface is frozen** (see the notice at the top) and no longer
+accepts feature Issues/PRs. The **GSAV native shell** is the active direction and
+welcomes Issues/PRs. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
 
 ---
 

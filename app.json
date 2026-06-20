@@ -3,7 +3,7 @@
     "name": "JKVideo",
     "slug": "jsvideo",
     "version": "1.0.19",
-    "scheme": ["bilibili", "gsav"],
+    "scheme": ["gsav"],
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -25,9 +25,6 @@
       "predictiveBackGestureEnabled": false,
       "usesCleartextTraffic": true,
       "permissions": [
-        "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS",
-        "android.permission.REQUEST_INSTALL_PACKAGES",
         "android.permission.RECORD_AUDIO",
         "android.permission.MODIFY_AUDIO_SETTINGS",
         "android.permission.REQUEST_INSTALL_PACKAGES"

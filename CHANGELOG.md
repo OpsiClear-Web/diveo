@@ -5,6 +5,18 @@
 
 ---
 
+## [1.0.16] – [1.0.19] - 2026-06
+
+### 变更（架构转向）
+- **GSAV 原生外壳**：新增基于 `react-native-webview` 的原生外壳，加载独立的 GSAV 4DGS 托管 Web 应用（路由 `/watch/:id`、`/gsav/:id`、`/gsav-diagnostics`；原生桥协议见 `utils/gsavBridge.ts`，含运行时校验与单元测试）。
+- **B 站客户端冻结**：因收到哔哩哔哩律师函，B 站相关功能停止迭代，仅作学习参考保留。
+- Expo SDK 55 / React Native 0.83 兼容性调整。
+- 安全：将 Sentry Auth Token 移出 `eas.json`、取消跟踪 `.env`。
+
+> 注：1.0.16–1.0.19 未逐版本记录细节；GSAV 落地进度以 [GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md](GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md) 为准。
+
+---
+
 ## [1.0.15] - 2026-03-26
 
 ### 新增

@@ -185,21 +185,30 @@ npm test
 
 ## 项目结构
 
+> 当前架构正从「B 站客户端」过渡到「GSAV 原生外壳」。下方标注「冻结」的部分为旧 B 站功能，仅维护、不新增（详见上方公告）；GSAV 外壳为继续开发方向。
+
 ```
 app/
-  index.tsx            # 首页（PagerView 热门/直播 Tab）
-  video/[bvid].tsx     # 视频详情（播放 + 简介/评论/弹幕）
-  live/[roomId].tsx    # 直播详情（HLS 播放 + 实时弹幕）
-  search.tsx           # 搜索页
-  downloads.tsx        # 下载管理页
-  settings.tsx         # 设置页（画质 + 退出登录）
+  index.tsx            # 首页入口（旧 B 站信息流 · 冻结 + GSAV 入口）
+  watch/[id].tsx       # GSAV 场景（WebView 原生外壳）
+  gsav/[id].tsx        # GSAV 场景深链别名（与 /watch 同屏）
+  gsav-diagnostics.tsx # GSAV 原生诊断页
+  video/[bvid].tsx     # 视频详情（冻结）
+  live/[roomId].tsx    # 直播详情（冻结）
+  search.tsx · downloads.tsx · settings.tsx  # 搜索 / 下载 / 设置（冻结）
 
-components/            # UI 组件（播放器、弹幕、卡片等）
-hooks/                 # 数据 Hooks（视频列表、播放流、弹幕等）
-services/              # Bilibili API 封装（axios + Cookie 拦截）
+components/            # UI 组件，含 GsavWebView / GsavScreen（GSAV 外壳）
+hooks/                 # 数据 Hooks（视频列表、播放流、弹幕等 · 冻结）
+services/              # Bilibili API 封装（冻结）
 store/                 # Zustand 状态（登录、下载、播放、设置）
-utils/                 # 工具函数（格式化、图片代理、MPD 构建）
+utils/                 # 工具函数，含 gsavBridge（GSAV 原生桥协议）
+scripts/               # gsav-native-preflight · verify-native-production-config
+docs/GSAV_NATIVE_QA.md # GSAV 原生设备 QA 手册
 ```
+
+**架构方向**：JKVideo 作为轻量原生外壳，通过 `react-native-webview` 加载独立的 GSAV
+托管 Web 应用（`../gsav-hosting`）。目录、CDN/R2 URL、播放与场景目录由 GSAV 托管侧拥有；
+JKVideo 只负责原生路由、WebView 加载/重试/返回与桥消息（见 `utils/gsavBridge.ts`）。
 
 ---
 
@@ -217,7 +226,9 @@ utils/                 # 工具函数（格式化、图片代理、MPD 构建）
 
 ## 贡献
 
-欢迎提交 Issue 和 PR！请先阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
+本仓库的 **B 站客户端部分已依法冻结**（见上方公告），不再接受该部分的新功能 Issue / PR。
+项目现以 **GSAV 原生外壳**（见 [GSAV Native Shell](#gsav-native-shell)）为继续开发方向，
+该部分欢迎 Issue / PR。贡献前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ---
 
