@@ -67,7 +67,7 @@ export function useCheckUpdate() {
   const openInstallSettings = () => {
     IntentLauncher.startActivityAsync(
       'android.settings.MANAGE_UNKNOWN_APP_SOURCES',
-      { data: 'package:com.anonymous.jkvideo' }
+      { data: 'package:com.opsiclear.diveo' }
     ).catch(() => {
       // 部分旧版 Android 不支持精确跳转，回退到通用安全设置
       IntentLauncher.startActivityAsync('android.settings.SECURITY_SETTINGS');
@@ -88,7 +88,7 @@ export function useCheckUpdate() {
       Alert.alert('提示', '自动安装仅支持 Android 设备');
       return;
     }
-    const localUri = FileSystem.cacheDirectory + `JKVideo-${version}.apk`;
+    const localUri = FileSystem.cacheDirectory + `Diveo-${version}.apk`;
     try {
       setDownloadProgress(0);
       const downloadResumable = FileSystem.createDownloadResumable(
@@ -110,7 +110,7 @@ export function useCheckUpdate() {
       // 系统拒绝时不会抛出 JS 异常，因此下载完成后主动引导。
       Alert.alert(
         '下载完成，准备安装',
-        '如果点击「安装」后提示无权限，请先点击「去设置」，为 JKVideo 开启「允许安装未知应用」，然后返回重试。',
+        '如果点击「安装」后提示无权限，请先点击「去设置」，为 Diveo 开启「允许安装未知应用」，然后返回重试。',
         [
           { text: '去设置', onPress: openInstallSettings },
           {
