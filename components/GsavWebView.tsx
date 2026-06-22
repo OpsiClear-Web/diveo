@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  BackHandler,
   Linking,
   Platform,
   Pressable,
@@ -8,209 +9,142 @@ import {
   Text,
   View,
 } from "react-native";
-import * as Clipboard from "expo-clipboard";
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { WebView, type WebViewMessageEvent } from "react-native-webview";
+import { WebView } from "react-native-webview";
 
 import {
-  buildNativeCommandScript,
-  buildNativeEmbedUrl,
   GSAV_ACCENT,
   GSAV_ACCENT_CONTRAST,
   getConfiguredGsavWebUrl,
   getOrigin,
   isAllowedGsavNavigation,
-  isTrustedBridgeOrigin,
-  parseBridgeMessage,
-  reduceBridgeEvent,
-  type GsavPlaybackSnapshot,
-  type NativeGsavCommand,
 } from "../utils/gsavBridge";
-import { useSettingsStore } from "../store/settingsStore";
 import { useTheme } from "../utils/theme";
 
 type GsavWebViewProps = {
+  /** Path within the hosted diveo app, e.g. "/" (home) or "/watch/elly". */
   path: string;
-  title: string;
 };
 
-export function GsavWebView({ path, title }: GsavWebViewProps) {
-  const router = useRouter();
+// World A: the native app is a thin wrapper around the hosted diveo web app
+// (gsav-hosting), which owns ALL UI -- home, browse, watch, and the player. We
+// load the FULL app (no ?embed=native: gsav-hosting renders its own nav/chrome,
+// so the native shell needs none) and let in-WebView navigation drive everything.
+// The shell adds only a trust-gated WebView, loading/error states, and Android
+// hardware-back -> WebView history. The player runs in the WebView's browser
+// engine (WebGL/Workers/WebCodecs), which is why a native client can host it at
+// all. The web build resolves GsavWebView.web.tsx (an iframe) instead.
+function buildAppUrl(path: string, baseUrl: string) {
+  const base = baseUrl.replace(/\/+$/, "");
+  const route = path.startsWith("/") ? path : `/${path}`;
+  return `${base}${route}`;
+}
+
+export function GsavWebView({ path }: GsavWebViewProps) {
   const theme = useTheme();
-  const darkMode = useSettingsStore((state) => state.darkMode);
   const webViewRef = useRef<WebView>(null);
-  const playbackSnapshotRef = useRef<GsavPlaybackSnapshot>({});
   const gsavWebUrl = useMemo(() => getConfiguredGsavWebUrl(), []);
   const [loadKey, setLoadKey] = useState(0);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [bridgeError, setBridgeError] = useState<string | null>(null);
-  const [capabilityLabel, setCapabilityLabel] = useState("Checking");
-  const [copiedUrl, setCopiedUrl] = useState(false);
-  const uri = useMemo(() => (gsavWebUrl ? buildNativeEmbedUrl(path, gsavWebUrl) : ""), [gsavWebUrl, path]);
+  const [canGoBack, setCanGoBack] = useState(false);
+  const uri = useMemo(() => (gsavWebUrl ? buildAppUrl(path, gsavWebUrl) : ""), [gsavWebUrl, path]);
   // Empty when the build has no URL OR the configured URL is malformed; either way
   // the WebView is not rendered and the "not configured" panel shows instead.
   const allowedOrigin = useMemo(() => (gsavWebUrl ? getOrigin(gsavWebUrl) : ""), [gsavWebUrl]);
 
-  const sendCommand = useCallback((command: NativeGsavCommand) => {
-    webViewRef.current?.injectJavaScript(buildNativeCommandScript(command));
-  }, []);
-
-  const syncNativeTheme = useCallback(() => {
-    sendCommand({ command: "setTheme", mode: darkMode ? "dark" : "light" });
-  }, [darkMode, sendCommand]);
-
+  // Android hardware-back walks the WebView's own history before letting the OS
+  // pop/exit. iOS relies on gsav-hosting's in-page navigation (it owns chrome).
   useEffect(() => {
-    syncNativeTheme();
-  }, [syncNativeTheme, loadKey]);
+    if (Platform.OS !== "android") return;
+    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+      if (canGoBack) {
+        webViewRef.current?.goBack();
+        return true;
+      }
+      return false;
+    });
+    return () => sub.remove();
+  }, [canGoBack]);
 
-  function handleBridgeMessage(event: WebViewMessageEvent) {
-    // Trust gate: only act on messages from the allowed origin. nativeEvent.url is the
-    // WebView's current page; with the navigation gate below this drops anything not
-    // served from the configured GSAV origin. All message->state wiring lives in the
-    // pure reduceBridgeEvent (unit-tested); the component just applies the effects.
-    if (!isTrustedBridgeOrigin(getOrigin(event.nativeEvent.url), allowedOrigin)) return;
-    const message = parseBridgeMessage(event.nativeEvent.data);
-    if (!message) return;
-    const effect = reduceBridgeEvent(playbackSnapshotRef.current, message);
-    playbackSnapshotRef.current = effect.snapshot;
-    if (effect.capabilityLabel) setCapabilityLabel(effect.capabilityLabel);
-    if (effect.bridgeError !== undefined) setBridgeError(effect.bridgeError);
-    if (effect.syncTheme) syncNativeTheme();
-  }
-
-  async function copyCurrentUrl() {
-    await Clipboard.setStringAsync(uri);
-    setCopiedUrl(true);
-    setTimeout(() => setCopiedUrl(false), 1200);
-  }
-
-  function retry() {
+  const retry = useCallback(() => {
     setLoadError(null);
-    setBridgeError(null);
     setLoading(true);
     setLoadKey((value) => value + 1);
+  }, []);
+
+  if (!allowedOrigin) {
+    return (
+      <SafeAreaView style={[styles.safe, styles.center, { backgroundColor: theme.bg }]}>
+        <Text style={[styles.errorTitle, { color: theme.text }]}>diveo not configured</Text>
+        <Text style={[styles.errorText, { color: theme.textSub }]}>
+          This build has no valid diveo origin. Set EXPO_PUBLIC_GSAV_WEB_URL to the diveo web app
+          origin and rebuild.
+        </Text>
+      </SafeAreaView>
+    );
   }
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]} edges={["top", "left", "right"]}>
-      <View style={[styles.header, { backgroundColor: theme.card, borderBottomColor: theme.border }]}>
-        <Pressable style={styles.headerButton} onPress={() => router.back()} accessibilityLabel="Back">
-          <Ionicons name="chevron-back" size={22} color={theme.text} />
-        </Pressable>
-        <View style={styles.headerTitle}>
-          <Text numberOfLines={1} style={[styles.title, { color: theme.text }]}>{title}</Text>
-          <Text numberOfLines={1} style={[styles.subtitle, { color: theme.textSub }]}>{capabilityLabel}</Text>
-        </View>
-        {__DEV__ && (
-          <Pressable style={styles.headerButton} onPress={copyCurrentUrl} accessibilityLabel="Copy diveo URL">
-            <Ionicons name={copiedUrl ? "checkmark" : "copy-outline"} size={18} color={theme.text} />
-          </Pressable>
-        )}
-        <Pressable style={styles.headerButton} onPress={retry} accessibilityLabel="Reload diveo player">
-          <Ionicons name="refresh" size={19} color={theme.text} />
-        </Pressable>
-      </View>
-
       <View style={styles.content}>
-        {!allowedOrigin ? (
-          <View style={[styles.errorPanel, { backgroundColor: theme.card }]}>
-            <Text style={[styles.errorTitle, { color: theme.text }]}>diveo not configured</Text>
-            <Text style={[styles.errorText, { color: theme.textSub }]}>
-              This build has no valid diveo origin. Set EXPO_PUBLIC_GSAV_WEB_URL to the diveo web
-              app origin and rebuild.
-            </Text>
+        <WebView
+          key={loadKey}
+          ref={webViewRef}
+          source={{ uri }}
+          originWhitelist={[allowedOrigin]}
+          javaScriptEnabled
+          domStorageEnabled
+          allowsInlineMediaPlayback
+          mediaPlaybackRequiresUserAction={false}
+          androidLayerType="hardware"
+          setSupportMultipleWindows={false}
+          mixedContentMode={Platform.OS === "android" ? (__DEV__ ? "compatibility" : "never") : undefined}
+          onNavigationStateChange={(navState) => setCanGoBack(navState.canGoBack)}
+          onShouldStartLoadWithRequest={(request) => {
+            if (isAllowedGsavNavigation(request.url, allowedOrigin)) return true;
+            // Open genuine external http(s) links in the system browser instead
+            // of navigating the shell; silently refuse everything else.
+            if (/^https?:/i.test(request.url) && getOrigin(request.url) !== "") {
+              Linking.openURL(request.url).catch(() => {});
+            }
+            return false;
+          }}
+          onLoadStart={() => {
+            setLoading(true);
+            setLoadError(null);
+          }}
+          onLoadEnd={() => setLoading(false)}
+          onError={(event) => {
+            setLoading(false);
+            setLoadError(event.nativeEvent.description || "Unable to load diveo.");
+          }}
+          style={styles.webView}
+        />
+
+        {loading && (
+          <View style={styles.loadingOverlay} pointerEvents="none">
+            <ActivityIndicator color={GSAV_ACCENT} />
           </View>
-        ) : (
-          <>
-            <WebView
-              key={loadKey}
-              ref={webViewRef}
-              source={{ uri }}
-              originWhitelist={[allowedOrigin]}
-              javaScriptEnabled
-              domStorageEnabled
-              allowsInlineMediaPlayback
-              mediaPlaybackRequiresUserAction={false}
-              androidLayerType="hardware"
-              setSupportMultipleWindows={false}
-              mixedContentMode={Platform.OS === "android" ? (__DEV__ ? "compatibility" : "never") : undefined}
-              onShouldStartLoadWithRequest={(request) => {
-                if (isAllowedGsavNavigation(request.url, allowedOrigin)) return true;
-                // Open genuine external http(s) links in the system browser instead
-                // of navigating the shell; silently refuse everything else.
-                if (/^https?:/i.test(request.url) && getOrigin(request.url) !== "") {
-                  Linking.openURL(request.url).catch(() => {});
-                }
-                return false;
-              }}
-              onLoadStart={() => {
-                setLoading(true);
-                setLoadError(null);
-              }}
-              onLoadEnd={() => {
-                setLoading(false);
-                syncNativeTheme();
-              }}
-              onError={(event) => {
-                setLoading(false);
-                setLoadError(event.nativeEvent.description || "Unable to load diveo web player.");
-              }}
-              onMessage={handleBridgeMessage}
-              style={styles.webView}
-            />
+        )}
 
-            {loading && (
-              <View style={styles.loadingOverlay} pointerEvents="none">
-                <ActivityIndicator color={GSAV_ACCENT} />
-              </View>
-            )}
-
-            {Boolean(loadError) && (
-              <View style={[styles.errorPanel, { backgroundColor: theme.card }]}>
-                <Text style={[styles.errorTitle, { color: theme.text }]}>diveo player unavailable</Text>
-                <Text style={[styles.errorText, { color: theme.textSub }]}>{loadError}</Text>
-                <Pressable style={styles.retryButton} onPress={retry}>
-                  <Text style={styles.retryText}>Retry</Text>
-                </Pressable>
-              </View>
-            )}
-          </>
+        {Boolean(loadError) && (
+          <View style={[styles.errorPanel, { backgroundColor: theme.card }]}>
+            <Text style={[styles.errorTitle, { color: theme.text }]}>diveo unavailable</Text>
+            <Text style={[styles.errorText, { color: theme.textSub }]}>{loadError}</Text>
+            <Pressable style={styles.retryButton} onPress={retry}>
+              <Text style={styles.retryText}>Retry</Text>
+            </Pressable>
+          </View>
         )}
       </View>
-
-      {Boolean(bridgeError) && !loadError && (
-        <View style={[styles.bridgeBanner, { backgroundColor: theme.card, borderTopColor: theme.border }]}>
-          <Text numberOfLines={2} style={[styles.bridgeText, { color: theme.textSub }]}>{bridgeError}</Text>
-          <Pressable onPress={() => sendCommand({ command: "play" })} accessibilityLabel="Play diveo">
-            <Ionicons name="play" size={18} color={GSAV_ACCENT} />
-          </Pressable>
-        </View>
-      )}
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  header: {
-    height: 48,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 6,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  headerButton: {
-    width: 42,
-    height: 42,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerTitle: { flex: 1, minWidth: 0 },
-  title: { fontSize: 16, fontFamily: "Roboto_700Bold" },
-  subtitle: { marginTop: 1, fontSize: 11, fontFamily: "Roboto_400Regular" },
+  center: { alignItems: "center", justifyContent: "center", padding: 24, gap: 8 },
   content: { flex: 1, backgroundColor: "#050505" },
   webView: { flex: 1, backgroundColor: "#050505" },
   loadingOverlay: {
@@ -240,13 +174,4 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   retryText: { color: GSAV_ACCENT_CONTRAST, fontSize: 13, fontFamily: "Roboto_700Bold" },
-  bridgeBanner: {
-    minHeight: 44,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    paddingHorizontal: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  bridgeText: { flex: 1, fontSize: 12, lineHeight: 17, fontFamily: "Roboto_400Regular" },
 });

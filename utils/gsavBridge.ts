@@ -11,7 +11,9 @@ export const GSAV_ACCENT_CONTRAST = "#050505";
 
 /** Routes that render the full-screen GSAV WebView shell (mini-players hidden). */
 export function isGsavShellRoute(pathname: string): boolean {
-  return pathname.startsWith("/gsav") || pathname.startsWith("/watch");
+  // World A: the root home is also a GSAV WebView, so suppress the legacy
+  // mini-players there too. Root must match exactly (every path starts with "/").
+  return pathname === "/" || pathname.startsWith("/gsav") || pathname.startsWith("/watch");
 }
 
 export type GsavBridgeInfo = {

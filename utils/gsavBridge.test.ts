@@ -318,14 +318,14 @@ describe("isTrustedBridgeOrigin (message trust gate)", () => {
 });
 
 describe("isGsavShellRoute", () => {
-  it("matches /gsav and /watch routes", () => {
+  it("matches the root home, /gsav, and /watch routes", () => {
+    expect(isGsavShellRoute("/")).toBe(true);
     expect(isGsavShellRoute("/gsav/elly")).toBe(true);
     expect(isGsavShellRoute("/gsav-diagnostics")).toBe(true);
     expect(isGsavShellRoute("/watch/elly")).toBe(true);
   });
 
   it("does not match legacy routes", () => {
-    expect(isGsavShellRoute("/")).toBe(false);
     expect(isGsavShellRoute("/video/BV1")).toBe(false);
     expect(isGsavShellRoute("/search")).toBe(false);
   });
