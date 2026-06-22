@@ -89,7 +89,7 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
 
     if (message.type === "GSAV_ERROR") {
       const payload = message.payload as { message?: unknown };
-      setBridgeError(typeof payload.message === "string" ? payload.message : "Diveo playback error.");
+      setBridgeError(typeof payload.message === "string" ? payload.message : "diveo playback error.");
     } else if (message.type === "GSAV_READY") {
       setBridgeError(null);
       syncNativeTheme();
@@ -98,7 +98,7 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
       const supported = payload.supported === true;
       setCapabilityLabel(getCapabilityLabel(payload));
       if (!supported) {
-        setBridgeError(getUnsupportedReason(payload) ?? "Diveo playback is not supported on this device.");
+        setBridgeError(getUnsupportedReason(payload) ?? "diveo playback is not supported on this device.");
       } else {
         setBridgeError(null);
         syncNativeTheme();
@@ -130,11 +130,11 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
           <Text numberOfLines={1} style={[styles.subtitle, { color: theme.textSub }]}>{capabilityLabel}</Text>
         </View>
         {__DEV__ && (
-          <Pressable style={styles.headerButton} onPress={copyCurrentUrl} accessibilityLabel="Copy Diveo URL">
+          <Pressable style={styles.headerButton} onPress={copyCurrentUrl} accessibilityLabel="Copy diveo URL">
             <Ionicons name={copiedUrl ? "checkmark" : "copy-outline"} size={18} color={theme.text} />
           </Pressable>
         )}
-        <Pressable style={styles.headerButton} onPress={retry} accessibilityLabel="Reload Diveo player">
+        <Pressable style={styles.headerButton} onPress={retry} accessibilityLabel="Reload diveo player">
           <Ionicons name="refresh" size={19} color={theme.text} />
         </Pressable>
       </View>
@@ -142,9 +142,9 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
       <View style={styles.content}>
         {!allowedOrigin ? (
           <View style={[styles.errorPanel, { backgroundColor: theme.card }]}>
-            <Text style={[styles.errorTitle, { color: theme.text }]}>Diveo not configured</Text>
+            <Text style={[styles.errorTitle, { color: theme.text }]}>diveo not configured</Text>
             <Text style={[styles.errorText, { color: theme.textSub }]}>
-              This build has no valid Diveo origin. Set EXPO_PUBLIC_GSAV_WEB_URL to the Diveo web
+              This build has no valid diveo origin. Set EXPO_PUBLIC_GSAV_WEB_URL to the diveo web
               app origin and rebuild.
             </Text>
           </View>
@@ -181,7 +181,7 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
               }}
               onError={(event) => {
                 setLoading(false);
-                setLoadError(event.nativeEvent.description || "Unable to load Diveo web player.");
+                setLoadError(event.nativeEvent.description || "Unable to load diveo web player.");
               }}
               onMessage={handleBridgeMessage}
               style={styles.webView}
@@ -195,7 +195,7 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
 
             {Boolean(loadError) && (
               <View style={[styles.errorPanel, { backgroundColor: theme.card }]}>
-                <Text style={[styles.errorTitle, { color: theme.text }]}>Diveo player unavailable</Text>
+                <Text style={[styles.errorTitle, { color: theme.text }]}>diveo player unavailable</Text>
                 <Text style={[styles.errorText, { color: theme.textSub }]}>{loadError}</Text>
                 <Pressable style={styles.retryButton} onPress={retry}>
                   <Text style={styles.retryText}>Retry</Text>
@@ -209,7 +209,7 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
       {Boolean(bridgeError) && !loadError && (
         <View style={[styles.bridgeBanner, { backgroundColor: theme.card, borderTopColor: theme.border }]}>
           <Text numberOfLines={2} style={[styles.bridgeText, { color: theme.textSub }]}>{bridgeError}</Text>
-          <Pressable onPress={() => sendCommand({ command: "play" })} accessibilityLabel="Play Diveo">
+          <Pressable onPress={() => sendCommand({ command: "play" })} accessibilityLabel="Play diveo">
             <Ionicons name="play" size={18} color={GSAV_ACCENT} />
           </Pressable>
         </View>

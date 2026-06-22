@@ -20,5 +20,5 @@ export default function GsavScreen() {
     [sceneId, share, startTime],
   );
 
-  return <GsavWebView path={path} title="Diveo" />;
+  return <GsavWebView path={path} title="diveo" />;
 }

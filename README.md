@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/JKVideo-仿B站客户端-00AEEC?style=for-the-badge&logo=bilibili&logoColor=white" alt="JKVideo"/>
+<img src="https://img.shields.io/badge/diveo-仿B站客户端-00AEEC?style=for-the-badge&logo=bilibili&logoColor=white" alt="diveo"/>
 
-# JKVideo
+# diveo
 
 **高颜值第三方 B 站 React Native 客户端**
 
@@ -51,7 +51,7 @@
 
 ## 演示视频
 
-https://github.com/tiajinsha/JKVideo/releases/download/v1.0.0/6490dcd9dba9a243a7cd8f00359cc285.mp4
+https://github.com/OpsiClear-Web/diveo/releases/download/v1.0.0/6490dcd9dba9a243a7cd8f00359cc285.mp4
 
 ---
 
@@ -106,8 +106,8 @@ Android · iOS · Web，Expo Go 扫码 5 分钟运行，Dev Build 解锁完整 D
 > 部分清晰度受限，视频播放降级为 WebView 方案
 
 ```bash
-git clone https://github.com/tiajinsha/JKVideo.git
-cd JKVideo
+git clone https://github.com/OpsiClear-Web/diveo.git
+cd diveo
 npm install
 npx expo start
 ```
@@ -135,9 +135,9 @@ npx expo start --web
 
 ### GSAV Native Shell
 
-JKVideo can host the GSAV hosting web app as a thin native shell. GSAV catalog,
+diveo can host the GSAV hosting web app as a thin native shell. GSAV catalog,
 CDN/R2 URLs, controls, and playback stay in `../gsav-hosting/apps/web`;
-JKVideo only owns native routing, WebView loading, retry, back navigation, and
+diveo only owns native routing, WebView loading, retry, back navigation, and
 bridge messages.
 
 Start the local GSAV hosting preview first:
@@ -147,7 +147,7 @@ cd ../gsav-hosting
 npm run smoke:web:local
 ```
 
-Then start JKVideo against that local preview:
+Then start diveo against that local preview:
 
 ```bash
 EXPO_PUBLIC_GSAV_WEB_URL=http://127.0.0.1:5191 npx expo start
@@ -177,7 +177,7 @@ npm test
 
 ### 直接安装（Android）
 
-前往 [Releases](https://github.com/tiajinsha/JKVideo/releases/latest) 下载最新 APK，无需编译，安装即用。
+前往 [Releases](https://github.com/OpsiClear-Web/diveo/releases/latest) 下载最新 APK，无需编译，安装即用。
 
 > 需在 Android 设置中开启「安装未知来源应用」
 
@@ -206,9 +206,9 @@ scripts/               # gsav-native-preflight · verify-native-production-confi
 docs/GSAV_NATIVE_QA.md # GSAV 原生设备 QA 手册
 ```
 
-**架构方向**：JKVideo 作为轻量原生外壳，通过 `react-native-webview` 加载独立的 GSAV
+**架构方向**：diveo 作为轻量原生外壳，通过 `react-native-webview` 加载独立的 GSAV
 托管 Web 应用（`../gsav-hosting`）。目录、CDN/R2 URL、播放与场景目录由 GSAV 托管侧拥有；
-JKVideo 只负责原生路由、WebView 加载/重试/返回与桥消息（见 `utils/gsavBridge.ts`）。
+diveo 只负责原生路由、WebView 加载/重试/返回与桥消息（见 `utils/gsavBridge.ts`）。
 
 ---
 
@@ -242,7 +242,7 @@ JKVideo 只负责原生路由、WebView 加载/重试/返回与桥消息（见 `
 
 ## License
 
-[MIT](LICENSE) © 2026 JKVideo Contributors
+[MIT](LICENSE) © 2026 diveo Contributors
 
 ---
 

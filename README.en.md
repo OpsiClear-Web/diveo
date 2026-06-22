@@ -1,8 +1,8 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/JKVideo-Bilibili_Client-00AEEC?style=for-the-badge&logo=bilibili&logoColor=white" alt="JKVideo"/>
+<img src="https://img.shields.io/badge/diveo-Bilibili_Client-00AEEC?style=for-the-badge&logo=bilibili&logoColor=white" alt="diveo"/>
 
-# JKVideo
+# diveo
 
 **A native shell for the GSAV 4DGS web player — formerly a third-party Bilibili client (that surface is now frozen)**
 
@@ -95,8 +95,8 @@ Android · iOS · Web, Expo Go scan-to-run in 5 minutes, Dev Build unlocks full 
 > Some quality options limited; video falls back to WebView
 
 ```bash
-git clone https://github.com/tiajinsha/JKVideo.git
-cd JKVideo
+git clone https://github.com/OpsiClear-Web/diveo.git
+cd diveo
 npm install
 npx expo start
 ```
@@ -124,8 +124,8 @@ npx expo start --web
 
 ### GSAV WebView Wrapper
 
-JKVideo can host the GSAV hosting web app as a thin native shell. The product
-web app lives in `../gsav-hosting/apps/web`; JKVideo only owns WebView loading,
+diveo can host the GSAV hosting web app as a thin native shell. The product
+web app lives in `../gsav-hosting/apps/web`; diveo only owns WebView loading,
 retry, back navigation, and bridge message handling. Set the web app origin
 before starting Expo.
 
@@ -136,7 +136,7 @@ cd ../gsav-hosting
 npm run smoke:web:local
 ```
 
-Then start JKVideo against that local preview:
+Then start diveo against that local preview:
 
 ```bash
 EXPO_PUBLIC_GSAV_WEB_URL=http://127.0.0.1:5191 npx expo start
@@ -170,7 +170,7 @@ npm test
 
 ### Direct Install (Android)
 
-Download the latest APK from [Releases](https://github.com/tiajinsha/JKVideo/releases/latest) — no build needed.
+Download the latest APK from [Releases](https://github.com/OpsiClear-Web/diveo/releases/latest) — no build needed.
 
 > Enable "Install from unknown sources" in Android settings
 
@@ -226,7 +226,7 @@ This project is not affiliated with Bilibili in any way.
 
 ## License
 
-[MIT](LICENSE) © 2026 JKVideo Contributors
+[MIT](LICENSE) © 2026 diveo Contributors
 
 ---
 

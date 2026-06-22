@@ -6,7 +6,7 @@
 
 ## Context
 
-JKVideo began as a third-party Bilibili client (DASH playback, danmaku, WBI
+diveo began as a third-party Bilibili client (DASH playback, danmaku, WBI
 signing, live, downloads, LAN share). It received a Bilibili cease-and-desist,
 so that surface can no longer be developed. In parallel the app is being turned
 into a thin **native shell** that hosts a separate GSAV 4DGS web app
@@ -60,7 +60,7 @@ self-updater (`hooks/useCheckUpdate.ts`).
 ## Ownership boundary (catalog contract) — P2-7
 
 GSAV catalog, scene data model, CDN/R2 URLs, and playback are owned by
-`../gsav-hosting`. JKVideo MUST NOT own a native GSAV catalog. The native shell
+`../gsav-hosting`. diveo MUST NOT own a native GSAV catalog. The native shell
 only:
 
 - routes `/watch/:id`, `/gsav/:id` (deep-link alias), `/gsav-diagnostics`;

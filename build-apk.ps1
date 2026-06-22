@@ -13,8 +13,8 @@ if ($LASTEXITCODE -eq 0) {
     $apk = Get-ChildItem "Z:\android\app\build\outputs\apk\debug\*.apk" | Select-Object -First 1
     Write-Host "SUCCESS! APK: $($apk.FullName)" -ForegroundColor Green
     # Copy to Desktop
-    Copy-Item $apk.FullName "C:\Users\Administrator\Desktop\JKVideo-debug.apk"
-    Write-Host "Copied to Desktop: JKVideo-debug.apk" -ForegroundColor Cyan
+    Copy-Item $apk.FullName "C:\Users\Administrator\Desktop\diveo-debug.apk"
+    Write-Host "Copied to Desktop: diveo-debug.apk" -ForegroundColor Cyan
 } else {
     Write-Host "Build FAILED" -ForegroundColor Red
 }

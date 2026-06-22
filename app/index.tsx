@@ -84,14 +84,14 @@ function GsavHomeEntry({
         <Ionicons name="cube-outline" size={18} color={GSAV_ACCENT} />
       </View>
       <View style={styles.gsavCopy}>
-        <Text numberOfLines={1} style={[styles.gsavTitle, { color: theme.text }]}>Diveo</Text>
+        <Text numberOfLines={1} style={[styles.gsavTitle, { color: theme.text }]}>diveo</Text>
         <Text numberOfLines={1} style={[styles.gsavSubtitle, { color: theme.textSub }]}>4D Gaussian video</Text>
       </View>
       <TouchableOpacity
         style={styles.gsavIconButton}
         onPress={onOpen}
         activeOpacity={0.75}
-        accessibilityLabel="Open Diveo test scene"
+        accessibilityLabel="Open diveo test scene"
       >
         <Ionicons name="play" size={16} color="#fff" />
       </TouchableOpacity>
@@ -99,7 +99,7 @@ function GsavHomeEntry({
         style={[styles.gsavIconButton, styles.gsavSecondaryButton]}
         onPress={onDiagnostics}
         activeOpacity={0.75}
-        accessibilityLabel="Open Diveo diagnostics"
+        accessibilityLabel="Open diveo diagnostics"
       >
         <Ionicons name="pulse-outline" size={16} color={GSAV_ACCENT} />
       </TouchableOpacity>

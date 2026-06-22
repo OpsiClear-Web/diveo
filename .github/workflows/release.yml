@@ -117,6 +117,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create "v${{ steps.bump.outputs.version }}" \
-            --title "Diveo v${{ steps.bump.outputs.version }}" \
+            --title "diveo v${{ steps.bump.outputs.version }}" \
             --generate-notes \
             android/app/build/outputs/apk/release/app-release.apk

@@ -1,6 +1,6 @@
 # GSAV Native WebView QA
 
-JKVideo hosts the GSAV site through `components/GsavWebView.tsx`. The native app
+diveo hosts the GSAV site through `components/GsavWebView.tsx`. The native app
 must not duplicate GSAV catalog, CDN URL, decoder, renderer, or playback-control
 logic.
 
@@ -46,10 +46,10 @@ Physical device target:
 http://<host-lan-ip>:5191
 ```
 
-Run the JKVideo-side preflight before launching Expo:
+Run the diveo-side preflight before launching Expo:
 
 ```powershell
-cd ..\JKVideo
+cd ..\diveo
 npm run gsav:preflight
 ```
 
@@ -70,7 +70,7 @@ because that address is resolved inside the emulator.
 ## Android Runbook
 
 ```powershell
-cd ..\JKVideo
+cd ..\diveo
 $env:EXPO_PUBLIC_GSAV_WEB_URL='http://10.0.2.2:5191'
 npx expo run:android
 ```
@@ -84,14 +84,14 @@ Checklist:
   message is explicit.
 - Open `/gsav/test?t=2.5`.
 - Confirm the native reload button reloads the WebView.
-- Confirm native back returns to the prior JKVideo screen.
-- Confirm the JKVideo mini-players do not overlay the GSAV WebView route.
+- Confirm native back returns to the prior diveo screen.
+- Confirm the diveo mini-players do not overlay the GSAV WebView route.
 - Rotate the device and confirm safe-area/header spacing remains usable.
 
 ## iOS Runbook
 
 ```bash
-cd ../JKVideo
+cd ../diveo
 export EXPO_PUBLIC_GSAV_WEB_URL='http://127.0.0.1:5191'
 npx expo run:ios
 ```
@@ -120,7 +120,7 @@ events and commands:
 
 Add one row per tested route/device.
 
-| Date | Platform | Device/Emulator | OS/WebView version | GSAV web URL | JKVideo route | Capability result | Playback result | Evidence path | Notes |
+| Date | Platform | Device/Emulator | OS/WebView version | GSAV web URL | diveo route | Capability result | Playback result | Evidence path | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 2026-06-18 | Host preflight | Windows host | n/a | `http://127.0.0.1:5191` | GSAV target routes | App shell returned `200` for `/`, `/native-diagnostics?embed=native`, `/watch/test?embed=native`, `/watch/test?t=2.5&embed=native`, `/watch/elly?embed=native` | `/test.gsav` range returned `206` | Terminal: `npm run gsav:preflight` | Pre-device gate only; not WebView QA. |
 | 2026-06-18 | iOS | Deferred | macOS/Xcode unavailable in current Windows environment | n/a | n/a | Not run | Deferred | n/a | Requires macOS/Xcode simulator or physical iOS device. |

@@ -1,6 +1,6 @@
-# JKVideo GSAV Native Shell Checklist
+# diveo GSAV Native Shell Checklist
 
-This checklist tracks only the JKVideo native-shell responsibilities for the
+This checklist tracks only the diveo native-shell responsibilities for the
 GSAV hosting product. The public website, catalog, Supabase backend, CDN/R2
 URLs, browser playback, viewer controls, and diagnostics are owned by
 `../gsav-hosting`.
@@ -14,9 +14,9 @@ Canonical product checklist:
 ## Ownership Boundary
 
 - [x] Keep GSAV rendering, decoding, catalog, playback controls, and browser
-  diagnostics out of JKVideo.
-- [x] Keep JKVideo as a React Native WebView shell and design reference.
-- [x] Do not import `@opsiclear/gsav-viewer` or parse `.gsav` files in JKVideo.
+  diagnostics out of diveo.
+- [x] Keep diveo as a React Native WebView shell and design reference.
+- [x] Do not import `@opsiclear/gsav-viewer` or parse `.gsav` files in diveo.
 - [x] Build native routes by loading the hosted web app with `?embed=native`.
 - [x] Treat native playback as beta until device QA is recorded.
 
@@ -41,10 +41,10 @@ cd ..\gsav-hosting
 npm run smoke:web:local
 ```
 
-Start JKVideo against the local preview:
+Start diveo against the local preview:
 
 ```powershell
-cd ..\JKVideo
+cd ..\diveo
 $env:EXPO_PUBLIC_GSAV_WEB_URL='http://127.0.0.1:5191'
 npx expo start
 ```
@@ -64,13 +64,13 @@ npx expo run:android
 - [x] `app/gsav/[id].tsx` aliases GSAV scene routes.
 - [x] `app/gsav-diagnostics.tsx` loads `/native-diagnostics?embed=native`.
 - [x] The configured GSAV origin is enforced for WebView navigation.
-- [x] Existing JKVideo mini-players are suppressed on GSAV shell routes.
-- [x] The JKVideo home feed exposes a compact GSAV entry without owning a
+- [x] Existing diveo mini-players are suppressed on GSAV shell routes.
+- [x] The diveo home feed exposes a compact GSAV entry without owning a
   native GSAV catalog.
 
 ## Bridge Contract
 
-Events parsed by JKVideo:
+Events parsed by diveo:
 
 - [x] `GSAV_BRIDGE_READY`
 - [x] `GSAV_CAPABILITIES`
@@ -85,7 +85,7 @@ Events parsed by JKVideo:
 - [x] `GSAV_PAUSE`
 - [x] `GSAV_ENDED`
 
-Commands JKVideo can send:
+Commands diveo can send:
 
 - [x] `setTheme`
 - [x] `loadScene`
@@ -98,7 +98,7 @@ Commands JKVideo can send:
 Validation:
 
 ```powershell
-cd ..\JKVideo
+cd ..\diveo
 npm test
 npx tsc --noEmit
 ```
@@ -112,7 +112,7 @@ state. Blank WebViews, silent failures, and indefinite spinners are bugs.
 - [ ] Run physical Android QA against a LAN URL.
 - [ ] Run iOS simulator/device QA on macOS or a physical iOS device.
 - [ ] Record every device run in `docs/GSAV_NATIVE_QA.md`.
-- [ ] Keep JKVideo GSAV release scope labeled native-wrapper beta until public
+- [ ] Keep diveo GSAV release scope labeled native-wrapper beta until public
   HTTPS hosting and target-device evidence are stable.
 
 Required routes:
@@ -128,7 +128,7 @@ Evidence fields:
 - Platform and device
 - OS and WebView/WKWebView version
 - GSAV web URL
-- JKVideo route
+- diveo route
 - Capability result
 - Playback result
 - Screenshot/video or log path
@@ -142,7 +142,7 @@ Production native support must wait for the web product gate in
 - [ ] Public Pages/static host URL is available.
 - [ ] Production `.gsav` assets support byte ranges.
 - [ ] Production CORS exposes required range headers.
-- [ ] JKVideo production builds use the public HTTPS GSAV origin.
+- [ ] diveo production builds use the public HTTPS GSAV origin.
 - [ ] Navigation allow-list is checked against the production origin.
 - [x] Add production config verifier.
   - Command: `npm run verify:native-production-config`.
@@ -171,7 +171,7 @@ npm run verify:native-production-config
 ## Deferred Work
 
 - [ ] Native `.gsav` renderer without WebView.
-- [ ] Offline `.gsav` downloads inside JKVideo.
+- [ ] Offline `.gsav` downloads inside diveo.
 - [ ] Native GSAV catalog browsing.
 - [ ] Native creator upload flow.
 - [ ] Automated Android/iOS device E2E in CI.

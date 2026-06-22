@@ -4,7 +4,7 @@ import * as FileSystem from 'expo-file-system/legacy';
 import * as IntentLauncher from 'expo-intent-launcher';
 import Constants from 'expo-constants';
 
-const GITHUB_API = 'https://api.github.com/repos/OpsiClear-Web/JKVideo/releases/latest';
+const GITHUB_API = 'https://api.github.com/repos/OpsiClear-Web/diveo/releases/latest';
 
 function compareVersions(a: string, b: string): number {
   const pa = a.replace(/^v/, '').split('.').map(Number);
@@ -88,7 +88,7 @@ export function useCheckUpdate() {
       Alert.alert('提示', '自动安装仅支持 Android 设备');
       return;
     }
-    const localUri = FileSystem.cacheDirectory + `Diveo-${version}.apk`;
+    const localUri = FileSystem.cacheDirectory + `diveo-${version}.apk`;
     try {
       setDownloadProgress(0);
       const downloadResumable = FileSystem.createDownloadResumable(
@@ -110,7 +110,7 @@ export function useCheckUpdate() {
       // 系统拒绝时不会抛出 JS 异常，因此下载完成后主动引导。
       Alert.alert(
         '下载完成，准备安装',
-        '如果点击「安装」后提示无权限，请先点击「去设置」，为 Diveo 开启「允许安装未知应用」，然后返回重试。',
+        '如果点击「安装」后提示无权限，请先点击「去设置」，为 diveo 开启「允许安装未知应用」，然后返回重试。',
         [
           { text: '去设置', onPress: openInstallSettings },
           {

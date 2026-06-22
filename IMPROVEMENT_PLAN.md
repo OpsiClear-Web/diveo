@@ -1,4 +1,4 @@
-# JKVideo Improvement Plan (v2 — review-hardened)
+# diveo Improvement Plan (v2 — review-hardened)
 
 > Produced from a verified 7-dimension maintainability audit (2026-06-20), then hardened by a 6-agent review panel (sequencing, risk/rollback, effort/scoping, completeness, technical-correctness, verifiability). Every task cites the audit finding + file:line evidence and has a **runnable** acceptance check.
 
@@ -55,7 +55,7 @@ P0-3(history scrub) ── optional, AFTER P0-1, off the critical path
 | P0-1 | Rotate leaked Sentry auth token | testing/config HIGH — `eas.json:19` live `sntrys_…`, org `jinsha-t0`, since `9bffc16` | Revoke in Sentry → new token → GH Actions secret. First grep for ALL consumers (only `eas.json:19` tracked) so rotation doesn't silently break source-map upload | `curl -s -o /dev/null -w '%{http_code}' -H 'Authorization: Bearer <OLD>' https://sentry.io/api/0/organizations/jinsha-t0/` → `401` | S | Low (CI sets `SENTRY_DISABLE_AUTO_UPLOAD:true`) | — |
 | P0-2 | **Untrack** `.env`; replace `eas.json` token ref | config HIGH — `.env` already tracked; bare `.env` not gitignored | `git rm --cached .env`; add `.env` + `.env.*` then `!.env.example` to `.gitignore`; commit `.env.example`; `eas.json` uses `$SENTRY_AUTH_TOKEN`. **DSN is public — no rotation/scrub.** | `git ls-files \| grep -c '^.env$'` == 0; `git check-ignore .env`→hit, `git check-ignore .env.example`→miss; `git grep -nE 'sntrys_[A-Za-z0-9]' -- . ':!*.md'` == 0 | S | Low | — |
 | **P0-5a** | **Wire prod env into the real build path** (in-repo half) | config HIGH — `release.yml` raw-Gradle ships cleartext ON + GSAV→`127.0.0.1:5191`; `eas.json` ignored | Set `EXPO_PUBLIC_APP_ENV=production` **on the Prebuild step** (manifest cleartext, resolved by `app.config.js:23` at config-eval) **and** `EXPO_PUBLIC_GSAV_WEB_URL=${{secrets.GSAV_WEB_URL}}` **on the Gradle step** (JS Babel inlining happens in `assembleRelease`). Simplest: set both **job-wide**. Run verifier **advisory** (`continue-on-error`) for now | After build: `unzip -p app-release.apk 'assets/*.bundle' \| grep -c '127.0.0.1:5191'` == 0; merged `AndroidManifest.xml` has `usesCleartextTraffic="false"` | M | Med | P0-4 |
-| P0-3 | *(Optional, deferred)* Scrub token from history | same as P0-1 | **Only after P0-1 confirmed.** `git filter-repo` on a `--mirror` clone (its required mode; re-add `origin` after); **pause `release.yml`** (bot auto-pushes to master, `:37-43`) during window; coordinate the `tiajinsha` fork (shared history via `8fcf74e`) | `git log -p --all -S 'sntrys_' -- eas.json` returns nothing. **Note: rotation is the real fix; this is hygiene, NOT 5-min revertible** | M | **High — irreversible, fork/bot races** | P0-1 |
+| P0-3 | *(Optional, deferred)* Scrub token from history | same as P0-1 | **Only after P0-1 confirmed.** `git filter-repo` on a `--mirror` clone (its required mode; re-add `origin` after); **pause `release.yml`** (bot auto-pushes to master, `:37-43`) during window; coordinate the `OpsiClear-Web` fork (shared history via `8fcf74e`) | `git log -p --all -S 'sntrys_' -- eas.json` returns nothing. **Note: rotation is the real fix; this is hygiene, NOT 5-min revertible** | M | **High — irreversible, fork/bot races** | P0-1 |
 
 > **P0-5/P2-4 false-green warning:** the verifier (`verify-native-production-config.js`) inspects `eas.json`/`process.env`, *not the APK*. A green verifier does **not** prove a safe artifact — only the `unzip`+manifest checks above do.
 
@@ -80,7 +80,7 @@ P0-3(history scrub) ── optional, AFTER P0-1, off the critical path
 | P0-5b | Flip to real URL; promote verifier to **required gate** | config HIGH | Set the real origin; change `release.yml` verifier step from advisory → required | `npm run verify:native-production-config` green **with the same env the build uses**; release job gated on it | S | Low | P2-4 |
 | P2-5 | Update/retire CHANGELOG | docs MED — frozen at 1.0.15, app 1.0.19 | Add 1.0.14–1.0.19 entries OR mark legacy + point to checklist | `grep -c '1.0.19' CHANGELOG.md` ≥ 1, or a delegation marker line present | S | Low | — |
 | P2-6 | Comment/string language policy | docs MED | CONTRIBUTING: "new code = English; legacy Chinese left as-is" | Policy line present in CONTRIBUTING | S | Low | — |
-| **P2-7** | Document GSAV catalog ownership contract | completeness — cross-repo boundary | State how JKVideo deep-links scene ids without owning catalog (id passthrough → `buildGsavWatchPath`); cross-link checklist `:16,68-69,175` | Contract note in ADR/README; P3-3 references it | S | Low | P2-1 |
+| **P2-7** | Document GSAV catalog ownership contract | completeness — cross-repo boundary | State how diveo deep-links scene ids without owning catalog (id passthrough → `buildGsavWatchPath`); cross-link checklist `:16,68-69,175` | Contract note in ADR/README; P3-3 references it | S | Low | P2-1 |
 
 ## Phase 3 — Structural: GSAV as the product (week 1–2). **DoD: app opens to a GSAV launcher; legacy reachable only behind flag; clean typed-route compile.**
 
@@ -131,7 +131,7 @@ Concrete, ordered deletion (the v1 hand-wave, now a list): (1) delete `app/{vide
 
 | Risk | Blast radius | Rollback / safeguard |
 |---|---|---|
-| P0-3 history rewrite | Breaks every clone/fork; races CI bot (`release.yml:43`) & `tiajinsha` fork | `git clone --mirror` backup first; pause workflow; re-add origin; **rotation (P0-1) is the actual fix — P0-3 is optional** |
+| P0-3 history rewrite | Breaks every clone/fork; races CI bot (`release.yml:43`) & `OpsiClear-Web` fork | `git clone --mirror` backup first; pause workflow; re-add origin; **rotation (P0-1) is the actual fix — P0-3 is optional** |
 | P0-5 / P2-4 false-green | Ships dead localhost APK while verifier passes | Acceptance = **APK artifact grep**, not config; P6-6 runtime guard fails loud |
 | P3-3 home reroute | App opens to empty/non-functional GSAV | Behind `EXPO_PUBLIC_HOME` flag (1-env revert); ship to `preview` first; 3 separate PRs |
 | Option B deletion | Removes only working app | `legacy-final` tag; delete **only after** GSAV launcher validated on preview |

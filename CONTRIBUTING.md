@@ -1,6 +1,6 @@
 # 贡献指南 · Contributing Guide
 
-感谢你考虑为 JKVideo 做贡献！
+感谢你考虑为 diveo 做贡献！
 
 ---
 
@@ -9,8 +9,8 @@
 ### 推荐方式：Dev Build（完整功能）
 
 ```bash
-git clone https://github.com/你的用户名/JKVideo.git
-cd JKVideo
+git clone https://github.com/你的用户名/diveo.git
+cd diveo
 npm install
 npx expo run:android   # 需要连接 Android 设备或启动模拟器
 ```
@@ -95,6 +95,6 @@ docs: 更新 README 快速开始步骤
 
 ## 问题反馈
 
-- Bug 报告：[提交 Issue](https://github.com/你的用户名/JKVideo/issues/new?template=bug_report.yml)
-- 功能建议：[提交 Feature Request](https://github.com/你的用户名/JKVideo/issues/new?template=feature_request.yml)
-- 使用问题：优先在 [Discussions](https://github.com/你的用户名/JKVideo/discussions) 提问
+- Bug 报告：[提交 Issue](https://github.com/你的用户名/diveo/issues/new?template=bug_report.yml)
+- 功能建议：[提交 Feature Request](https://github.com/你的用户名/diveo/issues/new?template=feature_request.yml)
+- 使用问题：优先在 [Discussions](https://github.com/你的用户名/diveo/discussions) 提问

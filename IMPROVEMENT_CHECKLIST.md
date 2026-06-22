@@ -1,4 +1,4 @@
-# JKVideo Improvement Checklist
+# diveo Improvement Checklist
 
 > Tracker for [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md). IDs match the plan. Check the task box only when its nested **✅ acceptance** check passes.
 >
@@ -110,7 +110,7 @@ Still owner/external:
   - [ ] ✅ merged `AndroidManifest.xml` has `usesCleartextTraffic="false"`
 - [ ] ⚠️ **P0-3** *(optional / deferred)* 🔗P0-1 — scrub token from git history
   - [ ] only after P0-1 confirmed; `git clone --mirror` backup first
-  - [ ] pause `release.yml` during window; `git filter-repo` on mirror; re-add `origin`; coordinate `tiajinsha` fork
+  - [ ] pause `release.yml` during window; `git filter-repo` on mirror; re-add `origin`; coordinate `OpsiClear-Web` fork
   - [ ] ✅ `git log -p --all -S 'sntrys_' -- eas.json` returns nothing
   - [ ] note: rotation is the real fix; this is hygiene, **not** 5-min revertible
 - [ ] **P0-7** 👤 — enable GitHub secret-scanning / push-protection
