@@ -10,7 +10,7 @@
     "proxy": "node dev-proxy.js",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "lint": "eslint components/GsavWebView.tsx components/GsavScreen.tsx app/gsav-diagnostics.tsx app/gsav app/watch utils/gsavBridge.ts utils/gsavBridge.test.ts utils/version.ts utils/version.test.ts scripts --max-warnings 0",
+    "lint": "eslint components/GsavWebView.tsx components/GsavScreen.tsx app/index.tsx app/settings.tsx app/gsav-diagnostics.tsx app/gsav app/watch utils/gsavBridge.ts utils/gsavBridge.test.ts utils/version.ts utils/version.test.ts scripts --max-warnings 0",
     "gsav:preflight": "node scripts/gsav-native-preflight.js",
     "verify:native-production-config": "node scripts/verify-native-production-config.js"
   },
