@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Linking, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST, getConfiguredGsavWebUrl } from "../utils/gsavBridge";
+import { buildNativeEmbedUrl, getConfiguredGsavWebUrl } from "../utils/gsavBridge";
 import { useTheme } from "../utils/theme";
 
 type GsavWebViewProps = {
@@ -13,35 +13,33 @@ type GsavWebViewProps = {
 };
 
 /**
- * Web variant of the GSAV player surface. react-native-webview has no web target
- * ("WebView does not support this platform"), so on web we cannot embed the player
- * in-shell. Instead we hand off to the hosted diveo web app (gsav-hosting) at the
- * configured origin -- which IS the real web product. We navigate to the plain
- * /watch path (NOT the ?embed=native variant): there is no ReactNativeWebView
- * bridge on web, so the standalone player page is the correct target. The native
- * in-shell player + bridge live in GsavWebView.tsx (native only); metro resolves
- * this .web.tsx for the web bundle so react-native-webview is never imported here.
+ * Web variant of the GSAV player surface. react-native-webview has no web target,
+ * BUT the web build runs in a real browser, which provides the WebGL/WebGPU, Web
+ * Workers, and WebCodecs the player needs. So instead of redirecting away, we embed
+ * the hosted diveo player in an <iframe> -- the web equivalent of the native WebView
+ * -- keeping the diveo shell chrome around it. We load the ?embed=native URL (via
+ * buildNativeEmbedUrl, the same URL the native WebView uses) so gsav-hosting hides
+ * its own header/social chrome and renders player-only. The ReactNativeWebView
+ * bridge is absent in a plain iframe, so gsav-hosting's bridge calls no-op
+ * gracefully; playback is unaffected. The native in-shell player lives in
+ * GsavWebView.tsx.
+ *
+ * Cross-origin framing note: gsav-hosting's Vite dev server sends no framing
+ * headers, so this works in dev. Its production _headers set `frame-ancestors
+ * 'self'` + `X-Frame-Options: SAMEORIGIN`; to embed in production, either serve the
+ * shell same-origin as gsav-hosting or add the shell origin to frame-ancestors.
  */
 export function GsavWebView({ path, title }: GsavWebViewProps) {
   const router = useRouter();
   const theme = useTheme();
   const baseUrl = useMemo(() => getConfiguredGsavWebUrl(), []);
-  const target = useMemo(() => {
+  const embedSrc = useMemo(() => (baseUrl ? buildNativeEmbedUrl(path, baseUrl) : ""), [baseUrl, path]);
+  const externalUrl = useMemo(() => {
     if (!baseUrl) return "";
     const base = baseUrl.replace(/\/+$/, "");
     const route = path.startsWith("/") ? path : `/${path}`;
     return `${base}${route}`;
   }, [baseUrl, path]);
-
-  useEffect(() => {
-    if (target && typeof window !== "undefined") {
-      window.location.replace(target);
-    }
-  }, [target]);
-
-  const openManually = () => {
-    if (target) Linking.openURL(target);
-  };
 
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]} edges={["top", "left", "right"]}>
@@ -50,26 +48,34 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
           <Ionicons name="chevron-back" size={22} color={theme.text} />
         </Pressable>
         <Text numberOfLines={1} style={[styles.title, { color: theme.text }]}>{title}</Text>
-        <View style={styles.headerButton} />
+        {externalUrl ? (
+          <Pressable
+            style={styles.headerButton}
+            onPress={() => Linking.openURL(externalUrl)}
+            accessibilityLabel="Open in a new tab"
+          >
+            <Ionicons name="open-outline" size={18} color={theme.text} />
+          </Pressable>
+        ) : (
+          <View style={styles.headerButton} />
+        )}
       </View>
 
       <View style={styles.content}>
-        {target ? (
-          <>
-            <Text style={[styles.message, { color: theme.text }]}>Opening the diveo player…</Text>
-            <Text style={[styles.sub, { color: theme.textSub }]}>If it doesn&apos;t open automatically:</Text>
-            <Pressable style={styles.cta} onPress={openManually} accessibilityLabel="Open the diveo player">
-              <Text style={styles.ctaText}>Open player</Text>
-            </Pressable>
-            <Text numberOfLines={1} style={[styles.url, { color: theme.textSub }]}>{target}</Text>
-          </>
+        {embedSrc ? (
+          <iframe
+            src={embedSrc}
+            title={title}
+            allow="autoplay; fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer"
+            style={{ border: 0, width: "100%", height: "100%", display: "block", backgroundColor: "#050505" }}
+          />
         ) : (
-          <>
-            <Text style={[styles.message, { color: theme.text }]}>diveo player not configured</Text>
-            <Text style={[styles.sub, { color: theme.textSub }]}>
+          <View style={styles.panel}>
+            <Text style={[styles.panelTitle, { color: theme.text }]}>diveo player not configured</Text>
+            <Text style={[styles.panelText, { color: theme.textSub }]}>
               Set EXPO_PUBLIC_GSAV_WEB_URL to the diveo web app origin to enable playback on web.
             </Text>
-          </>
+          </View>
         )}
       </View>
     </SafeAreaView>
@@ -87,19 +93,8 @@ const styles = StyleSheet.create({
   },
   headerButton: { width: 42, height: 42, alignItems: "center", justifyContent: "center" },
   title: { flex: 1, fontSize: 16, fontFamily: "Roboto_700Bold" },
-  content: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24, gap: 10 },
-  message: { fontSize: 16, fontFamily: "Roboto_700Bold" },
-  sub: { fontSize: 13, fontFamily: "Roboto_400Regular", textAlign: "center" },
-  cta: {
-    marginTop: 8,
-    minWidth: 120,
-    minHeight: 38,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 18,
-    backgroundColor: GSAV_ACCENT,
-    borderRadius: 8,
-  },
-  ctaText: { color: GSAV_ACCENT_CONTRAST, fontSize: 14, fontFamily: "Roboto_700Bold" },
-  url: { fontSize: 12, fontFamily: "Roboto_400Regular", marginTop: 4 },
+  content: { flex: 1, backgroundColor: "#050505" },
+  panel: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24, gap: 8 },
+  panelTitle: { fontSize: 16, fontFamily: "Roboto_700Bold" },
+  panelText: { fontSize: 13, fontFamily: "Roboto_400Regular", textAlign: "center" },
 });
