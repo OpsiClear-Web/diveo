@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/diveo-仿B站客户端-00AEEC?style=for-the-badge&logo=bilibili&logoColor=white" alt="diveo"/>
+<img src="https://img.shields.io/badge/diveo-4D_媒体外壳-2f7f80?style=for-the-badge" alt="diveo"/>
 
 # diveo
 
-**高颜值第三方 B 站 React Native 客户端**
+**承载 GSAV 4DGS 网页播放器的原生外壳 · 原 B 站客户端表层已冻结**
 
-*A feature-rich Bilibili-like app with DASH playback, real-time danmaku, WBI signing & live streaming*
+*A native shell for the GSAV 4DGS web player — formerly a third-party Bilibili client (that surface is now frozen)*
 
 ---
 
@@ -22,15 +22,13 @@
 
 ---
 
-> ## ⚠️ 重要公告
+> ## ⚠️ 项目方向
 >
-> 本项目已收到**哔哩哔哩（bilibili）律师函**，要求停止对 B 站 API 的调用及相关仿制行为。
+> diveo 正从第三方 B 站客户端转型为 **GSAV 4DGS 网页播放器的原生外壳**，通过 `react-native-webview` 承载独立的 GSAV 网页应用（见 `../gsav-hosting`）。
 >
-> 为尊重知识产权及相关法律法规，本仓库**即日起停止后续维护与更新**，不再接受新的 Issue 和 Pull Request。
+> 原有的 B 站客户端表层因**哔哩哔哩律师函已冻结**：不再调用 B 站 API、不再开发新功能，待 diveo 的 4D 能力就绪后整体移除（见 `docs/adr/0001-gsav-pivot.md`）。
 >
-> 现有代码仅作学习参考保留，请勿将本项目用于任何商业或违法用途。
->
-> 感谢所有支持过本项目的朋友。
+> 以下截图与功能均为**已冻结的 B 站表层**，仅作历史参考。
 
 ---
 

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://img.shields.io/badge/diveo-Bilibili_Client-00AEEC?style=for-the-badge&logo=bilibili&logoColor=white" alt="diveo"/>
+<img src="https://img.shields.io/badge/diveo-4D_media_shell-2f7f80?style=for-the-badge" alt="diveo"/>
 
 # diveo
 

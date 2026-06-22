@@ -46,11 +46,7 @@
       "typedRoutes": true
     },
     "extra": {
-      "router": {},
-      "eas": {
-        "projectId": "eac4192a-ae80-461c-8fff-6e1a8b777bd1"
-      }
-    },
-    "owner": "jinsha"
+      "router": {}
+    }
   }
 }
