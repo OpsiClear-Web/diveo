@@ -1,3 +1,6 @@
+// Dynamic Expo config. Its one job beyond app.json: make Android cleartext (plain HTTP)
+// traffic depend on the build environment, so a production build can never ship pointing
+// at a localhost/dev HTTP origin.
 const base = require("./app.json");
 
 function isProductionEnv(env = process.env) {
@@ -8,6 +11,13 @@ function isProductionEnv(env = process.env) {
   );
 }
 
+/**
+ * Merge app.json with environment-driven overrides. The load-bearing rule:
+ *   production  -> android.usesCleartextTraffic = false   (HTTPS only; no localhost)
+ *   dev/preview -> keep app.json's value (allows http://127.0.0.1 for local GSAV preview)
+ * This is the in-config half of the "no localhost APK in production" guarantee; the other
+ * half is release.yml's artifact check + getConfiguredGsavWebUrl's production guard.
+ */
 function resolveExpoConfig(env = process.env, incomingConfig = {}) {
   const production = isProductionEnv(env);
   const baseExpo = base.expo ?? {};

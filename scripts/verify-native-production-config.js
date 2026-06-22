@@ -36,6 +36,9 @@ function loadResolvedAppConfig(root, env = process.env) {
   };
 }
 
+// Security gate: reject any production GSAV origin that resolves to a local/private host.
+// This is what stops a release accidentally shipping with a dev URL baked into the APK
+// (127.0.0.1:5191, the Android emulator's 10.0.2.2, link-local, or a LAN box).
 function isLocalHostname(hostname) {
   const normalized = hostname.toLowerCase();
   if (
