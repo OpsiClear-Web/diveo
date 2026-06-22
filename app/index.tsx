@@ -1,23 +1,28 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, Text, Pressable, ScrollView, StyleSheet } from "react-native";
+import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { type ThemeColors, useTheme } from "../utils/theme";
-import { GSAV_ACCENT } from "../utils/gsavBridge";
+import { GSAV_ACCENT, getConfiguredGsavWebUrl } from "../utils/gsavBridge";
 
 // diveo-first home: a browse landing that deep-links into the hosted 4D player
-// (gsav-hosting) by scene id. This is a launcher, NOT a catalog — the real catalog
-// is owned by gsav-hosting and loads here once its origin is live (ADR-0001 / G1).
-// Until then we surface a small curated set of the known local scenes.
-type Scene = { id: string; title: string; subtitle: string };
+// (gsav-hosting) by scene id. This is a launcher, NOT a catalog -- the real
+// catalog is owned by gsav-hosting and loads here once a live API is wired
+// (ADR-0001 / G1). Until then we mirror the known static catalog so the ids,
+// titles, bylines, and posters match the hosted app exactly. Posters resolve
+// against the configured diveo origin; if it is unset the cube icon shows.
+type Scene = { id: string; title: string; author: string; poster: string };
 
-const FEATURED: Scene = { id: "elly", title: "Elly", subtitle: "Featured 4D scene" };
 const SCENES: Scene[] = [
-  { id: "elly", title: "Elly", subtitle: "4D Gaussian scene" },
-  { id: "test", title: "Test Scene", subtitle: "Diagnostics sample" },
+  { id: "elly", title: "Elly Portrait Capture", author: "OpsiClear", poster: "/posters/elly.svg" },
+  { id: "test", title: "Studio Motion Capture", author: "OpsiClear", poster: "/posters/test.svg" },
+  { id: "stage-study", title: "Stage Motion Study", author: "GSAV Lab", poster: "/posters/showcase.svg" },
+  { id: "capture-room", title: "Capture Room Preview", author: "OpsiClear Studio", poster: "/posters/showcase.svg" },
 ];
+const FEATURED: Scene = SCENES[0];
 
 const FONT = {
   regular: "Roboto_400Regular",
@@ -26,12 +31,19 @@ const FONT = {
   black: "Roboto_900Black",
 } as const;
 
+function resolvePoster(origin: string | null, poster: string): string | null {
+  if (!origin) return null;
+  return `${origin.replace(/\/+$/, "")}${poster}`;
+}
+
 function SceneCard({
   scene,
+  posterUri,
   theme,
   onPress,
 }: {
   scene: Scene;
+  posterUri: string | null;
   theme: ThemeColors;
   onPress: () => void;
 }) {
@@ -43,10 +55,13 @@ function SceneCard({
     >
       <View style={[styles.cardThumb, { backgroundColor: theme.placeholder }]}>
         <Ionicons name="cube-outline" size={26} color={GSAV_ACCENT} />
+        {posterUri ? (
+          <Image source={{ uri: posterUri }} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+        ) : null}
       </View>
       <View style={styles.cardInfo}>
         <Text numberOfLines={1} style={[styles.cardTitle, { color: theme.text }]}>{scene.title}</Text>
-        <Text numberOfLines={1} style={[styles.cardSub, { color: theme.textSub }]}>{scene.subtitle}</Text>
+        <Text numberOfLines={1} style={[styles.cardSub, { color: theme.textSub }]}>{scene.author}</Text>
       </View>
     </Pressable>
   );
@@ -56,8 +71,10 @@ export default function HomeScreen() {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
+  const origin = useMemo(() => getConfiguredGsavWebUrl(), []);
 
   const openScene = (id: string) => router.push(`/watch/${id}` as never);
+  const featuredPoster = resolvePoster(origin, FEATURED.poster);
 
   return (
     <View style={[styles.root, { backgroundColor: theme.bg }]}>
@@ -96,17 +113,26 @@ export default function HomeScreen() {
         >
           <View style={[styles.heroThumb, { backgroundColor: theme.placeholder }]}>
             <Ionicons name="cube-outline" size={48} color={GSAV_ACCENT} />
+            {featuredPoster ? (
+              <Image source={{ uri: featuredPoster }} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+            ) : null}
           </View>
           <View style={styles.heroOverlay}>
             <Text numberOfLines={1} style={styles.heroTitle}>{FEATURED.title}</Text>
-            <Text numberOfLines={1} style={styles.heroSub}>{FEATURED.subtitle}</Text>
+            <Text numberOfLines={1} style={styles.heroSub}>{FEATURED.author}</Text>
           </View>
         </Pressable>
 
         <Text style={[styles.sectionTitle, { color: theme.text }]}>Scenes</Text>
         <View style={styles.grid}>
           {SCENES.map((s) => (
-            <SceneCard key={s.id} scene={s} theme={theme} onPress={() => openScene(s.id)} />
+            <SceneCard
+              key={s.id}
+              scene={s}
+              posterUri={resolvePoster(origin, s.poster)}
+              theme={theme}
+              onPress={() => openScene(s.id)}
+            />
           ))}
         </View>
 
