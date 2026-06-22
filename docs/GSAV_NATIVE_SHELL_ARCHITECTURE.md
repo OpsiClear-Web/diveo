@@ -1,48 +1,65 @@
 # diveo Native Shell — Architecture
 
-How the diveo React Native app hosts the GSAV 4DGS web player. This is the single
-end-to-end reference for the shell: ownership boundary, WebView trust model, the
-native↔web bridge, and the release/distribution pipeline.
+How the diveo React Native app delivers the GSAV 4DGS experience. diveo follows
+**"World A"**: the **gsav-hosting** web app is the product and owns ALL user-facing UI
+(home, browse, watch, and the 4DGS player); the React Native app is a thin **native
+client** that wraps it. On the web, the product simply *is* gsav-hosting.
 
 - **GSAV** = the codec / `.gsav` format / wire protocol (technical, stays "GSAV").
 - **diveo** = the product / app (user-facing).
 - Decision history: [`docs/adr/0001-gsav-pivot.md`](adr/0001-gsav-pivot.md).
 - Cross-repo contract: [`GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md`](../GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md).
 
+## Why a WebView at all
+
+The 4DGS player is browser technology — WebGL/WebGPU + Web Workers + WebCodecs,
+shipped as gsav-hosting. React Native's runtime has none of those APIs, so there is no
+native renderer: the only way a phone runs this player is inside a browser engine. The
+native client embeds one via `react-native-webview`. (A from-scratch native renderer
+would mean reimplementing both the splat renderer on expo-gl/WebGPU AND a
+non-WebCodecs/non-WASM decoder — an SDK-scale project, deliberately not taken.)
+
 ## Ownership boundary
 
 ```
-  diveo native shell (this repo)            gsav-hosting (../gsav-hosting)
+  diveo native client (this repo)           gsav-hosting (../gsav-hosting)
   ──────────────────────────────            ──────────────────────────────
-  • WebView host + lifecycle                • the 4DGS web app (catalog, player)
-  • origin allowlist / trust gates          • .gsav decoding & rendering
-  • native↔web bridge (typed messages)      • scene data model, CDN/R2 URLs
+  • WebView host + lifecycle                • THE app: home, browse, watch, player
+  • origin allowlist / trust gate           • .gsav decoding & rendering
+  • Android hardware-back → WebView         • scene catalog, CDN/R2 URLs
   • deep links by scene id                  • account/entitlement (future)
-  • self-updater (Android APK)              • owns ALL catalog/playback logic
+  • self-updater (Android APK)              • owns ALL UI, navigation, playback
 
-  Rule: the shell NEVER owns a catalog. It deep-links scene ids via
-  buildGsavWatchPath(sceneId) — an id passthrough, not a catalog query.
+  Rule: the shell owns NO content UI and NO catalog. It loads the full hosted app
+  ({origin}/ … /watch/:id) and lets gsav-hosting drive everything in-WebView.
 ```
+
+## Platform delivery
+
+| Target | How the player is delivered |
+|---|---|
+| iOS / Android | native client → `react-native-webview` embeds the full gsav-hosting app |
+| Web (`expo start --web`, :8081) | **dev preview only** — a full-screen `<iframe>` of gsav-hosting |
+| Web (production) | **gsav-hosting served directly** is the web product (no RN-web shell ships) |
 
 ## Component map
 
 | File | Role |
 |---|---|
-| `components/GsavWebView.tsx` | the host: WebView config, trust gates, lifecycle, applies bridge effects |
-| `components/GsavScreen.tsx` | shared screen for `/watch/:id` + `/gsav/:id` |
-| `app/watch/[id].tsx`, `app/gsav/[id].tsx` | route re-exports (alias) |
-| `app/gsav-diagnostics.tsx` | diagnostics route |
-| `app/index.tsx` (`GsavHomeEntry`) | home launcher entry → deep-links a scene |
-| `utils/gsavBridge.ts` | **all pure logic**: protocol types, URL/origin helpers, trust gates, version-compat, `reduceBridgeEvent` |
-| `hooks/useCheckUpdate.ts` | in-app APK self-updater (Android) |
-
-Design rule: pure logic lives in `gsavBridge.ts` and is unit-tested; the component is
-a thin shell that wires React Native I/O to those pure functions.
+| `components/GsavWebView.tsx` | native host: trust-gated WebView of the full app, loading/error, hardware-back |
+| `components/GsavWebView.web.tsx` | web preview: full-screen `<iframe>` of the hosted app |
+| `components/GsavScreen.tsx` | shared screen for the `/watch/:id` + `/gsav/:id` deep links |
+| `app/index.tsx` | root — loads gsav-hosting's home (`/`) in the WebView |
+| `app/watch/[id].tsx`, `app/gsav/[id].tsx` | deep-link route re-exports |
+| `app/gsav-diagnostics.tsx` | diagnostics route (loads a hosted diagnostics page) |
+| `utils/gsavBridge.ts` | pure helpers: origin/URL helpers, the navigation trust gate, `buildGsavWatchPath` |
+| `hooks/useCheckUpdate.ts` | in-app APK self-updater (Android), checked silently on launch |
 
 ## WebView trust model
 
-Two independent gates, both fail-closed. An unconfigured/malformed origin renders a
-"diveo not configured" panel instead of loading anything.
+The shell loads the FULL hosted app, so navigation must stay inside the configured
+origin. One fail-closed gate; an unconfigured/malformed origin renders a "diveo not
+configured" panel instead of loading anything.
 
 ```
  configured origin: https://gsav.example   (getConfiguredGsavWebUrl → getOrigin)
@@ -51,56 +68,21 @@ Two independent gates, both fail-closed. An unconfigured/malformed origin render
  │                                                                        │
  │  NAVIGATION GATE  onShouldStartLoadWithRequest                         │
  │    isAllowedGsavNavigation(url, allowedOrigin)                         │
- │      ├─ https://gsav.example/watch/x   → ALLOW (exact origin match)    │
+ │      ├─ https://gsav.example/...       → ALLOW (exact origin match)    │
  │      ├─ https://evil.example/x         → BLOCK → Linking.openURL       │
  │      └─ about: / javascript: / empty   → BLOCK (no origin, fail-closed)│
- │                                                                        │
- │  MESSAGE GATE     onMessage                                            │
- │    isTrustedBridgeOrigin(event.nativeEvent.url's origin, allowedOrigin)│
- │      ├─ from https://gsav.example      → TRUST → reduceBridgeEvent     │
- │      └─ from an embedded foreign frame → DROP (no native effect)       │
  └──────────────────────────────────────────────────────────────────────┘
  * mixedContentMode: "never" in production, "compatibility" only in __DEV__.
 ```
 
-Why two gates: the navigation gate controls what the WebView may *load*; the message
-gate controls which postMessages the native side *trusts*. A page that slips a foreign
-iframe in still cannot drive native commands.
+## Native ↔ web bridge (dormant)
 
-## Native ↔ web bridge
-
-```
- WEB (gsav-hosting)                         NATIVE (diveo shell)
- ─────────────────                          ────────────────────
- window.ReactNativeWebView                  onMessage
-   .postMessage(JSON)        ───────────►   parseBridgeMessage   (JSON + type guard)
-                                            reduceBridgeEvent     (pure → effects)
-                                              ├─ snapshot (updatePlaybackSnapshot)
-                                              ├─ header label
-                                              ├─ error banner (set/clear)
-                                              └─ theme re-sync
- window.__GSAV_NATIVE_BRIDGE__              injectJavaScript(
-   .handleCommand(JSON)      ◄───────────     buildNativeCommandScript(command))
-```
-
-Message types (`GsavBridgeMessage`): `GSAV_BRIDGE_READY`, `GSAV_READY`, `GSAV_ERROR`,
-`GSAV_CAPABILITIES`, `GSAV_PROGRESS`, `GSAV_FRAME`, `GSAV_FIRST_FRAME`,
-`GSAV_PLAYBACK_STATE`, `GSAV_PLAY/PAUSE/ENDED/DESTROY`.
-Commands (`NativeGsavCommand`): `play`, `pause`, `seek`, `loadScene`, `setTheme`,
-`setMuted`, `setFullscreenIntent`, `closeMiniPlayer`.
-
-### Version negotiation
-
-```
- GSAV_BRIDGE_READY { version, minVersion }   (web reports its supported range)
-        │
-        ▼  isBridgeCompatible(web, NATIVE_VERSION, NATIVE_MIN_VERSION)
-   overlap?  web.version >= native.min  AND  native.version >= web.min
-        ├─ yes → proceed
-        └─ no  → show getBridgeMismatchMessage() ("diveo player version mismatch …")
-```
-
-A missing/garbled web version is treated as incompatible (fail-closed).
+World A loads the full hosted app **without** `?embed=native`, so gsav-hosting renders
+its own chrome and the native shell neither sends commands nor consumes bridge
+messages. The typed bridge protocol (`reduceBridgeEvent`, `buildNativeCommandScript`,
+message/version helpers in `gsavBridge.ts`) and its unit tests **remain in the repo but
+are unused by app code** — kept only because they are still test-covered. Removing the
+dead bridge infra is a tracked follow-up (below).
 
 ## Release / distribution pipeline
 
@@ -129,6 +111,16 @@ Defense in depth against shipping a localhost/dev player: (1) `app.config.js` fo
 ## Testing
 
 Pure logic is unit-tested (`utils/*.test.ts`, `scripts/*.test.mjs`, `app.config.test.mjs`).
-`reduceBridgeEvent` covers the message→state wiring without rendering React Native.
-Component-level render tests (react-native-testing-library) are not yet set up — the
-RN render harness under vitest is the remaining test-infra gap.
+Component-level render tests (react-native-testing-library) are not yet set up — the RN
+render harness under vitest is the remaining test-infra gap.
+
+## Follow-ups (World A cleanup)
+
+- **Remove the dead native↔web bridge infra** (`reduceBridgeEvent`, command/version
+  helpers, the `?embed=native` builder) and their tests, now that the shell wraps the
+  full app rather than driving a chrome-less player.
+- **Delete the frozen Bilibili legacy** (video / live / search / downloads / creator
+  screens + their stores, `MiniPlayer` / `LiveMiniPlayer`) — unreachable under World A.
+- **Web production embedding**, if ever wanted in-shell, needs same-origin hosting or
+  gsav-hosting's CSP `frame-ancestors` to include the shell origin. Otherwise the web
+  product is simply gsav-hosting served directly.
