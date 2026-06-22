@@ -18,12 +18,14 @@ import {
   buildNativeCommandScript,
   buildNativeEmbedUrl,
   GSAV_ACCENT,
+  getBridgeMismatchMessage,
   getBridgeStatusLabel,
   getCapabilityLabel,
   getConfiguredGsavWebUrl,
   getOrigin,
   getUnsupportedReason,
   isAllowedGsavNavigation,
+  isBridgeCompatible,
   isTrustedBridgeOrigin,
   type GsavPlaybackSnapshot,
   type NativeGsavCommand,
@@ -102,6 +104,11 @@ export function GsavWebView({ path, title }: GsavWebViewProps) {
       } else {
         setBridgeError(null);
         syncNativeTheme();
+      }
+    } else if (message.type === "GSAV_BRIDGE_READY") {
+      const payload = message.payload as { version?: unknown; minVersion?: unknown };
+      if (!isBridgeCompatible(payload)) {
+        setBridgeError(getBridgeMismatchMessage(payload));
       }
     }
   }

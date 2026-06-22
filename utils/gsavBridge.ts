@@ -226,6 +226,34 @@ function readFiniteNumber(value: unknown) {
   return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
+/**
+ * Bridge compatibility. The native shell supports bridge versions
+ * [GSAV_NATIVE_BRIDGE_MIN_VERSION, GSAV_NATIVE_BRIDGE_VERSION]; the web app reports its
+ * own [minVersion, version] in GSAV_BRIDGE_READY. They are compatible only when the two
+ * supported ranges overlap: web.version >= native.min AND native.version >= web.min.
+ * A missing/garbled web version is treated as incompatible — we will not assume a
+ * contract we can't read.
+ */
+export function isBridgeCompatible(
+  web: { version?: unknown; minVersion?: unknown },
+  nativeVersion: number = GSAV_NATIVE_BRIDGE_VERSION,
+  nativeMin: number = GSAV_NATIVE_BRIDGE_MIN_VERSION,
+): boolean {
+  const webVersion = readFiniteNumber(web.version);
+  if (webVersion === undefined) return false;
+  const webMin = readFiniteNumber(web.minVersion) ?? webVersion;
+  return webVersion >= nativeMin && nativeVersion >= webMin;
+}
+
+/** User-facing message when the native and web bridge version ranges don't overlap. */
+export function getBridgeMismatchMessage(
+  web: { version?: unknown; minVersion?: unknown },
+  nativeVersion: number = GSAV_NATIVE_BRIDGE_VERSION,
+): string {
+  const webVersion = readFiniteNumber(web.version);
+  return `diveo player version mismatch — update the app or the diveo web app (app bridge v${nativeVersion}, web v${webVersion ?? "?"}).`;
+}
+
 export function updatePlaybackSnapshot(
   previous: GsavPlaybackSnapshot,
   message: GsavBridgeMessage,

@@ -5,12 +5,14 @@ import {
   buildNativeEmbedUrl,
   buildGsavWatchPath,
   firstParam,
+  getBridgeMismatchMessage,
   getBridgeStatusLabel,
   getCapabilityLabel,
   getConfiguredGsavWebUrl,
   getOrigin,
   getUnsupportedReason,
   isAllowedGsavNavigation,
+  isBridgeCompatible,
   isGsavShellRoute,
   isTrustedBridgeOrigin,
   parseBridgeMessage,
@@ -386,5 +388,43 @@ describe("updatePlaybackSnapshot remaining branches", () => {
     expect(
       updatePlaybackSnapshot({ state: "playing" }, { type: "GSAV_ROUTE_CHANGE", payload: { path: "/watch/x", search: "", embed: true } }),
     ).toMatchObject({ state: "playing", lastEvent: "GSAV_ROUTE_CHANGE" });
+  });
+});
+
+describe("isBridgeCompatible (version range overlap)", () => {
+  it("accepts overlapping version ranges", () => {
+    expect(isBridgeCompatible({ version: 1, minVersion: 1 }, 1, 1)).toBe(true);
+    expect(isBridgeCompatible({ version: 2, minVersion: 1 }, 1, 1)).toBe(true); // native v1 within web [1,2]
+    expect(isBridgeCompatible({ version: 3, minVersion: 1 }, 2, 1)).toBe(true); // web v3 within native [1,2]
+  });
+
+  it("rejects when web requires a newer native than this build offers", () => {
+    expect(isBridgeCompatible({ version: 2, minVersion: 2 }, 1, 1)).toBe(false);
+  });
+
+  it("rejects when native requires a newer web than reported", () => {
+    expect(isBridgeCompatible({ version: 1, minVersion: 1 }, 2, 2)).toBe(false);
+  });
+
+  it("treats a missing or garbled web version as incompatible", () => {
+    expect(isBridgeCompatible({}, 1, 1)).toBe(false);
+    expect(isBridgeCompatible({ version: "x" }, 1, 1)).toBe(false);
+  });
+
+  it("defaults web minVersion to its version when absent", () => {
+    expect(isBridgeCompatible({ version: 1 }, 1, 1)).toBe(true);
+  });
+});
+
+describe("getBridgeMismatchMessage", () => {
+  it("names diveo and includes both versions for debugging", () => {
+    const msg = getBridgeMismatchMessage({ version: 2 }, 1);
+    expect(msg).toContain("diveo");
+    expect(msg).toContain("v1");
+    expect(msg).toContain("v2");
+  });
+
+  it("shows '?' when the web version is unreadable", () => {
+    expect(getBridgeMismatchMessage({}, 1)).toContain("web v?");
   });
 });
