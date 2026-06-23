@@ -12,6 +12,7 @@ import { isGsavShellRoute } from '../utils/gsavBridge';
 import { useTheme } from '../utils/theme';
 import { useCheckUpdate } from '../hooks/useCheckUpdate';
 import { useGsavAuthStore } from '../store/gsavAuthStore';
+import { useSavedScenesStore } from '../store/savedScenesStore';
 import { MiniPlayer } from '../components/MiniPlayer';
 import { LiveMiniPlayer } from '../components/LiveMiniPlayer';
 import * as Sentry from '@sentry/react-native';
@@ -38,6 +39,7 @@ function RootLayout() {
   const restoreSettings = useSettingsStore(s => s.restore);
   const darkMode = useSettingsStore(s => s.darkMode);
   const { checkUpdate } = useCheckUpdate();
+  const authUserId = useGsavAuthStore(s => s.user?.id);
   const pathname = usePathname();
   const gsavShellActive = isGsavShellRoute(pathname);
 
@@ -62,6 +64,10 @@ function RootLayout() {
       void checkUpdate({ silent: true });
     }
   }, []);
+
+  useEffect(() => {
+    void useSavedScenesStore.getState().load();
+  }, [authUserId]);
 
   if (!fontsLoaded) return null;
 

@@ -56,6 +56,14 @@ export default function HomeScreen() {
             <Ionicons name="search" size={20} color={theme.text} />
           </Pressable>
           <Pressable
+            onPress={() => router.push("/library" as never)}
+            hitSlop={8}
+            style={styles.iconBtn}
+            accessibilityLabel="Library"
+          >
+            <Ionicons name="bookmark-outline" size={19} color={theme.text} />
+          </Pressable>
+          <Pressable
             onPress={() => router.push("/gsav-diagnostics" as never)}
             hitSlop={8}
             style={styles.iconBtn}

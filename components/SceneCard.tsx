@@ -6,6 +6,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../utils/theme";
 import { GSAV_ACCENT } from "../utils/gsavBridge";
 import type { GsavContentItem } from "../services/gsav";
+import { useGsavAuthStore } from "../store/gsavAuthStore";
+import { useSavedScenesStore } from "../store/savedScenesStore";
 
 // Shared 16:9 scene card for the GSAV browse surfaces (feed, search, creator).
 // Self-themed; renders the real poster over a cube-icon fallback.
@@ -19,6 +21,10 @@ export function SceneCard({
   onAuthorPress?: () => void;
 }) {
   const theme = useTheme();
+  const userId = useGsavAuthStore((s) => s.user?.id);
+  const saved = useSavedScenesStore((s) => (item.backendId ? s.savedIds.has(item.backendId) : false));
+  const toggleSave = useSavedScenesStore((s) => s.toggle);
+  const showSave = Boolean(userId && item.backendId);
   return (
     <Pressable
       style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}
@@ -29,6 +35,16 @@ export function SceneCard({
         <Ionicons name="cube-outline" size={26} color={GSAV_ACCENT} />
         {item.posterUrl ? (
           <Image source={{ uri: item.posterUrl }} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+        ) : null}
+        {showSave ? (
+          <Pressable
+            style={styles.saveBtn}
+            onPress={() => item.backendId && toggleSave(item.backendId)}
+            hitSlop={6}
+            accessibilityLabel={saved ? "Remove from library" : "Save to library"}
+          >
+            <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={15} color={saved ? GSAV_ACCENT : "#ededed"} />
+          </Pressable>
         ) : null}
       </View>
       <View style={styles.info}>
@@ -54,6 +70,17 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   thumb: { aspectRatio: 16 / 9, alignItems: "center", justifyContent: "center" },
+  saveBtn: {
+    position: "absolute",
+    top: 6,
+    right: 6,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "rgba(5,5,5,0.5)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
   info: { padding: 8 },
   title: { fontFamily: "Roboto_500Medium", fontSize: 13 },
   sub: { fontFamily: "Roboto_400Regular", fontSize: 11, marginTop: 2 },

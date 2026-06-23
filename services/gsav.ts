@@ -25,6 +25,7 @@ export type GsavDanmaku = {
 
 export type GsavContentItem = {
   id: string;
+  backendId?: string; // Supabase video UUID — the saved_videos/video_reactions target
   title: string;
   author: string;
   creatorId?: string;
@@ -113,6 +114,7 @@ export function normalizeContentItem(raw: unknown): GsavContentItem | null {
     : [];
   return {
     id,
+    backendId: str(raw.backendId),
     title: str(raw.title) ?? "Untitled scene",
     author: str(raw.author) ?? "Unknown",
     creatorId: str(raw.creatorId),

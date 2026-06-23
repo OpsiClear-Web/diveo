@@ -11,6 +11,7 @@ describe("normalizeContentItem", () => {
   it("maps a full catalog video", () => {
     const item = normalizeContentItem({
       id: "elly",
+      backendId: "vid-uuid",
       title: "Elly Portrait Capture",
       author: "OpsiClear",
       creatorId: "opsiclear",
@@ -24,6 +25,7 @@ describe("normalizeContentItem", () => {
     });
     expect(item).toMatchObject({
       id: "elly",
+      backendId: "vid-uuid",
       title: "Elly Portrait Capture",
       author: "OpsiClear",
       gsavUrl: "https://cdn/processed/elly.gsav",
