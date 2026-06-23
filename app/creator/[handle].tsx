@@ -6,9 +6,10 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { useTheme } from "../../utils/theme";
-import { GSAV_ACCENT, firstParam } from "../../utils/gsavBridge";
+import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST, firstParam } from "../../utils/gsavBridge";
 import { SceneCard } from "../../components/SceneCard";
 import { useGsavCreator } from "../../hooks/useGsavCreator";
+import { useGsavFollow } from "../../hooks/useGsavFollow";
 
 // World B: creator profile, adapted from the original Bilibili app/creator/[mid].tsx
 // (hero + avatar + bio + stats + scene list) to gsav-hosting's creators/channel data.
@@ -30,6 +31,7 @@ export default function CreatorScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const { creator, videos, loading, error } = useGsavCreator(handle);
+  const follow = useGsavFollow(creator?.backendId, creator?.followerCount);
 
   const name = creator?.displayName ?? handle;
   const sceneCount = creator?.publishedVideoCount ?? videos.length;
@@ -56,7 +58,7 @@ export default function CreatorScreen() {
             ) : null}
             <View style={styles.stats}>
               <View style={styles.statItem}>
-                <Text style={[styles.statNum, { color: theme.text }]}>{formatCount(creator?.followerCount)}</Text>
+                <Text style={[styles.statNum, { color: theme.text }]}>{formatCount(follow.followerCount)}</Text>
                 <Text style={[styles.statLabel, { color: theme.textSub }]}>Followers</Text>
               </View>
               <View style={[styles.statDiv, { backgroundColor: theme.border }]} />
@@ -65,6 +67,24 @@ export default function CreatorScreen() {
                 <Text style={[styles.statLabel, { color: theme.textSub }]}>Scenes</Text>
               </View>
             </View>
+            {creator ? (
+              <Pressable
+                style={[styles.followBtn, follow.following ? styles.followingBtn : styles.followActiveBtn]}
+                onPress={() => {
+                  if (!follow.canFollow) {
+                    router.push("/login" as never);
+                    return;
+                  }
+                  follow.toggle();
+                }}
+                disabled={follow.busy}
+                accessibilityLabel={follow.following ? "Unfollow" : "Follow"}
+              >
+                <Text style={[styles.followText, { color: follow.following ? theme.text : GSAV_ACCENT_CONTRAST }]}>
+                  {follow.following ? "Following" : "Follow"}
+                </Text>
+              </Pressable>
+            ) : null}
           </View>
         </View>
 
@@ -127,6 +147,18 @@ const styles = StyleSheet.create({
   statNum: { fontFamily: FONT.bold, fontSize: 18 },
   statLabel: { fontFamily: FONT.regular, fontSize: 12, marginTop: 2 },
   statDiv: { width: StyleSheet.hairlineWidth, height: 28 },
+  followBtn: {
+    marginTop: 14,
+    minWidth: 130,
+    height: 34,
+    borderRadius: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 18,
+  },
+  followActiveBtn: { backgroundColor: GSAV_ACCENT },
+  followingBtn: { borderWidth: StyleSheet.hairlineWidth, borderColor: GSAV_ACCENT },
+  followText: { fontFamily: FONT.bold, fontSize: 14 },
   body: { padding: 16, gap: 12 },
   section: { fontFamily: FONT.bold, fontSize: 16 },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },

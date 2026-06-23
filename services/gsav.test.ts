@@ -67,7 +67,8 @@ describe("normalizeDanmaku", () => {
 
 describe("normalizeCreator", () => {
   it("maps a creator and falls back handle→id", () => {
-    expect(normalizeCreator({ id: "c1", displayName: "Lab" })).toMatchObject({
+    expect(normalizeCreator({ id: "c1", backendId: "ch-uuid", displayName: "Lab" })).toMatchObject({
+      backendId: "ch-uuid",
       handle: "c1",
       displayName: "Lab",
       avatarUrl: "",

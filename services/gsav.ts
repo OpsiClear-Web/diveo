@@ -43,6 +43,7 @@ export type GsavContentItem = {
 
 export type GsavCreator = {
   id: string;
+  backendId?: string; // Supabase channel UUID — the follows.channel_id target
   handle: string;
   displayName: string;
   bio?: string;
@@ -136,6 +137,7 @@ export function normalizeCreator(raw: unknown): GsavCreator | null {
   if (handle === undefined || displayName === undefined) return null;
   return {
     id: str(raw.id) ?? handle,
+    backendId: str(raw.backendId),
     handle,
     displayName,
     bio: str(raw.bio),
