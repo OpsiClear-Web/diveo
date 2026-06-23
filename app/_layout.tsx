@@ -11,6 +11,7 @@ import { initMiniExclusion } from '../store/miniExclusion';
 import { isGsavShellRoute } from '../utils/gsavBridge';
 import { useTheme } from '../utils/theme';
 import { useCheckUpdate } from '../hooks/useCheckUpdate';
+import { useGsavAuthStore } from '../store/gsavAuthStore';
 import { MiniPlayer } from '../components/MiniPlayer';
 import { LiveMiniPlayer } from '../components/LiveMiniPlayer';
 import * as Sentry from '@sentry/react-native';
@@ -54,6 +55,7 @@ function RootLayout() {
     restoreSettings();
     usePlayProgressStore.getState().hydrate();
     initMiniExclusion();
+    useGsavAuthStore.getState().init();
     // World A: the native client self-updates (APK). Check once on launch and
     // only prompt if a newer build exists; settings still has a manual check.
     if (Platform.OS === 'android') {

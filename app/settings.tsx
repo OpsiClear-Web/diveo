@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Alert } fr
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useAuthStore } from '../store/authStore';
+import { useGsavAuthStore } from '../store/gsavAuthStore';
 import { useSettingsStore } from '../store/settingsStore';
 import { useTheme } from '../utils/theme';
 import { useCheckUpdate } from '../hooks/useCheckUpdate';
@@ -12,7 +12,8 @@ import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST } from '../utils/gsavBridge';
 
 export default function SettingsScreen() {
   const router = useRouter();
-  const { isLoggedIn, logout } = useAuthStore();
+  const user = useGsavAuthStore((s) => s.user);
+  const signOut = useGsavAuthStore((s) => s.signOut);
   const { darkMode, setDarkMode, trafficSaving, setTrafficSaving } = useSettingsStore();
   const theme = useTheme();
   const { currentVersion, isChecking, downloadProgress, checkUpdate } = useCheckUpdate();
@@ -48,8 +49,7 @@ export default function SettingsScreen() {
   };
 
   const handleLogout = async () => {
-    await logout();
-    router.back();
+    await signOut();
   };
 
   return (
@@ -60,6 +60,22 @@ export default function SettingsScreen() {
         </TouchableOpacity>
         <Text style={[styles.topTitle, { color: theme.text }]}>Settings</Text>
         <View style={styles.spacer} />
+      </View>
+
+      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+        <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Account</Text>
+        {user ? (
+          <View style={styles.versionRow}>
+            <Text style={[styles.versionLabel, { color: theme.text }]} numberOfLines={1}>{user.email}</Text>
+            <TouchableOpacity onPress={handleLogout} activeOpacity={0.7}>
+              <Text style={[styles.updateBtnText, { color: theme.danger }]}>Log out</Text>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <TouchableOpacity style={styles.updateBtn} onPress={() => router.push('/login' as never)} activeOpacity={0.7}>
+            <Text style={styles.updateBtnText}>Log in</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
@@ -159,11 +175,6 @@ export default function SettingsScreen() {
         </View>
       </View>
 
-      {isLoggedIn && (
-        <TouchableOpacity style={[styles.logoutBtn, { borderColor: theme.danger }]} onPress={handleLogout} activeOpacity={0.8}>
-          <Text style={[styles.logoutText, { color: theme.danger }]}>Log out</Text>
-        </TouchableOpacity>
-      )}
     </SafeAreaView>
   );
 }
@@ -232,12 +243,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   clearBtnText: { color: GSAV_ACCENT_CONTRAST, fontSize: 13, fontFamily: 'Roboto_700Bold' },
-  logoutBtn: {
-    margin: 24,
-    paddingVertical: 12,
-    borderRadius: 8,
-    borderWidth: 1,
-    alignItems: 'center',
-  },
-  logoutText: { fontSize: 15, fontFamily: 'Roboto_700Bold' },
 });
