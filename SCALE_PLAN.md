@@ -146,10 +146,16 @@ component over `@opsiclear/gsav-client`** (Plan B), not a separate copy.
 > and its `socialApi.ts` re-exports the write ops (save/like/follow/comment) from
 > `@opsiclear/gsav-client` instead of defining them — verified by gsav-hosting's own
 > `type:check` + full vitest (106 tests) + `vite build`. The social write logic is now
-> single-sourced across BOTH apps. **Remaining:** (3b) unify the `Video`/`GsavContentItem`
-> type so gsav-hosting's catalog client (`api-catalog`) + the Video-coupled reads
-> (`getVideoSocialState`/`resolveSocialRefs`) also move into the package; (4) extract
-> `@opsiclear/gsav-bridge` (the protocol incl. `setSession`); (5) cross-repo CI.
+> single-sourced across BOTH apps.
+>
+> **Phase 4 DONE (verified both apps):** the session-auth bridge contract
+> (`GSAV_SET_SESSION`/`CLEAR_SESSION`/`AUTH_READY` + version + payload + build/parse
+> helpers) is extracted to `@opsiclear/gsav-bridge`, vendored into both repos; diveo's
+> `utils/gsavBridge` + gsav-hosting's `authBridge` consume it (diveo tsc/lint/116 tests
+> + bundle; gsav-hosting type:check/106 tests/build). **Remaining:** (3b) unify the
+> `Video`/`GsavContentItem` type so gsav-hosting's catalog client (`api-catalog`) + the
+> Video-coupled reads (`getVideoSocialState`/`resolveSocialRefs`) also move into the
+> package; (5) cross-repo CI.
 
 **Goal.** One shared SDK for data + auth + social, consumed by **both**
 gsav-hosting and diveo — replacing the mirrors (diveo's `services/gsav.ts` +
