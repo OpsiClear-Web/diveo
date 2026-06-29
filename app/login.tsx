@@ -4,9 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useTheme } from "../utils/theme";
+import { useTheme, radius } from "../utils/theme";
 import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST } from "../utils/gsavBridge";
 import { useGsavAuthStore } from "../store/gsavAuthStore";
+import { Brand } from "../components/Brand";
 
 // World B: native auth (Supabase) for diveo social. Email/password sign in or
 // sign up against gsav-hosting's Supabase project; on success returns to caller.
@@ -47,7 +48,7 @@ export default function LoginScreen() {
       </View>
 
       <View style={styles.body}>
-        <Text style={[styles.brand, { color: GSAV_ACCENT }]}>diveo</Text>
+        <View style={styles.brandWrap}><Brand logoSize={34} fontSize={26} /></View>
         <TextInput
           style={[styles.input, { backgroundColor: theme.inputBg, color: theme.text }]}
           value={email}
@@ -111,10 +112,10 @@ const styles = StyleSheet.create({
   back: { width: 32, height: 32, alignItems: "center", justifyContent: "center" },
   topTitle: { flex: 1, textAlign: "center", fontFamily: FONT.bold, fontSize: 16 },
   body: { flex: 1, padding: 24, gap: 12, justifyContent: "center" },
-  brand: { fontFamily: "Roboto_900Black", fontSize: 28, textAlign: "center", marginBottom: 12, letterSpacing: 0.2 },
-  input: { height: 46, borderRadius: 8, paddingHorizontal: 14, fontFamily: FONT.regular, fontSize: 15 },
+  brandWrap: { alignItems: "center", marginBottom: 12 },
+  input: { height: 46, borderRadius: radius.md, paddingHorizontal: 14, fontFamily: FONT.regular, fontSize: 15 },
   error: { fontFamily: FONT.regular, fontSize: 13 },
-  cta: { height: 46, borderRadius: 8, backgroundColor: GSAV_ACCENT, alignItems: "center", justifyContent: "center", marginTop: 4 },
+  cta: { height: 46, borderRadius: radius.md, backgroundColor: GSAV_ACCENT, alignItems: "center", justifyContent: "center", marginTop: 4 },
   ctaBusy: { opacity: 0.6 },
   ctaText: { color: GSAV_ACCENT_CONTRAST, fontFamily: FONT.bold, fontSize: 15 },
   toggle: { textAlign: "center", fontFamily: FONT.medium, fontSize: 13, marginTop: 8 },

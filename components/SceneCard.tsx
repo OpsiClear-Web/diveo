@@ -1,13 +1,25 @@
 import React from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable, StyleSheet, Share } from "react-native";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useTheme } from "../utils/theme";
-import { GSAV_ACCENT } from "../utils/gsavBridge";
+import { useTheme, radius } from "../utils/theme";
+import { GSAV_ACCENT, getConfiguredGsavWebUrl, buildGsavWatchPath } from "../utils/gsavBridge";
 import type { GsavContentItem } from "../services/gsav";
 import { useGsavAuthStore } from "../store/gsavAuthStore";
 import { useSavedScenesStore } from "../store/savedScenesStore";
+
+// Share a scene via the system share sheet, using its public web /watch URL.
+async function shareScene(item: GsavContentItem) {
+  const base = getConfiguredGsavWebUrl();
+  if (!base) return;
+  const url = `${base.replace(/\/+$/, "")}${buildGsavWatchPath(item.id)}`;
+  try {
+    await Share.share({ message: `${item.title}\n${url}`, url });
+  } catch {
+    // dismissed or unavailable — no-op
+  }
+}
 
 // Shared 16:9 scene card for the GSAV browse surfaces (feed, search, creator).
 // Self-themed; renders the real poster over a cube-icon fallback.
@@ -27,8 +39,11 @@ export function SceneCard({
   const showSave = Boolean(userId && item.backendId);
   return (
     <Pressable
-      style={[styles.card, { backgroundColor: theme.card, borderColor: theme.border }]}
+      style={[styles.card, { backgroundColor: theme.card }]}
       onPress={onPress}
+      onLongPress={() => {
+        void shareScene(item);
+      }}
       accessibilityLabel={`Open ${item.title}`}
     >
       <View style={[styles.thumb, { backgroundColor: theme.placeholder }]}>
@@ -65,8 +80,7 @@ const styles = StyleSheet.create({
   card: {
     width: "47.5%",
     flexGrow: 1,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.md,
     overflow: "hidden",
   },
   thumb: { aspectRatio: 16 / 9, alignItems: "center", justifyContent: "center" },
@@ -76,7 +90,7 @@ const styles = StyleSheet.create({
     right: 6,
     width: 28,
     height: 28,
-    borderRadius: 14,
+    borderRadius: radius.pill,
     backgroundColor: "rgba(5,5,5,0.5)",
     alignItems: "center",
     justifyContent: "center",

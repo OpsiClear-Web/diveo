@@ -20,8 +20,11 @@ import {
   getOrigin,
   isAllowedGsavNavigation,
   isAuthReadyMessage,
+  parseBridgeMessage,
 } from "../utils/gsavBridge";
 import { useGsavAuthStore } from "../store/gsavAuthStore";
+import { useGsavProgressStore } from "../store/gsavProgressStore";
+import { useSettingsStore } from "../store/settingsStore";
 import { useTheme } from "../utils/theme";
 
 type GsavWebViewProps = {
@@ -51,11 +54,20 @@ export function GsavWebView({ path }: GsavWebViewProps) {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [canGoBack, setCanGoBack] = useState(false);
-  const uri = useMemo(() => (gsavWebUrl ? buildAppUrl(path, gsavWebUrl) : ""), [gsavWebUrl, path]);
+  const trafficSaving = useSettingsStore((s) => s.trafficSaving);
+  // Data-saver: hint the hosted app via ?dataSaver=1 (Explore skips autoplay).
+  const uri = useMemo(() => {
+    if (!gsavWebUrl) return "";
+    const base = buildAppUrl(path, gsavWebUrl);
+    return trafficSaving ? `${base}${base.includes("?") ? "&" : "?"}dataSaver=1` : base;
+  }, [gsavWebUrl, path, trafficSaving]);
   // Empty when the build has no URL OR the configured URL is malformed; either way
   // the WebView is not rendered and the "not configured" panel shows instead.
   const allowedOrigin = useMemo(() => (gsavWebUrl ? getOrigin(gsavWebUrl) : ""), [gsavWebUrl]);
   const session = useGsavAuthStore((s) => s.session);
+  const saveProgress = useGsavProgressStore((s) => s.save);
+  const clearProgress = useGsavProgressStore((s) => s.clear);
+  const lastProgressSaveRef = useRef(0);
 
   // Android hardware-back walks the WebView's own history before letting the OS
   // pop/exit. iOS relies on gsav-hosting's in-page navigation (it owns chrome).
@@ -93,6 +105,37 @@ export function GsavWebView({ path }: GsavWebViewProps) {
     applySession();
   }, [applySession]);
 
+  // Capture playback position from the bridge so /watch can resume the scene.
+  // GSAV_FRAME is high-frequency (throttled to ~4s); GSAV_PLAYBACK_STATE
+  // (play/pause/seek) saves promptly; GSAV_ENDED clears the record (finished).
+  const captureProgress = useCallback(
+    (data: string) => {
+      const message = parseBridgeMessage(data);
+      if (!message) return;
+      const payload = (message.payload ?? {}) as {
+        videoId?: unknown;
+        currentTime?: unknown;
+        duration?: unknown;
+      };
+      const videoId = typeof payload.videoId === "string" ? payload.videoId : undefined;
+      if (!videoId) return;
+      if (message.type === "GSAV_ENDED") {
+        clearProgress(videoId);
+        return;
+      }
+      if (message.type === "GSAV_FRAME" || message.type === "GSAV_PLAYBACK_STATE") {
+        const time = typeof payload.currentTime === "number" ? payload.currentTime : undefined;
+        const duration = typeof payload.duration === "number" ? payload.duration : undefined;
+        if (time === undefined || duration === undefined) return;
+        const now = Date.now();
+        if (message.type === "GSAV_FRAME" && now - lastProgressSaveRef.current < 4000) return;
+        lastProgressSaveRef.current = now;
+        saveProgress(videoId, time, duration);
+      }
+    },
+    [saveProgress, clearProgress],
+  );
+
   if (!allowedOrigin) {
     return (
       <SafeAreaView style={[styles.safe, styles.center, { backgroundColor: theme.bg }]}>
@@ -122,7 +165,12 @@ export function GsavWebView({ path }: GsavWebViewProps) {
           mixedContentMode={Platform.OS === "android" ? (__DEV__ ? "compatibility" : "never") : undefined}
           onNavigationStateChange={(navState) => setCanGoBack(navState.canGoBack)}
           onMessage={(event) => {
-            if (isAuthReadyMessage(event.nativeEvent.data)) applySession();
+            const data = event.nativeEvent.data;
+            if (isAuthReadyMessage(data)) {
+              applySession();
+              return;
+            }
+            captureProgress(data);
           }}
           onShouldStartLoadWithRequest={(request) => {
             if (isAllowedGsavNavigation(request.url, allowedOrigin)) return true;

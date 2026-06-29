@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useGsavAuthStore } from '../store/gsavAuthStore';
 import { useSettingsStore } from '../store/settingsStore';
-import { useTheme } from '../utils/theme';
+import { useTheme, radius } from '../utils/theme';
 import { useCheckUpdate } from '../hooks/useCheckUpdate';
 import { getImageCacheSize, clearImageCache, formatBytes } from '../utils/cache';
 import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST } from '../utils/gsavBridge';
@@ -62,7 +62,7 @@ export default function SettingsScreen() {
         <View style={styles.spacer} />
       </View>
 
-      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Account</Text>
         {user ? (
           <View style={styles.versionRow}>
@@ -78,7 +78,7 @@ export default function SettingsScreen() {
         )}
       </View>
 
-      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Version</Text>
         <View style={styles.versionRow}>
           <Text style={[styles.versionLabel, { color: theme.text }]}>Current version</Text>
@@ -86,7 +86,7 @@ export default function SettingsScreen() {
         </View>
       </View>
 
-      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Updates</Text>
         <TouchableOpacity
           style={styles.updateBtn}
@@ -107,18 +107,18 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Appearance</Text>
         <View style={styles.optionRow}>
           <TouchableOpacity
-            style={[styles.option, { backgroundColor: theme.inputBg }, !darkMode && styles.optionActive]}
+            style={[styles.option, { borderColor: theme.border }, !darkMode && styles.optionActive]}
             onPress={() => setDarkMode(false)}
             activeOpacity={0.7}
           >
             <Text style={[styles.optionText, { color: theme.text }, !darkMode && styles.optionTextActive]}>Light</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.option, { backgroundColor: theme.inputBg }, darkMode && styles.optionActive]}
+            style={[styles.option, { borderColor: theme.border }, darkMode && styles.optionActive]}
             onPress={() => setDarkMode(true)}
             activeOpacity={0.7}
           >
@@ -127,18 +127,18 @@ export default function SettingsScreen() {
         </View>
       </View>
 
-      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Data</Text>
         <View style={styles.optionRow}>
           <TouchableOpacity
-            style={[styles.option, { backgroundColor: theme.inputBg }, !trafficSaving && styles.optionActive]}
+            style={[styles.option, { borderColor: theme.border }, !trafficSaving && styles.optionActive]}
             onPress={() => setTrafficSaving(false)}
             activeOpacity={0.7}
           >
             <Text style={[styles.optionText, { color: theme.text }, !trafficSaving && styles.optionTextActive]}>Standard</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.option, { backgroundColor: theme.inputBg }, trafficSaving && styles.optionActive]}
+            style={[styles.option, { borderColor: theme.border }, trafficSaving && styles.optionActive]}
             onPress={() => setTrafficSaving(true)}
             activeOpacity={0.7}
           >
@@ -147,12 +147,12 @@ export default function SettingsScreen() {
         </View>
         {trafficSaving && (
           <Text style={[styles.hint, { color: theme.textSub }]}>
-            Lower-res thumbnails · no autoplay on home · 360p default
+            No autoplay in Explore · static posters · lighter data use
           </Text>
         )}
       </View>
 
-      <View style={[styles.section, { backgroundColor: theme.card, borderColor: theme.border }]}>
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Storage</Text>
         <View style={styles.cacheRow}>
           <View>
@@ -200,17 +200,17 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 16,
     paddingVertical: 14,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   sectionLabel: { fontSize: 13, marginBottom: 10, fontFamily: 'Roboto_500Medium' },
   optionRow: { flexDirection: 'row', gap: 10 },
   option: {
     paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 8,
+    paddingVertical: 6,
+    borderRadius: radius.md,
+    borderWidth: StyleSheet.hairlineWidth,
+    backgroundColor: "transparent",
   },
-  optionActive: { backgroundColor: GSAV_ACCENT },
+  optionActive: { backgroundColor: GSAV_ACCENT, borderColor: GSAV_ACCENT },
   optionText: { fontSize: 13, fontFamily: 'Roboto_500Medium' },
   optionTextActive: { color: GSAV_ACCENT_CONTRAST, fontFamily: 'Roboto_700Bold' },
   hint: { fontSize: 12, marginTop: 8, fontFamily: 'Roboto_400Regular' },
@@ -238,7 +238,7 @@ const styles = StyleSheet.create({
     backgroundColor: GSAV_ACCENT,
     paddingHorizontal: 14,
     paddingVertical: 6,
-    borderRadius: 8,
+    borderRadius: radius.md,
     minWidth: 80,
     alignItems: 'center',
   },

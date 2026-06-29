@@ -13,10 +13,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-import { useTheme } from "../utils/theme";
+import { useTheme, radius } from "../utils/theme";
 import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST } from "../utils/gsavBridge";
 import { useGsavFeed } from "../hooks/useGsavFeed";
 import { SceneCard } from "../components/SceneCard";
+import { Brand } from "../components/Brand";
+import { ContinueWatchingPill } from "../components/ContinueWatchingPill";
 
 // World B: the native home is a diveo-content feed read live from gsav-hosting's
 // catalog (services/gsav -> useGsavFeed). Tapping a scene opens the GSAV player
@@ -32,7 +34,8 @@ export default function HomeScreen() {
   const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { items, loading, refreshing, error, reload, refresh } = useGsavFeed();
+  const { items, loading, refreshing, loadingMore, hasMore, error, reload, refresh, loadMore } =
+    useGsavFeed();
 
   const openScene = (id: string) => router.push(`/watch/${id}` as never);
   const featured = items[0];
@@ -45,8 +48,16 @@ export default function HomeScreen() {
           { paddingTop: insets.top + 8, backgroundColor: theme.card, borderBottomColor: theme.border },
         ]}
       >
-        <Text style={[styles.brand, { color: GSAV_ACCENT }]}>diveo</Text>
+        <Brand />
         <View style={styles.topNavActions}>
+          <Pressable
+            onPress={() => router.push("/explore" as never)}
+            hitSlop={8}
+            style={styles.iconBtn}
+            accessibilityLabel="Explore"
+          >
+            <Ionicons name="play-circle-outline" size={22} color={theme.text} />
+          </Pressable>
           <Pressable
             onPress={() => router.push("/search" as never)}
             hitSlop={8}
@@ -102,10 +113,18 @@ export default function HomeScreen() {
         <ScrollView
           contentContainerStyle={[styles.scroll, { paddingBottom: insets.bottom + 24 }]}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={refresh} tintColor={GSAV_ACCENT} />}
+          onScroll={({ nativeEvent }) => {
+            const distanceFromBottom =
+              nativeEvent.contentSize.height -
+              nativeEvent.layoutMeasurement.height -
+              nativeEvent.contentOffset.y;
+            if (distanceFromBottom < 400 && hasMore && !loadingMore) loadMore();
+          }}
+          scrollEventThrottle={200}
         >
           {featured ? (
             <Pressable
-              style={[styles.hero, { backgroundColor: theme.card, borderColor: theme.border }]}
+              style={[styles.hero, { backgroundColor: theme.card }]}
               onPress={() => openScene(featured.id)}
               accessibilityLabel={`Play ${featured.title}`}
             >
@@ -116,8 +135,8 @@ export default function HomeScreen() {
                 ) : null}
               </View>
               <View style={styles.heroOverlay}>
-                <Text numberOfLines={1} style={styles.heroTitle}>{featured.title}</Text>
-                <Text numberOfLines={1} style={styles.heroSub}>{featured.author}</Text>
+                <Text numberOfLines={1} style={[styles.heroTitle, { color: theme.text }]}>{featured.title}</Text>
+                <Text numberOfLines={1} style={[styles.heroSub, { color: theme.textSub }]}>{featured.author}</Text>
               </View>
             </Pressable>
           ) : null}
@@ -133,8 +152,11 @@ export default function HomeScreen() {
               />
             ))}
           </View>
+          {loadingMore && <ActivityIndicator color={GSAV_ACCENT} style={styles.feedFooter} />}
         </ScrollView>
       )}
+
+      <ContinueWatchingPill items={items} bottomOffset={insets.bottom + 16} />
     </View>
   );
 }
@@ -152,7 +174,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 16,
     backgroundColor: GSAV_ACCENT,
-    borderRadius: 8,
+    borderRadius: radius.md,
   },
   retryText: { color: GSAV_ACCENT_CONTRAST, fontFamily: FONT.bold, fontSize: 14 },
   topNav: {
@@ -163,19 +185,18 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  brand: { fontFamily: FONT.black, fontSize: 22, letterSpacing: 0.2 },
   topNavActions: { flexDirection: "row", alignItems: "center", gap: 6 },
-  iconBtn: { width: 34, height: 34, borderRadius: 17, alignItems: "center", justifyContent: "center" },
+  iconBtn: { width: 34, height: 34, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
   scroll: { padding: 16, gap: 16 },
   hero: {
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.md,
     overflow: "hidden",
   },
   heroThumb: { aspectRatio: 16 / 9, alignItems: "center", justifyContent: "center" },
   heroOverlay: { padding: 14 },
-  heroTitle: { fontFamily: FONT.bold, fontSize: 18, color: "#ededed" },
-  heroSub: { fontFamily: FONT.regular, fontSize: 13, color: "#a2a2a2", marginTop: 2 },
+  heroTitle: { fontFamily: FONT.bold, fontSize: 18 },
+  heroSub: { fontFamily: FONT.regular, fontSize: 13, marginTop: 2 },
   sectionTitle: { fontFamily: FONT.bold, fontSize: 16 },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
+  feedFooter: { marginTop: 16 },
 });

@@ -14,7 +14,6 @@ const WEB_SHIMS = {
   '@dr.pogodin/react-native-static-server': 'shims/react-native-static-server.web.ts',
   'expo-network':                           'shims/expo-network.web.ts',
   'expo-intent-launcher':                   'shims/expo-intent-launcher.web.ts',
-  'react-native-video':                     'shims/react-native-video.web.tsx',
   'expo-file-system':                       'shims/expo-file-system.web.ts',
   'expo-file-system/legacy':                'shims/expo-file-system.web.ts',
   'expo-clipboard':                         'shims/expo-clipboard.web.ts',
