@@ -9,8 +9,10 @@ from drifting. Apply these to the real gsav-hosting repo (find → replace; or h
 to an agent), then `npm run type:check && npm run build && npx vitest run`
 (verified green: type:check 0, build 0, 106 tests).
 
-Three files: `apps/web/src/native/embedMode.ts`, `apps/web/src/router.tsx`,
-`apps/web/src/routes/explore.tsx`.
+**Part 1 — data-saver** (below): three files — `apps/web/src/native/embedMode.ts`,
+`apps/web/src/router.tsx`, `apps/web/src/routes/explore.tsx`. **Part 2 —
+capture-metadata removal** (further below): four files. The two parts touch
+independent regions (`explore.tsx` appears in both); apply in either order.
 
 ---
 
@@ -138,10 +140,180 @@ REPLACE:
 
 ---
 
-## Also pending port (this session, NOT in this doc yet)
+## Part 2 — capture-metadata removal (public-display cleanup, same session)
 
-Earlier in the same session, public-display **capture-metadata removal** was applied
-to gsav-hosting (`routes/explore.tsx` shortsStats, `routes/watch.$id.tsx`,
-`components/VideoCard.tsx`, `components/HeroCard.tsx` — drop duration/splats/frames/fps).
-Those are independent regions from the data-saver edits above. Ask to have them
-added here as find→replace blocks too if they haven't already been ported.
+Strips technical capture stats (duration / splats / frames / fps) from public
+surfaces, keeping titles/authors/descriptions. Four files. Independent regions
+from Part 1. Assumes a baseline that still HAS the metadata (a gsav-hosting
+checkout without these edits).
+
+### 2A. `apps/web/src/routes/explore.tsx`
+
+Drop the now-unused format import —
+
+FIND:
+```tsx
+import { isNativeEmbedSearch, withNativeEmbedSearch } from '../native/embedMode';
+import { formatCount, formatDuration } from '../utils/format';
+```
+REPLACE:
+```tsx
+import { isNativeEmbedSearch, withNativeEmbedSearch } from '../native/embedMode';
+```
+
+Drop the `shortsStats` row —
+
+FIND:
+```tsx
+                                        {video.description && <p>{video.description}</p>}
+                                        <div className="shortsStats">
+                                            {video.durationSec !== undefined && <span>{formatDuration(video.durationSec)}</span>}
+                                            {video.gaussians !== undefined && <span>{formatCount(video.gaussians)} splats</span>}
+                                            {video.frames !== undefined && <span>{formatCount(video.frames)} frames</span>}
+                                        </div>
+                                    </div>
+```
+REPLACE:
+```tsx
+                                        {video.description && <p>{video.description}</p>}
+                                    </div>
+```
+
+### 2B. `apps/web/src/routes/watch.$id.tsx`
+
+Drop the format import —
+
+FIND:
+```tsx
+import { isNativeEmbedSearch, withNativeEmbedSearch } from '../native/embedMode';
+import { formatCount, formatDuration } from '../utils/format';
+```
+REPLACE:
+```tsx
+import { isNativeEmbedSearch, withNativeEmbedSearch } from '../native/embedMode';
+```
+
+Reduce `detailMeta` to just the author link —
+
+FIND:
+```tsx
+                        <div className="detailMeta">
+                            <CreatorAuthorLink video={video} nativeEmbed={nativeEmbed} />
+                            {video.durationSec !== undefined && <span>{formatDuration(video.durationSec)}</span>}
+                            {video.gaussians !== undefined && <span>{formatCount(video.gaussians)} splats</span>}
+                            {video.frames !== undefined && <span>{formatCount(video.frames)} frames</span>}
+                            {video.fps !== undefined && <span>{video.fps} fps</span>}
+                        </div>
+```
+REPLACE:
+```tsx
+                        <div className="detailMeta">
+                            <CreatorAuthorLink video={video} nativeEmbed={nativeEmbed} />
+                        </div>
+```
+
+### 2C. `apps/web/src/components/VideoCard.tsx`
+
+Drop the format + MaterialIcon imports —
+
+FIND:
+```tsx
+import { withNativeEmbedSearch } from '../native/embedMode';
+import { formatCount, formatDuration } from '../utils/format';
+import { MaterialIcon } from './MaterialIcon';
+import { PosterPreview } from './PosterPreview';
+```
+REPLACE:
+```tsx
+import { withNativeEmbedSearch } from '../native/embedMode';
+import { PosterPreview } from './PosterPreview';
+```
+
+Drop the thumbnail badges (frame count + duration) —
+
+FIND:
+```tsx
+                <span className="thumbBadge thumbBadgeLeft">
+                    <MaterialIcon name="play_arrow" size={13} fill />
+                    {video.frames !== undefined ? formatCount(video.frames) : 'GSAV'}
+                </span>
+                {video.durationSec !== undefined && (
+                    <span className="thumbBadge thumbBadgeRight">
+                        <MaterialIcon name="schedule" size={13} />
+                        {formatDuration(video.durationSec)}
+                    </span>
+                )}
+            </div>
+```
+REPLACE:
+```tsx
+            </div>
+```
+
+Drop the splats `cardStat` —
+
+FIND:
+```tsx
+                <h2>{video.title}</h2>
+                <p>{video.author}</p>
+                {!compact && video.gaussians !== undefined && (
+                    <span className="cardStat">
+                        <MaterialIcon name="grain" size={14} />
+                        {formatCount(video.gaussians)} splats
+                    </span>
+                )}
+```
+REPLACE:
+```tsx
+                <h2>{video.title}</h2>
+                <p>{video.author}</p>
+```
+
+### 2D. `apps/web/src/components/HeroCard.tsx`
+
+Drop the format import (keep MaterialIcon — still used by the "Watch" affordance) —
+
+FIND:
+```tsx
+import { withNativeEmbedSearch } from '../native/embedMode';
+import { formatCount, formatDuration } from '../utils/format';
+import { MaterialIcon } from './MaterialIcon';
+```
+REPLACE:
+```tsx
+import { withNativeEmbedSearch } from '../native/embedMode';
+import { MaterialIcon } from './MaterialIcon';
+```
+
+Reduce `heroMeta` to just the "Watch" affordance —
+
+FIND:
+```tsx
+                    <span>
+                        <MaterialIcon name="play_arrow" size={15} fill />
+                        Watch
+                    </span>
+                    {video.durationSec !== undefined && <span>{formatDuration(video.durationSec)}</span>}
+                    {video.gaussians !== undefined && (
+                        <span>
+                            <MaterialIcon name="grain" size={15} />
+                            {formatCount(video.gaussians)} splats
+                        </span>
+                    )}
+                </div>
+```
+REPLACE:
+```tsx
+                    <span>
+                        <MaterialIcon name="play_arrow" size={15} fill />
+                        Watch
+                    </span>
+                </div>
+```
+
+---
+
+After applying Parts 1 + 2: `npm run type:check && npm run build && npx vitest run`.
+Note: `utils/format` itself STAYS — it's still imported elsewhere in the web app
+(e.g. `SocialPanel` counts, the `MiniPlayer` playback clock). Only the imports in
+these four files are dropped.
