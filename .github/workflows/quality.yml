@@ -22,16 +22,18 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Type-check
-        run: npx tsc --noEmit
+      # verify:local includes typecheck, lint, dependency audit, env-example
+      # audit, import-boundary audit, bridge-origin audit, docs drift, unit
+      # tests, coverage, and verify:whitespace. Lint is scoped to the
+      # diveo/GSAV surface + utils + scripts; the frozen Bilibili legacy is
+      # intentionally not linted (slated for deletion, ADR 0001).
+      - name: Local verification bundle
+        run: npm run verify:local
 
-      - name: Unit tests
-        run: npm test
-
-      # Lint is scoped to the diveo/GSAV surface + utils + scripts (see package.json
-      # "lint" + eslint.config.js). The frozen Bilibili legacy is intentionally not
-      # linted (slated for deletion, ADR 0001). --max-warnings 0 keeps the surface clean.
-      - name: Lint (diveo surface)
-        run: npm run lint
-
-      # TODO(P1-3): add `vitest run --coverage` once @vitest/coverage-v8 is installed.
+      - name: Native production config placeholder audit
+        env:
+          EXPO_PUBLIC_GSAV_WEB_URL: https://gsav.example.com
+          EXPO_PUBLIC_GSAV_CATALOG_URL: https://gsav.example.com/functions/v1/catalog
+          EXPO_PUBLIC_GSAV_SUPABASE_URL: https://supabase.example.com
+          EXPO_PUBLIC_GSAV_SUPABASE_ANON_KEY: public-anon-key
+        run: npm run verify:native-production-config

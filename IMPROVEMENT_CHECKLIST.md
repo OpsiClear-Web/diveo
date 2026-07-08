@@ -1,5 +1,12 @@
 # diveo Improvement Checklist
 
+> Superseded by `docs/IMPLEMENTATION_VALIDATION_AUDIT.md`.
+> This file is historical and is not the active release checklist.
+> Historical ownership warning: ADR 0002 supersedes the launcher/no-catalog
+> guidance below. React Native now owns native browse/search/creator/library
+> product UX as a consumer of shared GSAV catalog contracts; gsav-hosting owns
+> decode/render/playback/runtime. Do not use this file for ownership decisions.
+
 > Tracker for [IMPROVEMENT_PLAN.md](IMPROVEMENT_PLAN.md). IDs match the plan. Check the task box only when its nested **✅ acceptance** check passes.
 >
 > **Legend:** 👤 needs a human (not code) · 🔗 has a dependency · ⛔ externally blocked · ⭐ quick win (front-load) · ⚠️ high-risk · 🔀 DG-1-conditional

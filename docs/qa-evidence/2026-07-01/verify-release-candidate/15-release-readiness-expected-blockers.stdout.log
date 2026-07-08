@@ -1,0 +1,185 @@
+{
+  "checkedAt": "2026-07-01T23:32:03.695Z",
+  "status": "fail",
+  "qaPath": "docs/GSAV_NATIVE_QA.md",
+  "ok": false,
+  "checked": 30,
+  "missing": [
+    {
+      "id": "JS runtime smoke",
+      "platform": "JS runtime smoke",
+      "route": "JS runtime smoke",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /",
+      "platform": "Android",
+      "route": "/",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /",
+      "platform": "iOS",
+      "route": "/",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /search",
+      "platform": "Android",
+      "route": "/search",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /search",
+      "platform": "iOS",
+      "route": "/search",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /library",
+      "platform": "Android",
+      "route": "/library",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /library",
+      "platform": "iOS",
+      "route": "/library",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /creator/:handle",
+      "platform": "Android",
+      "route": "/creator/:handle",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /creator/:handle",
+      "platform": "iOS",
+      "route": "/creator/:handle",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /explore",
+      "platform": "Android",
+      "route": "/explore",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /explore",
+      "platform": "iOS",
+      "route": "/explore",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /gsav-diagnostics",
+      "platform": "Android",
+      "route": "/gsav-diagnostics",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /gsav-diagnostics",
+      "platform": "iOS",
+      "route": "/gsav-diagnostics",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /watch/test",
+      "platform": "Android",
+      "route": "/watch/test",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /watch/test",
+      "platform": "iOS",
+      "route": "/watch/test",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android route /gsav/test?t=2.5",
+      "platform": "Android",
+      "route": "/gsav/test?t=2.5",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "iOS route /gsav/test?t=2.5",
+      "platform": "iOS",
+      "route": "/gsav/test?t=2.5",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "negative validation Missing host config",
+      "platform": "Android/iOS",
+      "route": "Missing host config",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "negative validation Host offline/retry",
+      "platform": "Android/iOS",
+      "route": "Host offline/retry",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "negative validation Cross-origin navigation",
+      "platform": "Android/iOS",
+      "route": "Cross-origin navigation",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "negative validation Unsupported renderer",
+      "platform": "Android/iOS",
+      "route": "Unsupported renderer",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "negative validation Auth initialization gate",
+      "platform": "Android/iOS",
+      "route": "Auth initialization gate",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "negative validation Ended playback",
+      "platform": "Android/iOS",
+      "route": "Ended playback",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Release validation prerequisites",
+      "platform": "Release validation prerequisites",
+      "route": "Validation prerequisites",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android release APK artifact scan",
+      "platform": "Android release",
+      "route": "Release APK artifact",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android release installed APK smoke",
+      "platform": "Android release",
+      "route": "Release-installed APK smoke",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "Android generated versionCode metadata",
+      "platform": "Android release",
+      "route": "Generated versionCode metadata",
+      "resultIncludes": "versionCode",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "production .gsav range probe",
+      "platform": "Production host",
+      "route": "Production .gsav range probe",
+      "reason": "row has pending required fields"
+    },
+    {
+      "id": "non-publishing release dry run",
+      "platform": "GitHub Actions release dry run",
+      "route": "Release workflow dry run",
+      "resultIncludes": "publish_release=false",
+      "reason": "row has pending required fields"
+    }
+  ]
+}

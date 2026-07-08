@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "handoff-owner-assignment/v1",
+  "reviewer": "<evidence-reviewer>",
+  "reviewedAt": "<ISO timestamp>",
+  "owners": {
+    "android": "<android-validation-owner>",
+    "ios": "<ios-validation-owner>",
+    "iosExecutor": "<ios-executor-proof>",
+    "gsavHost": "<gsav-host-owner>",
+    "releaseTooling": "<release-tooling-owner>",
+    "evidenceReviewer": "<evidence-reviewer>",
+    "nativeRelease": "<native-release-owner>"
+  }
+}

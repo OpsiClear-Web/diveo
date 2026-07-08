@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-07-03T01:28:44.787Z",
+  "status": "no-publish",
+  "ok": false,
+  "repository": "OpsiClear-Web/diveo",
+  "workflowName": "Release APK",
+  "deviceWorkflowName": "Device Validation",
+  "review": {
+    "reviewer": "codex-local-verifier",
+    "reviewedAt": "2026-07-03T01:29:00Z"
+  },
+  "commands": {
+    "workflows": "gh api repos/OpsiClear-Web/diveo/actions/workflows",
+    "releaseRuns": "gh run list -R OpsiClear-Web/diveo --workflow 'Release APK' --limit 10 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+    "workflowDispatchRuns": "gh run list -R OpsiClear-Web/diveo --event workflow_dispatch --limit 20 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+    "releases": "gh release list -R OpsiClear-Web/diveo --limit 20 --json tagName,name,isDraft,isImmutable,isLatest,isPrerelease,publishedAt"
+  },
+  "workflows": [],
+  "workflowNames": [],
+  "releaseWorkflowPresent": false,
+  "deviceValidationWorkflowPresent": false,
+  "latestReleaseApkRuns": [],
+  "latestReleaseApkRun": null,
+  "workflowDispatchRuns": [],
+  "releaseWorkflowDispatchRuns": [],
+  "successfulReleaseWorkflowDispatchRuns": [],
+  "releases": [],
+  "releaseState": {
+    "releaseCount": 0,
+    "noGitHubReleasesObserved": true,
+    "latestReleaseApkRunEvent": null,
+    "latestReleaseWorkflowDispatchRun": null
+  },
+  "querySummaries": {
+    "workflows": {
+      "command": "gh api repos/OpsiClear-Web/diveo/actions/workflows",
+      "exitCode": 1,
+      "stderr": "Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "message": "Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "output": {
+        "workflowCount": 0
+      },
+      "error": null
+    },
+    "releaseRuns": {
+      "command": "gh run list -R OpsiClear-Web/diveo --workflow 'Release APK' --limit 10 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+      "exitCode": 1,
+      "stderr": "couldn't fetch workflows for OpsiClear-Web/diveo: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows?per_page=100&page=1\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "message": "couldn't fetch workflows for OpsiClear-Web/diveo: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows?per_page=100&page=1\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "output": {
+        "runCount": 0
+      },
+      "error": null
+    },
+    "workflowDispatchRuns": {
+      "command": "gh run list -R OpsiClear-Web/diveo --event workflow_dispatch --limit 20 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+      "exitCode": 1,
+      "stderr": "failed to get runs: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/runs?per_page=20&exclude_pull_requests=true&event=workflow_dispatch\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "message": "failed to get runs: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/runs?per_page=20&exclude_pull_requests=true&event=workflow_dispatch\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "output": {
+        "runCount": 0
+      },
+      "error": null
+    },
+    "releases": {
+      "command": "gh release list -R OpsiClear-Web/diveo --limit 20 --json tagName,name,isDraft,isImmutable,isLatest,isPrerelease,publishedAt",
+      "exitCode": 1,
+      "stderr": "Post \"https://api.github.com/graphql\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "message": "Post \"https://api.github.com/graphql\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "output": {
+        "releaseCount": 0
+      },
+      "error": null
+    }
+  },
+  "blockers": [
+    "workflows query failed: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "Release APK run query failed: couldn't fetch workflows for OpsiClear-Web/diveo: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows?per_page=100&page=1\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "workflow_dispatch run query failed: failed to get runs: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/runs?per_page=20&exclude_pull_requests=true&event=workflow_dispatch\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "GitHub release query failed: Post \"https://api.github.com/graphql\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "Release APK workflow is not active or not present",
+    "Device Validation workflow is not active or not present",
+    "no workflow_dispatch runs found for the current fixed-candidate dry-run requirement"
+  ],
+  "releaseReadinessImpact": {
+    "status": "no-publish",
+    "qaRow": "GitHub Actions release dry run / Release workflow dry run",
+    "requiredBeforePass": [
+      "workflow_dispatch publish_release=false run with fixed candidate_ref and production secrets",
+      "artifact diveo-release-evidence-v<version> from that run",
+      "reviewed dry-run summary, checksums, no-publish proof, and publishArtifactIdentitySha256",
+      "active Device Validation workflow in the remote repository"
+    ]
+  }
+}

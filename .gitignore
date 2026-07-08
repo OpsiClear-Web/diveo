@@ -49,13 +49,23 @@ coverage/
 # git worktrees
 .worktrees/
 
+# local automation artifacts
+.codex/
+.playwright-cli/
+
 # Internal AI instructions & planning docs
 CLAUDE.md
 docs/*
 !docs/GSAV_NATIVE_QA.md
 !docs/GSAV_NATIVE_SHELL_ARCHITECTURE.md
+!docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md
+!docs/IMPLEMENTATION_VALIDATION_AUDIT.md
+!docs/STACK_DESIGN_CLEANUP_CHECKLIST.md
+!docs/UI_DESIGN_CLEANUP_CHECKLIST.md
 !docs/adr/
 !docs/adr/**
+!docs/qa-evidence/
+!docs/qa-evidence/**
 feature.md
 livePlan.md
 Promotion.md

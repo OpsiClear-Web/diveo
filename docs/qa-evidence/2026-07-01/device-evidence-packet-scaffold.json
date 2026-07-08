@@ -1,0 +1,1884 @@
+{
+  "schemaVersion": "device-evidence-packet/v1",
+  "generatedAt": "2026-07-01T20:34:34.502Z",
+  "note": "This packet scaffolds device validation evidence. It does not mark QA rows passed.",
+  "target": {
+    "evidenceDate": "2026-07-01",
+    "defaultOwner": "codex-local-verifier",
+    "releaseCandidateSha": "3d243f51497982d1c741e28d7f6ed2e90c99ba50",
+    "evidenceSignoffSha": null,
+    "appVersion": "1.0.19",
+    "packageVersion": "1.0.19",
+    "androidVersionCode": 10019,
+    "dryRunArtifact": null,
+    "dryRunRunUrl": null,
+    "gsavHostUrl": "https://gsav.example.com",
+    "gsavHostingCommit": "pending-production-host-identity"
+  },
+  "summary": {
+    "totalPackets": 22,
+    "routePackets": 16,
+    "negativePackets": 6
+  },
+  "packets": [
+    {
+      "id": "android-route-home",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /",
+        "platform": "Android",
+        "route": "/"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-home.txt",
+        "docs/qa-evidence/2026-07-01/android-route-home.png",
+        "docs/qa-evidence/2026-07-01/android-route-home.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "native home/feed",
+        "no hosted web chrome"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-home",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /",
+        "platform": "iOS",
+        "route": "/"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-home.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-home.png",
+        "docs/qa-evidence/2026-07-01/ios-route-home.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "native home/feed",
+        "no hosted web chrome"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-search",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /search",
+        "platform": "Android",
+        "route": "/search"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-search.txt",
+        "docs/qa-evidence/2026-07-01/android-route-search.png",
+        "docs/qa-evidence/2026-07-01/android-route-search.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "native search",
+        "watch route opens from result"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-search",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /search",
+        "platform": "iOS",
+        "route": "/search"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-search.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-search.png",
+        "docs/qa-evidence/2026-07-01/ios-route-search.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "native search",
+        "watch route opens from result"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-library",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /library",
+        "platform": "Android",
+        "route": "/library"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-library.txt",
+        "docs/qa-evidence/2026-07-01/android-route-library.png",
+        "docs/qa-evidence/2026-07-01/android-route-library.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "release-owned signed-in fixture",
+        "saved scene opens watch route",
+        "account-safe evidence"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-library",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /library",
+        "platform": "iOS",
+        "route": "/library"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-library.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-library.png",
+        "docs/qa-evidence/2026-07-01/ios-route-library.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "release-owned signed-in fixture",
+        "saved scene opens watch route",
+        "account-safe evidence"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-creator-handle",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /creator/:handle",
+        "platform": "Android",
+        "route": "/creator/:handle"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-creator-handle.txt",
+        "docs/qa-evidence/2026-07-01/android-route-creator-handle.png",
+        "docs/qa-evidence/2026-07-01/android-route-creator-handle.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "native creator profile",
+        "scene navigation reaches watch route"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-creator-handle",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /creator/:handle",
+        "platform": "iOS",
+        "route": "/creator/:handle"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-creator-handle.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-creator-handle.png",
+        "docs/qa-evidence/2026-07-01/ios-route-creator-handle.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp"
+      ],
+      "requiredSignals": [
+        "native creator profile",
+        "scene navigation reaches watch route"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-explore",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /explore",
+        "platform": "Android",
+        "route": "/explore"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-explore.txt",
+        "docs/qa-evidence/2026-07-01/android-route-explore.png",
+        "docs/qa-evidence/2026-07-01/android-route-explore.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "embed=native",
+        "dataSaver=1 when enabled",
+        "hidden hosted chrome"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-explore",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /explore",
+        "platform": "iOS",
+        "route": "/explore"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-explore.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-explore.png",
+        "docs/qa-evidence/2026-07-01/ios-route-explore.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "embed=native",
+        "dataSaver=1 when enabled",
+        "hidden hosted chrome"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-gsav-diagnostics",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /gsav-diagnostics",
+        "platform": "Android",
+        "route": "/gsav-diagnostics"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-gsav-diagnostics.txt",
+        "docs/qa-evidence/2026-07-01/android-route-gsav-diagnostics.png",
+        "docs/qa-evidence/2026-07-01/android-route-gsav-diagnostics.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "native diagnostics route",
+        "bridge capability or route-change signal"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-gsav-diagnostics",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /gsav-diagnostics",
+        "platform": "iOS",
+        "route": "/gsav-diagnostics"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-gsav-diagnostics.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-gsav-diagnostics.png",
+        "docs/qa-evidence/2026-07-01/ios-route-gsav-diagnostics.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "native diagnostics route",
+        "bridge capability or route-change signal"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-watch-test",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /watch/test",
+        "platform": "Android",
+        "route": "/watch/test"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-watch-test.txt",
+        "docs/qa-evidence/2026-07-01/android-route-watch-test.png",
+        "docs/qa-evidence/2026-07-01/android-route-watch-test.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "GSAV_BRIDGE_READY or explicit unsupported/error state",
+        "retry or resume signal"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-watch-test",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /watch/test",
+        "platform": "iOS",
+        "route": "/watch/test"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-watch-test.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-watch-test.png",
+        "docs/qa-evidence/2026-07-01/ios-route-watch-test.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "GSAV_BRIDGE_READY or explicit unsupported/error state",
+        "retry or resume signal"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "android-route-gsav-test-t-2-5",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "Android route /gsav/test?t=2.5",
+        "platform": "Android",
+        "route": "/gsav/test?t=2.5"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/android-route-gsav-test-t-2-5.txt",
+        "docs/qa-evidence/2026-07-01/android-route-gsav-test-t-2-5.png",
+        "docs/qa-evidence/2026-07-01/android-route-gsav-test-t-2-5.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "androidWebViewVersion",
+        "buildProfile",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "native alias preserves id",
+        "start time preserved",
+        "embed=native"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "ios-route-gsav-test-t-2-5",
+      "type": "route",
+      "status": "pending",
+      "qaRow": {
+        "id": "iOS route /gsav/test?t=2.5",
+        "platform": "iOS",
+        "route": "/gsav/test?t=2.5"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/ios-route-gsav-test-t-2-5.txt",
+        "docs/qa-evidence/2026-07-01/ios-route-gsav-test-t-2-5.png",
+        "docs/qa-evidence/2026-07-01/ios-route-gsav-test-t-2-5.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "device",
+        "osVersion",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "redaction",
+        "wkWebViewVersion",
+        "executorProof",
+        "artifactUrl",
+        "artifactSha256",
+        "ux.rotation",
+        "ux.safeArea",
+        "ux.backNavigation",
+        "ux.noClippedText",
+        "ux.noNestedTouch",
+        "ux.touchTarget44dp",
+        "sameOriginProductPathOutcome"
+      ],
+      "requiredSignals": [
+        "native alias preserves id",
+        "start time preserved",
+        "embed=native"
+      ],
+      "trigger": null,
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "negative-missing-host-config",
+      "type": "negative",
+      "status": "pending",
+      "qaRow": {
+        "id": "negative validation Missing host config",
+        "platform": "Android/iOS",
+        "route": "Missing host config"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/negative-missing-host-config.txt",
+        "docs/qa-evidence/2026-07-01/negative-missing-host-config.png",
+        "docs/qa-evidence/2026-07-01/negative-missing-host-config.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "trigger",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "android.device",
+        "android.osVersion",
+        "android.webViewVersion",
+        "ios.device",
+        "ios.osVersion",
+        "ios.wkWebViewVersion",
+        "redaction"
+      ],
+      "requiredSignals": [
+        "native config/error UI",
+        "no blank WebView"
+      ],
+      "trigger": "Launch an embedded route without EXPO_PUBLIC_GSAV_WEB_URL.",
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "Launch an embedded route without EXPO_PUBLIC_GSAV_WEB_URL.",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "negative-host-offline-retry",
+      "type": "negative",
+      "status": "pending",
+      "qaRow": {
+        "id": "negative validation Host offline/retry",
+        "platform": "Android/iOS",
+        "route": "Host offline/retry"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/negative-host-offline-retry.txt",
+        "docs/qa-evidence/2026-07-01/negative-host-offline-retry.png",
+        "docs/qa-evidence/2026-07-01/negative-host-offline-retry.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "trigger",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "android.device",
+        "android.osVersion",
+        "android.webViewVersion",
+        "ios.device",
+        "ios.osVersion",
+        "ios.wkWebViewVersion",
+        "redaction"
+      ],
+      "requiredSignals": [
+        "retry UI appears",
+        "retry recovers after host returns"
+      ],
+      "trigger": "Open /watch/test, stop or block the GSAV host, then recover and tap retry.",
+      "qaFlag": null,
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "Open /watch/test, stop or block the GSAV host, then recover and tap retry.",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "negative-cross-origin-navigation",
+      "type": "negative",
+      "status": "pending",
+      "qaRow": {
+        "id": "negative validation Cross-origin navigation",
+        "platform": "Android/iOS",
+        "route": "Cross-origin navigation"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/negative-cross-origin-navigation.txt",
+        "docs/qa-evidence/2026-07-01/negative-cross-origin-navigation.png",
+        "docs/qa-evidence/2026-07-01/negative-cross-origin-navigation.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "trigger",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "android.device",
+        "android.osVersion",
+        "android.webViewVersion",
+        "ios.device",
+        "ios.osVersion",
+        "ios.wkWebViewVersion",
+        "redaction"
+      ],
+      "requiredSignals": [
+        "untrusted navigation blocked",
+        "app stays on trusted route"
+      ],
+      "trigger": "Build with EXPO_PUBLIC_GSAV_QA_CONTROLS=1, open /gsav-diagnostics, then tap Cross-origin.",
+      "qaFlag": "EXPO_PUBLIC_GSAV_QA_CONTROLS=1",
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "Build with EXPO_PUBLIC_GSAV_QA_CONTROLS=1, open /gsav-diagnostics, then tap Cross-origin.",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "negative-unsupported-renderer",
+      "type": "negative",
+      "status": "pending",
+      "qaRow": {
+        "id": "negative validation Unsupported renderer",
+        "platform": "Android/iOS",
+        "route": "Unsupported renderer"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/negative-unsupported-renderer.txt",
+        "docs/qa-evidence/2026-07-01/negative-unsupported-renderer.png",
+        "docs/qa-evidence/2026-07-01/negative-unsupported-renderer.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "trigger",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "android.device",
+        "android.osVersion",
+        "android.webViewVersion",
+        "ios.device",
+        "ios.osVersion",
+        "ios.wkWebViewVersion",
+        "redaction"
+      ],
+      "requiredSignals": [
+        "native unsupported overlay",
+        "no blank WebView"
+      ],
+      "trigger": "Build with EXPO_PUBLIC_GSAV_QA_CONTROLS=1, open /gsav-diagnostics, then tap Unsupported.",
+      "qaFlag": "EXPO_PUBLIC_GSAV_QA_CONTROLS=1",
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "Build with EXPO_PUBLIC_GSAV_QA_CONTROLS=1, open /gsav-diagnostics, then tap Unsupported.",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "negative-auth-initialization-gate",
+      "type": "negative",
+      "status": "pending",
+      "qaRow": {
+        "id": "negative validation Auth initialization gate",
+        "platform": "Android/iOS",
+        "route": "Auth initialization gate"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/negative-auth-initialization-gate.txt",
+        "docs/qa-evidence/2026-07-01/negative-auth-initialization-gate.png",
+        "docs/qa-evidence/2026-07-01/negative-auth-initialization-gate.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "trigger",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "android.device",
+        "android.osVersion",
+        "android.webViewVersion",
+        "ios.device",
+        "ios.osVersion",
+        "ios.wkWebViewVersion",
+        "redaction"
+      ],
+      "requiredSignals": [
+        "no clear-session bridge message before auth initialization"
+      ],
+      "trigger": "Build with EXPO_PUBLIC_GSAV_QA_AUTH_DELAY_MS=5000, then mount /gsav-diagnostics or /watch/test.",
+      "qaFlag": "EXPO_PUBLIC_GSAV_QA_AUTH_DELAY_MS=5000",
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "Build with EXPO_PUBLIC_GSAV_QA_AUTH_DELAY_MS=5000, then mount /gsav-diagnostics or /watch/test.",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    },
+    {
+      "id": "negative-ended-playback",
+      "type": "negative",
+      "status": "pending",
+      "qaRow": {
+        "id": "negative validation Ended playback",
+        "platform": "Android/iOS",
+        "route": "Ended playback"
+      },
+      "owner": "codex-local-verifier",
+      "expectedEvidencePaths": [
+        "docs/qa-evidence/2026-07-01/negative-ended-playback.txt",
+        "docs/qa-evidence/2026-07-01/negative-ended-playback.png",
+        "docs/qa-evidence/2026-07-01/negative-ended-playback.mp4"
+      ],
+      "requiredActualFields": [
+        "owner",
+        "trigger",
+        "gsavHostUrl",
+        "gsavHostingCommit",
+        "observedSignals",
+        "evidencePaths",
+        "android.device",
+        "android.osVersion",
+        "android.webViewVersion",
+        "ios.device",
+        "ios.osVersion",
+        "ios.wkWebViewVersion",
+        "redaction"
+      ],
+      "requiredSignals": [
+        "GSAV_ENDED observed",
+        "saved progress cleared"
+      ],
+      "trigger": "Build with EXPO_PUBLIC_GSAV_QA_CONTROLS=1, open /gsav-diagnostics, tap Ended, then reopen /watch/test.",
+      "qaFlag": "EXPO_PUBLIC_GSAV_QA_CONTROLS=1",
+      "actual": {
+        "owner": "codex-local-verifier",
+        "device": "",
+        "osVersion": "",
+        "androidWebViewVersion": "",
+        "wkWebViewVersion": "",
+        "executorProof": "",
+        "buildProfile": "",
+        "gsavHostUrl": "https://gsav.example.com",
+        "gsavHostingCommit": "pending-production-host-identity",
+        "finalEmbeddedUrl": "",
+        "trigger": "Build with EXPO_PUBLIC_GSAV_QA_CONTROLS=1, open /gsav-diagnostics, tap Ended, then reopen /watch/test.",
+        "observedSignals": [],
+        "evidencePaths": [],
+        "mediaSha256": [],
+        "fileSha256": [],
+        "artifactPurpose": "",
+        "evidenceManifestPath": "",
+        "evidenceManifestSha256": "",
+        "sourceRunId": "",
+        "sourceArtifactId": "",
+        "artifactUrl": "",
+        "artifactSha256": "",
+        "sameOriginProductPathOutcome": "",
+        "ux": {
+          "rotation": "",
+          "safeArea": "",
+          "backNavigation": "",
+          "noClippedText": "",
+          "noNestedTouch": "",
+          "touchTarget44dp": ""
+        },
+        "redaction": "",
+        "android": {
+          "device": "",
+          "osVersion": "",
+          "webViewVersion": ""
+        },
+        "ios": {
+          "device": "",
+          "osVersion": "",
+          "wkWebViewVersion": ""
+        }
+      }
+    }
+  ]
+}

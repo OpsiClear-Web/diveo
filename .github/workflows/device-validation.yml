@@ -1,0 +1,297 @@
+name: Device Validation
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_run_id:
+        description: "GitHub Actions run ID from the release dry run or publish run."
+        required: true
+        type: string
+      artifact_name:
+        description: "Uploaded release evidence artifact name from release.yml."
+        required: true
+        type: string
+      evidence_date:
+        description: "Evidence folder date in YYYY-MM-DD format."
+        required: true
+        type: string
+      release_evidence_mode:
+        description: "Mode used when re-verifying the downloaded release evidence bundle. Pre-publish device validation only accepts dry-run evidence."
+        required: true
+        default: dry-run
+        type: choice
+        options:
+          - dry-run
+      release_artifact_url:
+        description: "Optional GitHub Actions run, Actions artifact, or release asset download URL for the downloaded release evidence."
+        required: false
+        type: string
+      ios_validation_owner:
+        description: "Person, team, issue, or workflow run responsible for iOS WKWebView validation evidence."
+        required: true
+        type: string
+      ios_validation_executor_proof:
+        description: "macOS/Xcode/xcrun proof or physical iOS-device proof for the iOS validation lane."
+        required: true
+        type: string
+      ios_validation_device:
+        description: "iOS simulator or physical device identity used for WKWebView validation."
+        required: true
+        type: string
+      ios_validation_version:
+        description: "iOS version used for WKWebView validation."
+        required: true
+        type: string
+      ios_wkwebview_version:
+        description: "WKWebView or WebKit version used for iOS validation."
+        required: true
+        type: string
+      ios_validation_artifact_url:
+        description: "Trusted direct GitHub artifact, release asset download, or docs/qa-evidence blob containing iOS screenshots, video, or filtered logs."
+        required: true
+        type: string
+      ios_validation_artifact_sha256:
+        description: "64-hex SHA256 for the reviewed iOS screenshot, video, log bundle, or artifact manifest."
+        required: true
+        type: string
+      ios_validation_artifact_path:
+        description: "Artifact-root-relative path under downloaded-release/release-evidence for the reviewed iOS artifact bytes."
+        required: true
+        type: string
+
+jobs:
+  android-device-validation:
+    runs-on: [self-hosted, linux, android]
+    permissions:
+      actions: read
+      contents: read
+    env:
+      EXPO_PUBLIC_APP_ENV: production
+      EXPO_PUBLIC_GSAV_WEB_URL: ${{ secrets.GSAV_WEB_URL }}
+      EXPO_PUBLIC_GSAV_CATALOG_URL: ${{ secrets.GSAV_CATALOG_URL }}
+      EXPO_PUBLIC_GSAV_SUPABASE_URL: ${{ secrets.GSAV_SUPABASE_URL }}
+      EXPO_PUBLIC_GSAV_SUPABASE_ANON_KEY: ${{ secrets.GSAV_SUPABASE_ANON_KEY }}
+      GSAV_WEB_URL: ${{ secrets.GSAV_WEB_URL }}
+      GSAV_CATALOG_URL: ${{ secrets.GSAV_CATALOG_URL }}
+      GSAV_SUPABASE_URL: ${{ secrets.GSAV_SUPABASE_URL }}
+      GSAV_SUPABASE_ANON_KEY: ${{ secrets.GSAV_SUPABASE_ANON_KEY }}
+      GSAV_RANGE_PROBE_URL: ${{ secrets.GSAV_RANGE_PROBE_URL }}
+      GSAV_HOST_IDENTITY_URL: ${{ secrets.GSAV_HOST_IDENTITY_URL }}
+      GSAV_HOSTING_COMMIT: ${{ secrets.GSAV_HOSTING_COMMIT }}
+      DOWNLOADED_RELEASE_DIR: downloaded-release
+      APK_PATH: android/app/build/outputs/apk/release/app-release.apk
+      MANIFEST_PATH: android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
+      VALIDATION_PREREQS_PATH: release-evidence/validation-prereqs.json
+      IOS_VALIDATION_OWNER: ${{ inputs.ios_validation_owner }}
+      IOS_VALIDATION_EXECUTOR_PROOF: ${{ inputs.ios_validation_executor_proof }}
+      IOS_VALIDATION_DEVICE: ${{ inputs.ios_validation_device }}
+      IOS_VALIDATION_VERSION: ${{ inputs.ios_validation_version }}
+      IOS_WKWEBVIEW_VERSION: ${{ inputs.ios_wkwebview_version }}
+      IOS_VALIDATION_ARTIFACT_URL: ${{ inputs.ios_validation_artifact_url }}
+      IOS_VALIDATION_ARTIFACT_SHA256: ${{ inputs.ios_validation_artifact_sha256 }}
+      IOS_VALIDATION_ARTIFACT_PATH: ${{ inputs.ios_validation_artifact_path }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate dispatch inputs
+        env:
+          RELEASE_RUN_ID: ${{ inputs.release_run_id }}
+          RELEASE_ARTIFACT_NAME: ${{ inputs.artifact_name }}
+          EVIDENCE_DATE: ${{ inputs.evidence_date }}
+          RELEASE_ARTIFACT_URL: ${{ inputs.release_artifact_url }}
+          IOS_VALIDATION_ARTIFACT_URL: ${{ inputs.ios_validation_artifact_url }}
+          IOS_VALIDATION_ARTIFACT_SHA256: ${{ inputs.ios_validation_artifact_sha256 }}
+          IOS_VALIDATION_ARTIFACT_PATH: ${{ inputs.ios_validation_artifact_path }}
+        run: |
+          node <<'NODE'
+          const path = require("node:path");
+
+          const runId = process.env.RELEASE_RUN_ID || "";
+          const artifactName = process.env.RELEASE_ARTIFACT_NAME || "";
+          const evidenceDate = process.env.EVIDENCE_DATE || "";
+          const artifactUrl = process.env.RELEASE_ARTIFACT_URL || "";
+          const iosArtifactUrl = process.env.IOS_VALIDATION_ARTIFACT_URL || "";
+          const iosArtifactSha256 = process.env.IOS_VALIDATION_ARTIFACT_SHA256 || "";
+          const iosArtifactPath = process.env.IOS_VALIDATION_ARTIFACT_PATH || "";
+          const trustedEvidenceUrlPattern = /^https:\/\/github\.com\/(?:(?:opsiclear|opsiclear-web)\/diveo|opsiclear\/gsav-hosting)\/(?:actions\/runs\/\d+\/artifacts\/[^/\s]+|releases\/download\/[^/\s]+\/[^/\s]+|blob\/[^/\s]+\/docs\/qa-evidence\/.+)$/i;
+
+          if (!/^\d+$/.test(runId)) {
+            throw new Error("release_run_id must contain only digits.");
+          }
+          if (!/^diveo-release-evidence-v\d+\.\d+\.\d+$/.test(artifactName)) {
+            throw new Error("artifact_name must match diveo-release-evidence-v<semver>.");
+          }
+          const parsedDate = new Date(`${evidenceDate}T00:00:00.000Z`);
+          if (
+            !/^\d{4}-\d{2}-\d{2}$/.test(evidenceDate)
+            || Number.isNaN(parsedDate.getTime())
+            || parsedDate.toISOString().slice(0, 10) !== evidenceDate
+          ) {
+            throw new Error("evidence_date must be a valid YYYY-MM-DD date.");
+          }
+          if (
+            artifactUrl
+            && !/^https:\/\/github\.com\/(?:opsiclear|opsiclear-web)\/diveo\/(?:actions\/runs\/\d+|actions\/runs\/\d+\/artifacts\/\d+|releases\/download\/[^/\s]+\/[^/\s]+)$/i.test(artifactUrl)
+          ) {
+            throw new Error("release_artifact_url must be a trusted Diveo GitHub Actions run, Actions artifact, or release asset download URL.");
+          }
+          if (!trustedEvidenceUrlPattern.test(iosArtifactUrl)) {
+            throw new Error("ios_validation_artifact_url must be a trusted direct Diveo or opsiclear/gsav-hosting GitHub artifact, release asset download, or docs/qa-evidence blob.");
+          }
+          if (!/^[a-f0-9]{64}$/i.test(iosArtifactSha256)) {
+            throw new Error("ios_validation_artifact_sha256 must be a 64-hex SHA256.");
+          }
+          if (
+            !iosArtifactPath
+            || path.isAbsolute(iosArtifactPath)
+            || iosArtifactPath.split(/[\\/]+/).includes("..")
+            || !iosArtifactPath.replace(/\\/g, "/").startsWith("release-evidence/")
+          ) {
+            throw new Error("ios_validation_artifact_path must be an artifact-root-relative path under release-evidence/.");
+          }
+          NODE
+
+      - name: Download release evidence artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          run-id: ${{ inputs.release_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: downloaded-release
+
+      - name: Materialize iOS validation artifact bytes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/materialize-ios-validation-artifact.js \
+            --url "$IOS_VALIDATION_ARTIFACT_URL" \
+            --output-path "$DOWNLOADED_RELEASE_DIR/$IOS_VALIDATION_ARTIFACT_PATH" \
+            --expected-sha256 "$IOS_VALIDATION_ARTIFACT_SHA256"
+          test -s "$DOWNLOADED_RELEASE_DIR/$IOS_VALIDATION_ARTIFACT_PATH"
+
+      - name: Verify downloaded artifact paths
+        run: |
+          test -s "$DOWNLOADED_RELEASE_DIR/$APK_PATH"
+          test -s "$DOWNLOADED_RELEASE_DIR/$MANIFEST_PATH"
+          test -s "$DOWNLOADED_RELEASE_DIR/$IOS_VALIDATION_ARTIFACT_PATH"
+          test -d "$DOWNLOADED_RELEASE_DIR/release-evidence"
+
+      - name: Verify downloaded artifact identity
+        env:
+          RELEASE_RUN_ID: ${{ inputs.release_run_id }}
+          RELEASE_ARTIFACT_NAME: ${{ inputs.artifact_name }}
+          TRUSTED_RELEASE_REPOSITORY: ${{ github.repository }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const summaryPath = path.join(
+            process.env.DOWNLOADED_RELEASE_DIR,
+            "release-evidence",
+            "dry-run-summary.json",
+          );
+          const summary = JSON.parse(fs.readFileSync(summaryPath, "utf8"));
+          if (summary.artifactName !== process.env.RELEASE_ARTIFACT_NAME) {
+            throw new Error(
+              `Downloaded artifactName ${summary.artifactName} does not match ${process.env.RELEASE_ARTIFACT_NAME}`,
+            );
+          }
+          const runUrl = String(summary.runUrl || "");
+          const trustedRepository = String(process.env.TRUSTED_RELEASE_REPOSITORY || "");
+          if (!/^(?:opsiclear|opsiclear-web)\/diveo$/i.test(trustedRepository)) {
+            throw new Error(`Untrusted release repository ${trustedRepository}.`);
+          }
+          const expectedRunPath = `/${trustedRepository}/actions/runs/${process.env.RELEASE_RUN_ID}`;
+          let parsedRunUrl;
+          try {
+            parsedRunUrl = new URL(runUrl);
+          } catch {
+            throw new Error(`Downloaded dry-run runUrl ${runUrl} is not a valid URL.`);
+          }
+          if (
+            parsedRunUrl.protocol !== "https:"
+            || parsedRunUrl.hostname.toLowerCase() !== "github.com"
+            || parsedRunUrl.username
+            || parsedRunUrl.password
+            || parsedRunUrl.pathname.toLowerCase() !== expectedRunPath.toLowerCase()
+            || parsedRunUrl.search
+            || parsedRunUrl.hash
+          ) {
+            throw new Error(
+              `Downloaded dry-run runUrl ${runUrl} must match https://github.com${expectedRunPath}.`,
+            );
+          }
+          if (summary.publishRelease !== false) {
+            throw new Error("Pre-publish device validation requires dry-run-summary.json publishRelease=false.");
+          }
+          NODE
+
+      - name: Capture validation prerequisites
+        run: |
+          npm run verify:validation-prereqs -- \
+            --root "$DOWNLOADED_RELEASE_DIR" \
+            --apk-path "$APK_PATH" \
+            --manifest-path "$MANIFEST_PATH" \
+            --ios-artifact-path "$IOS_VALIDATION_ARTIFACT_PATH" \
+            --output-path "$VALIDATION_PREREQS_PATH"
+          test -s "$DOWNLOADED_RELEASE_DIR/$VALIDATION_PREREQS_PATH"
+
+      - name: Attach validation prerequisites to release evidence
+        run: |
+          npm run release-evidence:attach-validation-prereqs -- \
+            --root "$DOWNLOADED_RELEASE_DIR" \
+            --evidence-dir release-evidence \
+            --validation-prereqs-path "$VALIDATION_PREREQS_PATH" \
+            --apk-path "$APK_PATH" \
+            --manifest-path "$MANIFEST_PATH"
+
+      - name: Re-verify release evidence with device prerequisites
+        run: |
+          set -o pipefail
+          mkdir -p device-validation-evidence
+          npm run verify:release-evidence-bundle -- \
+            --root "$DOWNLOADED_RELEASE_DIR" \
+            --evidence-dir release-evidence \
+            --apk-path "$APK_PATH" \
+            --manifest-path "$MANIFEST_PATH" \
+            --mode "${{ inputs.release_evidence_mode }}" \
+            --require-validation-prereqs true \
+            | tee device-validation-evidence/device-validation-bundle-verifier.json
+
+      - name: Capture installed APK smoke
+        run: |
+          QA_EVIDENCE_DIR="docs/qa-evidence/${{ inputs.evidence_date }}"
+          mkdir -p "$QA_EVIDENCE_DIR"
+          CI_ARTIFACT_URL="${{ inputs.release_artifact_url }}"
+          if [ -z "$CI_ARTIFACT_URL" ]; then
+            CI_ARTIFACT_URL="https://github.com/${{ github.repository }}/actions/runs/${{ inputs.release_run_id }}"
+          fi
+          PRODUCTION_HOST_URL="$(node -e 'const fs = require("node:fs"); const path = require("node:path"); const preflight = JSON.parse(fs.readFileSync(path.join(process.env.DOWNLOADED_RELEASE_DIR, "release-evidence", "gsav-preflight.json"), "utf8")); process.stdout.write(String(preflight.baseUrl || ""));')"
+          npm run android:installed-smoke -- \
+            --apk-path "$DOWNLOADED_RELEASE_DIR/$APK_PATH" \
+            --output-path "$QA_EVIDENCE_DIR/android-installed-release-smoke.txt" \
+            --dry-run-summary-path "$DOWNLOADED_RELEASE_DIR/release-evidence/dry-run-summary.json" \
+            --production-host-url "$PRODUCTION_HOST_URL" \
+            --ci-artifact-url "$CI_ARTIFACT_URL"
+
+      - name: Upload device validation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: diveo-device-validation-${{ inputs.evidence_date }}-${{ inputs.release_run_id }}
+          if-no-files-found: error
+          path: |
+            downloaded-release/release-evidence/**
+            device-validation-evidence/device-validation-bundle-verifier.json
+            docs/qa-evidence/${{ inputs.evidence_date }}/android-installed-release-smoke.txt

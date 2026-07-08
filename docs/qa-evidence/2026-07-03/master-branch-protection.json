@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-07-03T01:28:44.538Z",
+  "status": "no-publish",
+  "ok": false,
+  "errors": [
+    "branch query failed: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "master is not protected",
+    "branch protection query failed: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master/protection\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "required status check missing: quality / quality"
+  ],
+  "repository": "OpsiClear-Web/diveo",
+  "branch": "master",
+  "requiredChecks": [
+    "quality / quality"
+  ],
+  "observedRequiredChecks": [],
+  "review": {
+    "reviewer": "codex-local-verifier",
+    "reviewedAt": "2026-07-03T01:29:00Z"
+  },
+  "branchQuery": {
+    "command": "gh api repos/OpsiClear-Web/diveo/branches/master",
+    "exitCode": 1,
+    "stderr": "Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "message": "Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "output": null,
+    "error": null
+  },
+  "protectionQuery": {
+    "command": "gh api repos/OpsiClear-Web/diveo/branches/master/protection",
+    "exitCode": 1,
+    "stderr": "Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master/protection\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "message": "Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master/protection\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+    "output": null,
+    "error": null
+  },
+  "releaseReadinessImpact": {
+    "status": "no-publish",
+    "qaRow": "Branch protection / Master branch protection",
+    "requiredBeforePass": [
+      "branch query failed: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "master is not protected",
+      "branch protection query failed: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/branches/master/protection\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "required status check missing: quality / quality"
+    ]
+  }
+}

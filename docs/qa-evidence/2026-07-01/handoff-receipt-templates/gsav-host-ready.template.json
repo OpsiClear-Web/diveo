@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "gsav-host-ready/v2",
+  "evidenceDate": "2026-07-01",
+  "reviewer": "<host-ready-reviewer>",
+  "reviewedAt": "<ISO timestamp>",
+  "gsavHostingCommit": "<GSAV_HOSTING_COMMIT>",
+  "gsavHostUrl": "https://<production-gsav-host>",
+  "gsavHostIdentityUrl": "https://<production-gsav-host>/<identity-path>",
+  "observedIdentity": "<GSAV_HOSTING_COMMIT>",
+  "routeGuardTest": {
+    "command": "<gsav-hosting native-route-guard command>",
+    "status": "pass",
+    "outputPath": "docs/qa-evidence/2026-07-01/<route-guard-output>"
+  },
+  "preflightOutputPath": "docs/qa-evidence/2026-07-01/<gsav-preflight-output>",
+  "runtimeSmokeOutputPath": "docs/qa-evidence/2026-07-01/<runtime-smoke-output>",
+  "range": {
+    "url": "https://<production-cdn>/<fixture>.gsav",
+    "status": 206,
+    "contentRange": "bytes 0-0/<decimal-size>",
+    "accessControlAllowOrigin": "*",
+    "accessControlExposeHeaders": "Accept-Ranges, Content-Length, Content-Range, ETag"
+  },
+  "bridge": {
+    "version": "<bridge-version>",
+    "minVersion": "<bridge-min-version>"
+  }
+}

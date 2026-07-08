@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-07-01T23:31:49.487Z",
+  "status": "pass",
+  "ok": true,
+  "checkedFiles": [
+    "README.md",
+    "README.en.md",
+    "CONTRIBUTING.md",
+    ".github/PULL_REQUEST_TEMPLATE.md",
+    ".env.example",
+    "docs/GSAV_NATIVE_SHELL_ARCHITECTURE.md",
+    "docs/GSAV_NATIVE_QA.md",
+    "docs/adr/0002-native-app-with-web-player.md",
+    "docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md",
+    "docs/IMPLEMENTATION_VALIDATION_AUDIT.md"
+  ],
+  "checkedSupersededFiles": [
+    "docs/adr/0001-gsav-pivot.md",
+    "IMPROVEMENT_PLAN.md",
+    "IMPROVEMENT_CHECKLIST.md",
+    "REMAINING_GAPS_PLAN.md",
+    "GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md"
+  ],
+  "errors": []
+}

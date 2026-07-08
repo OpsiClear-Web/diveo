@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "external-evidence-inventory/v1",
+  "reviewer": "_pending_",
+  "reviewedAt": "_pending_",
+  "generatedAt": "2026-07-02T08:47:37.998Z",
+  "entries": [
+    {
+      "evidencePath": "docs/qa-evidence/2026-06-30/diveo-gsav-runtime-smoke-refresh-2026-06-30.txt",
+      "status": "pending",
+      "reviewer": "_pending_",
+      "reviewedAt": "_pending_",
+      "pathKind": "local",
+      "sourceRefs": [
+        {
+          "source": "qa",
+          "qaRowId": "JS runtime smoke JS runtime smoke",
+          "platform": "JS runtime smoke",
+          "route": "JS runtime smoke",
+          "evidenceDate": "2026-06-30"
+        }
+      ],
+      "sha256": "36035808f0653a7b4e47e9efd138f3a7567593f47fe160b8c843f715e4961e55"
+    },
+    {
+      "evidencePath": "docs/qa-evidence/2026-06-30/diveo-gsav-preflight-refresh-2026-06-30.txt",
+      "status": "pending",
+      "reviewer": "_pending_",
+      "reviewedAt": "_pending_",
+      "pathKind": "local",
+      "sourceRefs": [
+        {
+          "source": "qa",
+          "qaRowId": "Host preflight GSAV target routes",
+          "platform": "Host preflight",
+          "route": "GSAV target routes",
+          "evidenceDate": "2026-06-30"
+        }
+      ],
+      "sha256": "d55ecd6e4cd322a83f6032f9b0d5b22c46de87ef47abc8df3a5f99e2bc8a7421"
+    },
+    {
+      "evidencePath": "docs/qa-evidence/2026-06-30/diveo-gsav-preflight-2026-06-30.txt",
+      "status": "pending",
+      "reviewer": "_pending_",
+      "reviewedAt": "_pending_",
+      "pathKind": "local",
+      "sourceRefs": [
+        {
+          "source": "qa",
+          "qaRowId": "Host preflight GSAV target routes",
+          "platform": "Host preflight",
+          "route": "GSAV target routes",
+          "evidenceDate": "2026-06-18"
+        }
+      ],
+      "sha256": "f34cdfa0e0cea0323cdcaf15696a5650eb5aa3b9f869edf2ee6d2d4ad64da8a6"
+    },
+    {
+      "evidencePath": "docs/qa-evidence/2026-07-01/master-branch-protection.json",
+      "status": "pending",
+      "reviewer": "_pending_",
+      "reviewedAt": "_pending_",
+      "pathKind": "local",
+      "sourceRefs": [
+        {
+          "source": "qa",
+          "qaRowId": "Branch protection Master branch protection",
+          "platform": "Branch protection",
+          "route": "Master branch protection",
+          "evidenceDate": "2026-07-01"
+        }
+      ],
+      "sha256": "d4098a017ca2552ba6707cee33315723601d5ddd78cf302ae4a655eca02a5be3"
+    }
+  ]
+}

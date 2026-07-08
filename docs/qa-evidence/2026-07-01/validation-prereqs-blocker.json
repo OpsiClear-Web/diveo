@@ -1,0 +1,274 @@
+{
+  "checkedAt": "2026-07-01T20:34:35.236Z",
+  "ok": false,
+  "status": "fail",
+  "checked": {
+    "commands": {
+      "adb": false,
+      "java": false,
+      "npx": true,
+      "gh": true,
+      "emulator": false,
+      "xcrun": false
+    },
+    "env": {
+      "production-gsav-web-url": {
+        "name": "EXPO_PUBLIC_GSAV_WEB_URL",
+        "present": false,
+        "value": null
+      },
+      "production-gsav-catalog-url": {
+        "name": "EXPO_PUBLIC_GSAV_CATALOG_URL",
+        "present": false,
+        "value": null
+      },
+      "production-supabase-url": {
+        "name": "EXPO_PUBLIC_GSAV_SUPABASE_URL",
+        "present": false,
+        "value": null
+      },
+      "production-range-probe-url": {
+        "name": "GSAV_RANGE_PROBE_URL",
+        "present": false,
+        "value": null
+      },
+      "production-host-identity-url": {
+        "name": "GSAV_HOST_IDENTITY_URL",
+        "present": false,
+        "value": null
+      },
+      "production-supabase-anon-key": {
+        "name": "EXPO_PUBLIC_GSAV_SUPABASE_ANON_KEY",
+        "present": false,
+        "value": null
+      },
+      "production-hosting-commit": {
+        "name": "GSAV_HOSTING_COMMIT",
+        "present": false,
+        "value": null
+      },
+      "EXPO_PUBLIC_GSAV_QA_CONTROLS": null,
+      "EXPO_PUBLIC_GSAV_QA_AUTH_DELAY_MS": null
+    },
+    "paths": {
+      "apk": {
+        "path": "android/app/build/outputs/apk/release/app-release.apk",
+        "exists": false
+      },
+      "manifest": {
+        "path": "android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml",
+        "exists": false
+      },
+      "androidProject": {
+        "path": "android",
+        "exists": false
+      }
+    },
+    "android": {
+      "connectedDevices": [],
+      "deviceMetadata": []
+    },
+    "androidMetadataTools": {
+      "aapt": {
+        "command": "aapt",
+        "envName": "AAPT",
+        "label": "aapt dump badging",
+        "commandAvailable": false,
+        "envConfigured": false,
+        "envValue": null
+      },
+      "apkanalyzer": {
+        "command": "apkanalyzer",
+        "envName": "APKANALYZER",
+        "label": "apkanalyzer manifest print",
+        "commandAvailable": false,
+        "envConfigured": false,
+        "envValue": null
+      },
+      "bundletool": {
+        "command": "bundletool",
+        "envName": "BUNDLETOOL",
+        "label": "bundletool dump manifest",
+        "commandAvailable": false,
+        "envConfigured": false,
+        "envValue": null
+      }
+    },
+    "ios": {
+      "owner": {
+        "name": "IOS_VALIDATION_OWNER",
+        "present": false,
+        "value": null
+      },
+      "deviceIdentity": {
+        "name": "IOS_VALIDATION_DEVICE",
+        "present": false,
+        "value": null
+      },
+      "iosVersion": {
+        "name": "IOS_VALIDATION_VERSION",
+        "present": false,
+        "value": null
+      },
+      "wkWebViewVersion": {
+        "name": "IOS_WKWEBVIEW_VERSION",
+        "present": false,
+        "value": null
+      },
+      "artifactUrl": {
+        "name": "IOS_VALIDATION_ARTIFACT_URL",
+        "present": false,
+        "value": null
+      },
+      "artifactSha256": {
+        "name": "IOS_VALIDATION_ARTIFACT_SHA256",
+        "present": false,
+        "value": null
+      },
+      "executorProof": {
+        "present": false,
+        "source": "IOS_VALIDATION_EXECUTOR_PROOF",
+        "value": null
+      },
+      "artifactPath": {
+        "name": "IOS_VALIDATION_ARTIFACT_PATH",
+        "present": false,
+        "value": null,
+        "exists": false,
+        "insideRoot": true
+      },
+      "computedArtifactSha256": {
+        "present": false,
+        "value": null
+      },
+      "artifactSha256Matches": null
+    }
+  },
+  "blockers": [
+    {
+      "id": "android-adb",
+      "requirement": "Android device route QA and installed APK smoke",
+      "reason": "`adb` is not available.",
+      "nextAction": "Install Android SDK platform-tools or set PATH/ADB before Android validation."
+    },
+    {
+      "id": "android-java",
+      "requirement": "Gradle release APK build",
+      "reason": "`java` is not available.",
+      "nextAction": "Install JDK 17 before building the Android release artifact."
+    },
+    {
+      "id": "android-version-metadata-tool",
+      "requirement": "generated APK versionCode metadata",
+      "reason": "No generated APK metadata tool is available.",
+      "nextAction": "Install aapt, apkanalyzer, or bundletool, or set AAPT, APKANALYZER, or BUNDLETOOL before artifact validation."
+    },
+    {
+      "id": "ios-executor-proof",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "iOS validation executor proof is missing.",
+      "nextAction": "Set IOS_VALIDATION_EXECUTOR_PROOF to macOS/Xcode/xcrun evidence or physical iOS-device proof, or run on macOS with xcrun available."
+    },
+    {
+      "id": "ios-owner",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "iOS validation owner is missing or not concrete.",
+      "nextAction": "Set IOS_VALIDATION_OWNER to the person, team handle, GitHub issue, or workflow run that owns iOS validation."
+    },
+    {
+      "id": "ios-deviceIdentity",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "iOS simulator/device identity is missing or not concrete.",
+      "nextAction": "Set IOS_VALIDATION_DEVICE to the simulator or physical device name/UDID used for WKWebView validation."
+    },
+    {
+      "id": "ios-iosVersion",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "iOS version is missing or not concrete.",
+      "nextAction": "Set IOS_VALIDATION_VERSION to the iOS version observed during validation."
+    },
+    {
+      "id": "ios-wkWebViewVersion",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "WKWebView/WebKit version is missing or not concrete.",
+      "nextAction": "Set IOS_WKWEBVIEW_VERSION or IOS_WEBKIT_VERSION to the WebKit/WKWebView version observed during validation."
+    },
+    {
+      "id": "ios-artifactUrl",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "iOS validation artifact URL is missing or not concrete.",
+      "nextAction": "Set IOS_VALIDATION_ARTIFACT_URL to a trusted direct GitHub Actions artifact, release asset download, or docs/qa-evidence blob containing iOS screenshots, video, or filtered logs."
+    },
+    {
+      "id": "ios-artifactSha256",
+      "requirement": "iOS WKWebView route and negative validation",
+      "reason": "iOS validation artifact SHA256 is missing or not concrete.",
+      "nextAction": "Set IOS_VALIDATION_ARTIFACT_SHA256 to the 64-hex checksum of the reviewed iOS screenshot, video, log bundle, or artifact manifest."
+    },
+    {
+      "id": "ios-artifactPath",
+      "requirement": "byte-verified iOS WKWebView validation artifact",
+      "reason": "IOS_VALIDATION_ARTIFACT_PATH is missing.",
+      "nextAction": "Download or place the reviewed iOS artifact in the validation root and set IOS_VALIDATION_ARTIFACT_PATH or --ios-artifact-path."
+    },
+    {
+      "id": "production-gsav-web-url",
+      "requirement": "production GSAV web URL",
+      "reason": "EXPO_PUBLIC_GSAV_WEB_URL or GSAV_WEB_URL is missing.",
+      "nextAction": "Set the production secret/env value before collecting publish-counted evidence."
+    },
+    {
+      "id": "production-gsav-catalog-url",
+      "requirement": "production GSAV catalog URL",
+      "reason": "EXPO_PUBLIC_GSAV_CATALOG_URL or GSAV_CATALOG_URL is missing.",
+      "nextAction": "Set the production secret/env value before collecting publish-counted evidence."
+    },
+    {
+      "id": "production-supabase-url",
+      "requirement": "production Supabase URL",
+      "reason": "EXPO_PUBLIC_GSAV_SUPABASE_URL or GSAV_SUPABASE_URL is missing.",
+      "nextAction": "Set the production secret/env value before collecting publish-counted evidence."
+    },
+    {
+      "id": "production-range-probe-url",
+      "requirement": "production .gsav range probe URL",
+      "reason": "GSAV_RANGE_PROBE_URL or GSAV_NATIVE_PREFLIGHT_RANGE_URL is missing.",
+      "nextAction": "Set the production secret/env value before collecting publish-counted evidence."
+    },
+    {
+      "id": "production-host-identity-url",
+      "requirement": "production GSAV host identity URL",
+      "reason": "GSAV_HOST_IDENTITY_URL or GSAV_HOST_BUILD_METADATA_URL is missing.",
+      "nextAction": "Set the production secret/env value before collecting publish-counted evidence."
+    },
+    {
+      "id": "production-supabase-anon-key",
+      "requirement": "production Supabase anon key",
+      "reason": "EXPO_PUBLIC_GSAV_SUPABASE_ANON_KEY or GSAV_SUPABASE_ANON_KEY is missing.",
+      "nextAction": "Set the production secret/env value before release dry-run validation."
+    },
+    {
+      "id": "production-hosting-commit",
+      "requirement": "production GSAV host/build identity",
+      "reason": "GSAV_HOSTING_COMMIT is missing.",
+      "nextAction": "Set the production secret/env value before release dry-run validation."
+    },
+    {
+      "id": "release-apk",
+      "requirement": "real release APK artifact scan and installed APK smoke",
+      "reason": "Release APK does not exist at android/app/build/outputs/apk/release/app-release.apk.",
+      "nextAction": "Build or download the exact release APK before artifact and installed-smoke validation."
+    },
+    {
+      "id": "merged-manifest",
+      "requirement": "merged Android manifest scan",
+      "reason": "Merged Android manifest does not exist at android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml.",
+      "nextAction": "Point --manifest-path or ANDROID_MANIFEST_PATH at the generated release manifest."
+    }
+  ],
+  "warnings": [
+    "`emulator` is unavailable; Android validation must use a physical device or another machine.",
+    "iOS WKWebView validation requires macOS with Xcode/xcrun or a separate physical-device workflow.",
+    "Generated android/ project is missing; run `npx expo prebuild --platform android --no-install` before local Gradle artifact validation."
+  ]
+}

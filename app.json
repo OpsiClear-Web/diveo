@@ -23,6 +23,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
+      "versionCode": 10019,
       "usesCleartextTraffic": true,
       "permissions": [
         "android.permission.MODIFY_AUDIO_SETTINGS",
@@ -36,7 +37,6 @@
     },
     "plugins": [
       "expo-router",
-      "react-native-video",
       "expo-screen-orientation",
       "@sentry/react-native/expo",
       "expo-secure-store",

@@ -1,0 +1,156 @@
+{
+  "bridge": {
+    "nativeMinVersion": 1,
+    "nativeVersion": 1,
+    "sessionVersion": 1,
+    "web": {
+      "compatible": true,
+      "minVersion": 1,
+      "sourcePath": "../gsav-hosting/apps/web/src/native/bridge.ts",
+      "version": 1
+    }
+  },
+  "catalog": {
+    "firstVideoId": "capture-room",
+    "schemaVersion": 1
+  },
+  "doctor": {
+    "checks": [
+      {
+        "detail": "ok",
+        "name": "diveo env drift",
+        "ok": true
+      },
+      {
+        "detail": "ok",
+        "name": "gsav-hosting web env drift",
+        "ok": true
+      },
+      {
+        "detail": "ok",
+        "name": "gsav-hosting functions env drift",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:8082",
+        "name": "native shell origin allowlist",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/auth/v1/health",
+        "name": "Supabase API",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/functions/v1/catalog schema=1 first=capture-room",
+        "name": "Catalog function",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/capture-room.jpg",
+        "name": "catalog video[0] capture-room poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/videos/30000000-0000-0000-0000-000000000003/40000000-0000-0000-0000-000000000004/scene.gsav",
+        "name": "catalog video[0] capture-room GSAV asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/capture-room.webp",
+        "name": "catalog video[0] capture-room animated poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/stage-study.jpg",
+        "name": "catalog video[1] stage-study poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/videos/30000000-0000-0000-0000-000000000002/40000000-0000-0000-0000-000000000003/scene.gsav",
+        "name": "catalog video[1] stage-study GSAV asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/stage-study.webp",
+        "name": "catalog video[1] stage-study animated poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/elly.jpg",
+        "name": "catalog video[2] elly poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/videos/30000000-0000-0000-0000-000000000001/40000000-0000-0000-0000-000000000002/scene.gsav",
+        "name": "catalog video[2] elly GSAV asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/elly.webp",
+        "name": "catalog video[2] elly animated poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/test.jpg",
+        "name": "catalog video[3] test poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/videos/30000000-0000-0000-0000-000000000001/40000000-0000-0000-0000-000000000001/scene.gsav",
+        "name": "catalog video[3] test GSAV asset",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:54321/storage/v1/object/public/gsav-public/posters/generated/test.webp",
+        "name": "catalog video[3] test animated poster asset",
+        "ok": true
+      },
+      {
+        "detail": "http://localhost:5173",
+        "name": "GSAV web app",
+        "ok": true
+      },
+      {
+        "detail": "http://127.0.0.1:8082",
+        "name": "diveo native preview",
+        "ok": true
+      }
+    ],
+    "ok": true,
+    "requireAssets": true,
+    "skipNetwork": false
+  },
+  "gitSha": "3d243f51497982d1c741e28d7f6ed2e90c99ba50",
+  "schemaVersion": "stack-architecture-receipt/v1",
+  "stackProfile": {
+    "allowedShellOrigins": [
+      "http://localhost:8081",
+      "http://127.0.0.1:8081",
+      "http://localhost:8082",
+      "http://127.0.0.1:8082"
+    ],
+    "backend": {
+      "class": "local-private",
+      "origin": "http://127.0.0.1:54321",
+      "url": "http://127.0.0.1:54321"
+    },
+    "catalog": {
+      "class": "local-private",
+      "origin": "http://127.0.0.1:54321",
+      "url": "http://127.0.0.1:54321/functions/v1/catalog"
+    },
+    "nativePreview": {
+      "class": "local-private",
+      "origin": "http://127.0.0.1:8082",
+      "url": "http://127.0.0.1:8082"
+    },
+    "path": "config/stack.local.json",
+    "profile": "local",
+    "web": {
+      "class": "local-private",
+      "origin": "http://localhost:5173",
+      "url": "http://localhost:5173"
+    }
+  }
+}

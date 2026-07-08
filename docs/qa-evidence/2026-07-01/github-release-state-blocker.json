@@ -1,0 +1,288 @@
+{
+  "checkedAt": "2026-07-01T20:58:55.689Z",
+  "status": "no-publish",
+  "ok": false,
+  "repository": "OpsiClear-Web/diveo",
+  "workflowName": "Release APK",
+  "deviceWorkflowName": "Device Validation",
+  "review": {
+    "reviewer": "codex-local-verifier",
+    "reviewedAt": "2026-07-01T20:56:30Z"
+  },
+  "commands": {
+    "workflows": "gh api repos/OpsiClear-Web/diveo/actions/workflows",
+    "releaseRuns": "gh run list -R OpsiClear-Web/diveo --workflow 'Release APK' --limit 10 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+    "workflowDispatchRuns": "gh run list -R OpsiClear-Web/diveo --event workflow_dispatch --limit 20 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+    "releases": "gh release list -R OpsiClear-Web/diveo --limit 20 --json tagName,name,isDraft,isImmutable,isLatest,isPrerelease,publishedAt"
+  },
+  "workflows": [
+    {
+      "id": 299441762,
+      "nodeId": "W_kwDORuqKd84R2R5i",
+      "name": "CI",
+      "path": ".github/workflows/ci.yml",
+      "state": "active",
+      "createdAt": "2026-06-20T14:51:30.000-04:00",
+      "updatedAt": "2026-06-22T01:29:55.000-04:00",
+      "url": "https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows/299441762",
+      "htmlUrl": "https://github.com/OpsiClear-Web/diveo/blob/master/.github/workflows/ci.yml",
+      "badgeUrl": "https://github.com/OpsiClear-Web/diveo/workflows/CI/badge.svg"
+    },
+    {
+      "id": 297794236,
+      "nodeId": "W_kwDORuqKd84Rv_q8",
+      "name": "Auto Close Invalid Issues",
+      "path": ".github/workflows/close-invalid-issues.yml",
+      "state": "active",
+      "createdAt": "2026-06-17T14:11:34.000-04:00",
+      "updatedAt": "2026-06-17T14:11:34.000-04:00",
+      "url": "https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows/297794236",
+      "htmlUrl": "https://github.com/OpsiClear-Web/diveo/blob/master/.github/workflows/close-invalid-issues.yml",
+      "badgeUrl": "https://github.com/OpsiClear-Web/diveo/workflows/Auto%20Close%20Invalid%20Issues/badge.svg"
+    },
+    {
+      "id": 299964305,
+      "nodeId": "W_kwDORuqKd84R4ReR",
+      "name": "Quality",
+      "path": ".github/workflows/quality.yml",
+      "state": "active",
+      "createdAt": "2026-06-22T01:29:55.000-04:00",
+      "updatedAt": "2026-06-22T01:29:55.000-04:00",
+      "url": "https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows/299964305",
+      "htmlUrl": "https://github.com/OpsiClear-Web/diveo/blob/master/.github/workflows/quality.yml",
+      "badgeUrl": "https://github.com/OpsiClear-Web/diveo/workflows/Quality/badge.svg"
+    },
+    {
+      "id": 297794237,
+      "nodeId": "W_kwDORuqKd84Rv_q9",
+      "name": "Release APK",
+      "path": ".github/workflows/release.yml",
+      "state": "active",
+      "createdAt": "2026-06-17T14:11:34.000-04:00",
+      "updatedAt": "2026-06-17T14:11:34.000-04:00",
+      "url": "https://api.github.com/repos/OpsiClear-Web/diveo/actions/workflows/297794237",
+      "htmlUrl": "https://github.com/OpsiClear-Web/diveo/blob/master/.github/workflows/release.yml",
+      "badgeUrl": "https://github.com/OpsiClear-Web/diveo/workflows/Release%20APK/badge.svg"
+    }
+  ],
+  "workflowNames": [
+    "CI",
+    "Auto Close Invalid Issues",
+    "Quality",
+    "Release APK"
+  ],
+  "releaseWorkflowPresent": true,
+  "deviceValidationWorkflowPresent": false,
+  "latestReleaseApkRuns": [
+    {
+      "databaseId": 28015257532,
+      "workflowName": "Release APK",
+      "displayTitle": "feat(diveo): GSAV catalog data layer (World B foundation)",
+      "headBranch": "master",
+      "headSha": "fdc88ec053ecd4bb2a0a7f489a927eaa02146017",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-23T09:09:12Z",
+      "updatedAt": "2026-06-23T09:09:54Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/28015257532"
+    },
+    {
+      "databaseId": 27985962116,
+      "workflowName": "Release APK",
+      "displayTitle": "docs: rewrite shell architecture for World A",
+      "headBranch": "master",
+      "headSha": "fe08fa3d0efdeef4ee5740c786212ae31f38b995",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T21:41:54Z",
+      "updatedAt": "2026-06-22T21:42:32Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27985962116"
+    },
+    {
+      "databaseId": 27984336248,
+      "workflowName": "Release APK",
+      "displayTitle": "feat(diveo): embed the player in-shell on web via iframe (no redirect)",
+      "headBranch": "master",
+      "headSha": "da18e4ea5f233bc45c8d7cd7b650615254574519",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T21:11:59Z",
+      "updatedAt": "2026-06-22T21:12:36Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27984336248"
+    },
+    {
+      "databaseId": 27979348232,
+      "workflowName": "Release APK",
+      "displayTitle": "feat(diveo): mirror the hosted scene catalog on the home",
+      "headBranch": "master",
+      "headSha": "856f1daac55ee6a7094713ebe66becfe5dda8c17",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T19:45:05Z",
+      "updatedAt": "2026-06-22T19:45:48Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27979348232"
+    },
+    {
+      "databaseId": 27978270197,
+      "workflowName": "Release APK",
+      "displayTitle": "fix(diveo): hand off to hosted player on web instead of crashing",
+      "headBranch": "master",
+      "headSha": "e56d785f50e5f38ee8177abff38a7dc7fbfbf4c0",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T19:26:10Z",
+      "updatedAt": "2026-06-22T19:26:46Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27978270197"
+    },
+    {
+      "databaseId": 27977834493,
+      "workflowName": "Release APK",
+      "displayTitle": "feat(diveo): replace frozen feed with a diveo browse home",
+      "headBranch": "master",
+      "headSha": "088398fc767d7ea5c74c2882918341d41c72a0fe",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T19:18:28Z",
+      "updatedAt": "2026-06-22T19:19:13Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27977834493"
+    },
+    {
+      "databaseId": 27958703250,
+      "workflowName": "Release APK",
+      "displayTitle": "docs: add remaining-gaps plan (shell completeness -> shippable)",
+      "headBranch": "master",
+      "headSha": "058374dc43327d4ef7204dc9cf83784db3c87773",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T14:06:20Z",
+      "updatedAt": "2026-06-22T14:07:00Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27958703250"
+    },
+    {
+      "databaseId": 27937419376,
+      "workflowName": "Release APK",
+      "displayTitle": "chore: gitignore coverage/ output",
+      "headBranch": "master",
+      "headSha": "994f679fef218e43410cca90d7d4181444fdc2aa",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T07:44:46Z",
+      "updatedAt": "2026-06-22T07:45:22Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27937419376"
+    },
+    {
+      "databaseId": 27936243565,
+      "workflowName": "Release APK",
+      "displayTitle": "docs: track native-shell architecture doc (gitignore exception)",
+      "headBranch": "master",
+      "headSha": "6edade90ef49ba9df822732f6b6631d0adaff641",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T07:19:33Z",
+      "updatedAt": "2026-06-22T07:20:11Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27936243565"
+    },
+    {
+      "databaseId": 27936210469,
+      "workflowName": "Release APK",
+      "displayTitle": "ci(release): skip release (not fail) until GSAV_WEB_URL is set",
+      "headBranch": "master",
+      "headSha": "2e53615c1f8d46f748d1e4774e3310e073d804fc",
+      "status": "completed",
+      "conclusion": "success",
+      "event": "push",
+      "createdAt": "2026-06-22T07:18:51Z",
+      "updatedAt": "2026-06-22T07:19:34Z",
+      "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/27936210469"
+    }
+  ],
+  "latestReleaseApkRun": {
+    "databaseId": 28015257532,
+    "workflowName": "Release APK",
+    "displayTitle": "feat(diveo): GSAV catalog data layer (World B foundation)",
+    "headBranch": "master",
+    "headSha": "fdc88ec053ecd4bb2a0a7f489a927eaa02146017",
+    "status": "completed",
+    "conclusion": "success",
+    "event": "push",
+    "createdAt": "2026-06-23T09:09:12Z",
+    "updatedAt": "2026-06-23T09:09:54Z",
+    "url": "https://github.com/OpsiClear-Web/diveo/actions/runs/28015257532"
+  },
+  "workflowDispatchRuns": [],
+  "releaseWorkflowDispatchRuns": [],
+  "successfulReleaseWorkflowDispatchRuns": [],
+  "releases": [],
+  "releaseState": {
+    "releaseCount": 0,
+    "noGitHubReleasesObserved": true,
+    "latestReleaseApkRunEvent": "push",
+    "latestReleaseWorkflowDispatchRun": null
+  },
+  "querySummaries": {
+    "workflows": {
+      "command": "gh api repos/OpsiClear-Web/diveo/actions/workflows",
+      "exitCode": 0,
+      "stderr": "",
+      "message": null,
+      "output": {
+        "workflowCount": 4
+      },
+      "error": null
+    },
+    "releaseRuns": {
+      "command": "gh run list -R OpsiClear-Web/diveo --workflow 'Release APK' --limit 10 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+      "exitCode": 0,
+      "stderr": "",
+      "message": null,
+      "output": {
+        "runCount": 10
+      },
+      "error": null
+    },
+    "workflowDispatchRuns": {
+      "command": "gh run list -R OpsiClear-Web/diveo --event workflow_dispatch --limit 20 --json databaseId,workflowName,displayTitle,headBranch,headSha,status,conclusion,event,createdAt,updatedAt,url",
+      "exitCode": 0,
+      "stderr": "",
+      "message": null,
+      "output": {
+        "runCount": 0
+      },
+      "error": null
+    },
+    "releases": {
+      "command": "gh release list -R OpsiClear-Web/diveo --limit 20 --json tagName,name,isDraft,isImmutable,isLatest,isPrerelease,publishedAt",
+      "exitCode": 0,
+      "stderr": "",
+      "message": null,
+      "output": {
+        "releaseCount": 0
+      },
+      "error": null
+    }
+  },
+  "blockers": [
+    "Device Validation workflow is not active or not present",
+    "no workflow_dispatch runs found for the current fixed-candidate dry-run requirement",
+    "latest Release APK run is push, not a fixed-candidate dry run"
+  ],
+  "releaseReadinessImpact": {
+    "status": "no-publish",
+    "qaRow": "GitHub Actions release dry run / Release workflow dry run",
+    "requiredBeforePass": [
+      "workflow_dispatch publish_release=false run with fixed candidate_ref and production secrets",
+      "artifact diveo-release-evidence-v<version> from that run",
+      "reviewed dry-run summary, checksums, no-publish proof, and publishArtifactIdentitySha256",
+      "active Device Validation workflow in the remote repository"
+    ]
+  }
+}

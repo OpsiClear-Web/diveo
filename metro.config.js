@@ -9,14 +9,10 @@ config.watchFolders = [...(config.watchFolders ?? []), path.resolve(__dirname, '
 const originalResolveRequest = config.resolver.resolveRequest;
 
 const WEB_SHIMS = {
-  'react-native-pager-view':                'shims/react-native-pager-view.web.tsx',
   '@sentry/react-native':                   'shims/sentry-react-native.web.tsx',
-  '@dr.pogodin/react-native-static-server': 'shims/react-native-static-server.web.ts',
-  'expo-network':                           'shims/expo-network.web.ts',
   'expo-intent-launcher':                   'shims/expo-intent-launcher.web.ts',
   'expo-file-system':                       'shims/expo-file-system.web.ts',
   'expo-file-system/legacy':                'shims/expo-file-system.web.ts',
-  'expo-clipboard':                         'shims/expo-clipboard.web.ts',
 };
 
 config.resolver.resolveRequest = (context, moduleName, platform) => {

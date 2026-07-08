@@ -1,5 +1,16 @@
 # diveo Scale Plan — scene-social bridge + shared client SDK
 
+> Superseded by `docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md`.
+> This file is historical and is not the active scale plan.
+> Use `docs/GSAV_NATIVE_QA.md` and `docs/IMPLEMENTATION_VALIDATION_AUDIT.md`
+> for current validation evidence, release blockers, and publish/no-publish
+> status.
+> The body below is retained for historical context only; do not use it as an implementation checklist.
+> Historical ownership warning: ADR 0002 supersedes any launcher/no-catalog
+> guidance below. React Native now owns native browse/search/creator/library
+> product UX as a consumer of shared GSAV catalog contracts; gsav-hosting owns
+> decode/render/playback/runtime. Do not use this file for ownership decisions.
+
 Two implementation plans toward the principled large-scale design (one source of
 truth per concern; clients consume shared packages/contracts, never mirror each
 other). Plan A ships scene-level social (comments/danmaku) the principled way;

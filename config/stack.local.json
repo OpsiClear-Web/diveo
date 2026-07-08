@@ -1,0 +1,14 @@
+{
+  "profile": "local",
+  "backendUrl": "http://127.0.0.1:54321",
+  "catalogUrl": "http://127.0.0.1:54321/functions/v1/catalog",
+  "webUrl": "http://localhost:5173",
+  "nativePreviewUrl": "http://127.0.0.1:8082",
+  "allowedShellOrigins": [
+    "http://localhost:8081",
+    "http://127.0.0.1:8081",
+    "http://localhost:8082",
+    "http://127.0.0.1:8082"
+  ],
+  "supabaseAnonKey": ""
+}

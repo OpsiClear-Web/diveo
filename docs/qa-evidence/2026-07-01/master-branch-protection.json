@@ -1,0 +1,80 @@
+{
+  "checkedAt": "2026-07-01T20:34:20.999Z",
+  "status": "pass",
+  "ok": true,
+  "errors": [],
+  "repository": "OpsiClear-Web/diveo",
+  "branch": "master",
+  "requiredChecks": [
+    "quality / quality"
+  ],
+  "observedRequiredChecks": [
+    "quality / quality"
+  ],
+  "review": {
+    "reviewer": "codex-local-verifier",
+    "reviewedAt": "2026-07-01T20:34:20Z"
+  },
+  "branchQuery": {
+    "command": "gh api repos/OpsiClear-Web/diveo/branches/master",
+    "exitCode": 0,
+    "stderr": "",
+    "message": null,
+    "output": {
+      "name": "master",
+      "protected": true,
+      "protectionUrl": "https://api.github.com/repos/OpsiClear-Web/diveo/branches/master/protection",
+      "commitSha": "fdc88ec053ecd4bb2a0a7f489a927eaa02146017",
+      "htmlUrl": "https://github.com/OpsiClear-Web/diveo/tree/master",
+      "protection": {
+        "enabled": true,
+        "requiredStatusChecks": {
+          "strict": null,
+          "enforcementLevel": "everyone",
+          "contexts": [
+            "quality / quality"
+          ],
+          "checks": [
+            {
+              "context": "quality / quality",
+              "name": null,
+              "appId": null
+            }
+          ]
+        }
+      }
+    },
+    "error": null
+  },
+  "protectionQuery": {
+    "command": "gh api repos/OpsiClear-Web/diveo/branches/master/protection",
+    "exitCode": 0,
+    "stderr": "",
+    "message": null,
+    "output": {
+      "requiredStatusChecks": {
+        "strict": true,
+        "enforcementLevel": null,
+        "contexts": [
+          "quality / quality"
+        ],
+        "checks": [
+          {
+            "context": "quality / quality",
+            "name": null,
+            "appId": null
+          }
+        ]
+      },
+      "enforceAdmins": true,
+      "requiredPullRequestReviews": null,
+      "restrictions": null
+    },
+    "error": null
+  },
+  "releaseReadinessImpact": {
+    "status": "ready",
+    "qaRow": "Branch protection / Master branch protection",
+    "requiredBeforePass": []
+  }
+}

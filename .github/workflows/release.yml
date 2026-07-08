@@ -4,18 +4,45 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
+    inputs:
+      candidate_ref:
+        description: "Frozen payload candidate commit SHA. The selected workflow ref may only add QA/audit/evidence files on top."
+        required: true
+        type: string
+      publish_release:
+        description: "Create a GitHub release from the verified candidate after readiness passes."
+        required: true
+        default: false
+        type: boolean
+      expected_apk_sha256:
+        description: "Required when publish_release=true: APK SHA256 from the validated dry-run artifact."
+        required: false
+        type: string
+      expected_publish_identity_sha256:
+        description: "Required when publish_release=true: publishArtifactIdentitySha256 from the validated dry-run artifact."
+        required: false
+        type: string
+      external_evidence_inventory_path:
+        description: "Required when publish_release=true: reviewed external evidence inventory path under docs/qa-evidence/<date>/external-evidence-inventory.json."
+        required: false
+        type: string
+      device_evidence_packet_path:
+        description: "Required when publish_release=true: reviewed non-scaffold device packet path under docs/qa-evidence/<date>/."
+        required: false
+        type: string
 
 jobs:
-  # Gate the artifact on the same tsc + test + lint quality gate as PRs (not just merges).
+  # Gate the artifact on the same tsc + test + lint quality gate as PRs.
   quality:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
     uses: ./.github/workflows/quality.yml
 
-  # Skip (do NOT fail) the release until the production origin secret is set. This keeps
-  # master green while GSAV_WEB_URL is unconfigured, instead of a permanent red run that
-  # would mask real failures. The release job below is gated on this output.
+  # Skip the release until the production GSAV/Supabase secrets and range-probe
+  # URL are set. Quality still runs, so master keeps a useful CI signal while
+  # publishing is disabled.
   gate:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+    if: ${{ github.event_name != 'push' || !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     outputs:
       configured: ${{ steps.check.outputs.configured }}
@@ -23,30 +50,52 @@ jobs:
       - id: check
         env:
           GSAV_WEB_URL: ${{ secrets.GSAV_WEB_URL }}
+          GSAV_CATALOG_URL: ${{ secrets.GSAV_CATALOG_URL }}
+          GSAV_SUPABASE_URL: ${{ secrets.GSAV_SUPABASE_URL }}
+          GSAV_SUPABASE_ANON_KEY: ${{ secrets.GSAV_SUPABASE_ANON_KEY }}
+          GSAV_RANGE_PROBE_URL: ${{ secrets.GSAV_RANGE_PROBE_URL }}
+          GSAV_HOSTING_COMMIT: ${{ secrets.GSAV_HOSTING_COMMIT }}
+          GSAV_HOST_IDENTITY_URL: ${{ secrets.GSAV_HOST_IDENTITY_URL }}
+          PUBLISH_INTENT: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
         run: |
-          if [ -n "$GSAV_WEB_URL" ]; then
+          missing=""
+          for name in GSAV_WEB_URL GSAV_CATALOG_URL GSAV_SUPABASE_URL GSAV_SUPABASE_ANON_KEY GSAV_RANGE_PROBE_URL GSAV_HOSTING_COMMIT GSAV_HOST_IDENTITY_URL; do
+            value=$(eval "printf '%s' \"\${$name:-}\"")
+            if [ -z "$value" ]; then
+              missing="$missing $name"
+            fi
+          done
+          if [ -z "$missing" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
-            echo "GSAV_WEB_URL not set — release skipped (set the secret to enable publishing)."
+            echo "Missing production GSAV secrets:$missing; release skipped."
+            if [ "$PUBLISH_INTENT" = "true" ]; then
+              echo "::error::Production GSAV secrets are required when publish_release=true:$missing"
+              exit 1
+            fi
             echo "configured=false" >> "$GITHUB_OUTPUT"
           fi
 
   release:
     needs: [quality, gate]
-    # Runs only when the production origin is configured; otherwise this job is skipped
-    # (shown gray, not red). Quality still runs on every push for the real CI signal.
     if: ${{ needs.gate.outputs.configured == 'true' }}
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      artifact_name: ${{ steps.version.outputs.artifact_name }}
+      candidate_sha: ${{ steps.candidate.outputs.sha }}
 
-    # Production env for the raw prebuild + Gradle build (this pipeline does NOT use
-    # `eas build`, so eas.json env never applies). EXPO_PUBLIC_APP_ENV flips
-    # android.usesCleartextTraffic=false at prebuild (app.config.js); the EXPO_PUBLIC_*
-    # values are inlined into the JS bundle during assembleRelease.
+    # This pipeline does not use `eas build`, so EAS profile env does not apply.
+    # EXPO_PUBLIC_APP_ENV flips Android cleartext off at prebuild; the remaining
+    # EXPO_PUBLIC_* values are inlined into the JS bundle during assembleRelease.
     env:
       EXPO_PUBLIC_APP_ENV: production
       EXPO_PUBLIC_GSAV_WEB_URL: ${{ secrets.GSAV_WEB_URL }}
+      EXPO_PUBLIC_GSAV_CATALOG_URL: ${{ secrets.GSAV_CATALOG_URL }}
+      EXPO_PUBLIC_GSAV_SUPABASE_URL: ${{ secrets.GSAV_SUPABASE_URL }}
+      EXPO_PUBLIC_GSAV_SUPABASE_ANON_KEY: ${{ secrets.GSAV_SUPABASE_ANON_KEY }}
       EXPO_PUBLIC_SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
 
     steps:
@@ -54,82 +103,389 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+
+      - name: Resolve frozen payload candidate
+        id: candidate
+        env:
+          PAYLOAD_CANDIDATE_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.candidate_ref || github.sha }}
+          PUBLISH_INTENT: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        run: |
+          mkdir -p release-evidence
+          if [ -z "$PAYLOAD_CANDIDATE_REF" ]; then
+            echo "::error::workflow_dispatch release runs must provide candidate_ref."
+            exit 1
+          fi
+          if ! printf '%s' "$PAYLOAD_CANDIDATE_REF" | grep -Eiq '^[0-9a-f]{40}$'; then
+            echo "::error::candidate_ref must be a full 40-hex payload commit SHA."
+            exit 1
+          fi
+          CANDIDATE_SHA=$(git rev-parse "$PAYLOAD_CANDIDATE_REF^{commit}")
+          SIGNOFF_SHA=$(git rev-parse HEAD)
+          echo "sha=$CANDIDATE_SHA" >> "$GITHUB_OUTPUT"
+          echo "signoff_sha=$SIGNOFF_SHA" >> "$GITHUB_OUTPUT"
+          echo "payloadCandidateRef=$PAYLOAD_CANDIDATE_REF" | tee release-evidence/signoff-diff-files.txt
+          echo "payloadCandidateSha=$CANDIDATE_SHA" | tee -a release-evidence/signoff-diff-files.txt
+          echo "evidenceSignoffSha=$SIGNOFF_SHA" | tee -a release-evidence/signoff-diff-files.txt
+          if ! git merge-base --is-ancestor "$CANDIDATE_SHA" "$SIGNOFF_SHA"; then
+            echo "::error::The evidence signoff ref must descend from candidate_ref."
+            exit 1
+          fi
+          if [ "$PUBLISH_INTENT" = "true" ]; then
+            git fetch --no-tags origin master
+            PROTECTED_MASTER_SHA=$(git rev-parse origin/master^{commit})
+            echo "protectedMasterSha=$PROTECTED_MASTER_SHA" | tee -a release-evidence/signoff-diff-files.txt
+            echo "protectedCandidateProof=git merge-base --is-ancestor $CANDIDATE_SHA origin/master" | tee -a release-evidence/signoff-diff-files.txt
+            if ! git merge-base --is-ancestor "$CANDIDATE_SHA" origin/master; then
+              echo "::error::candidate_ref must be reachable from protected origin/master before publish_release=true."
+              exit 1
+            fi
+          fi
+          git diff --name-only "$CANDIDATE_SHA..$SIGNOFF_SHA" | tee -a release-evidence/signoff-diff-files.txt
+          DISALLOWED=$(git diff --name-only "$CANDIDATE_SHA..$SIGNOFF_SHA" | grep -Ev '^(docs/GSAV_NATIVE_QA\.md|docs/IMPLEMENTATION_VALIDATION_AUDIT\.md|docs/qa-evidence/)' || true)
+          if [ -n "$DISALLOWED" ]; then
+            echo "::error::Only QA/audit/evidence files may change after candidate_ref:"
+            echo "$DISALLOWED"
+            exit 1
+          fi
 
       - name: Setup Node 20
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
 
+      - name: Capture frozen candidate version
+        id: version
+        run: |
+          RELEASE_VERSION=$(node -e "console.log(require('./package.json').version)")
+          echo "$RELEASE_VERSION" | tee release-evidence/version.txt
+          echo "version=$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+          echo "artifact_name=diveo-release-evidence-v$RELEASE_VERSION" >> "$GITHUB_OUTPUT"
+
       - name: Verify native production config (required gate)
-        run: npm run verify:native-production-config
+        run: |
+          npm run verify:native-production-config | tee release-evidence/native-production-config-before-bump.json
 
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # Apply the bump locally BEFORE the build so the APK carries the new version, but
-      # do NOT commit/push it until the build + artifact checks pass (below). A failed
-      # build therefore never leaves master with a consumed version number.
-      - name: Compute and apply version bump (local only)
-        id: bump
+      - name: Verify frozen candidate native production config
         run: |
-          NEW_VERSION=$(node scripts/bump-version.js)
-          echo "version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+          set -o pipefail
+          npm run verify:native-production-config | tee release-evidence/native-production-config-after-bump.json
+
+      - name: Write release candidate identity
+        run: |
+          {
+            echo "releaseCandidateSha=${{ steps.candidate.outputs.sha }}"
+            echo "evidenceSignoffSha=${{ steps.candidate.outputs.signoff_sha }}"
+            node -e "const app=require('./app.json').expo; const pkg=require('./package.json'); console.log('appVersion=' + app.version); console.log('packageVersion=' + pkg.version); console.log('androidVersionCode=' + app.android.versionCode)"
+          } | tee release-evidence/release-candidate.txt
+
+      - name: Verify GSAV production host preflight
+        env:
+          GSAV_NATIVE_PREFLIGHT_SKIP_LOCAL_ASSET: "1"
+          GSAV_NATIVE_PREFLIGHT_REQUIRE_RANGE_PROBE: "1"
+          GSAV_NATIVE_PREFLIGHT_REQUIRE_CORS: "1"
+          GSAV_NATIVE_PREFLIGHT_REQUIRE_HOST_IDENTITY: "1"
+          GSAV_NATIVE_PREFLIGHT_RANGE_URL: ${{ secrets.GSAV_RANGE_PROBE_URL }}
+          GSAV_HOST_IDENTITY_URL: ${{ secrets.GSAV_HOST_IDENTITY_URL }}
+          GSAV_HOSTING_COMMIT: ${{ secrets.GSAV_HOSTING_COMMIT }}
+          RELEASE_CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          set -o pipefail
+          npm run gsav:preflight -- --output-path release-evidence/gsav-preflight.json
+          test -s release-evidence/gsav-preflight.json
+
+      - name: Verify GSAV production runtime smoke
+        env:
+          GSAV_RUNTIME_SMOKE_CHROMIUM_EXECUTABLE: /usr/bin/google-chrome
+          GSAV_NATIVE_RUNTIME_SMOKE_TIMEOUT_MS: "30000"
+          GSAV_HOSTING_COMMIT: ${{ secrets.GSAV_HOSTING_COMMIT }}
+          RELEASE_CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          set -o pipefail
+          npm run gsav:runtime-smoke -- --output-path release-evidence/gsav-runtime-smoke.json
+          test -s release-evidence/gsav-runtime-smoke.json
 
       - name: Expo Prebuild
         run: npx expo prebuild --platform android --no-install
+
+      - name: Capture generated version metadata
+        run: |
+          node -e "const app=require('./app.json').expo; console.log(JSON.stringify({version: app.version, androidVersionCode: app.android.versionCode}, null, 2))" | tee release-evidence/app-version-metadata.json
+          grep -n "versionCode" android/app/build.gradle | tee release-evidence/gradle-version-code.txt
 
       - name: Grant Gradle execute permission
         run: chmod +x android/gradlew
 
       - name: Build Release APK
         env:
-          SENTRY_DISABLE_AUTO_UPLOAD: 'true'
+          SENTRY_DISABLE_AUTO_UPLOAD: "true"
         run: |
           cd android
           ./gradlew assembleRelease --no-daemon
 
       - name: Verify built artifact
+        env:
+          ANDROID_MANIFEST_PATH: android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
         run: |
-          set -eu
-          APK=android/app/build/outputs/apk/release/app-release.apk
-          # Positive check: the configured production origin must be inlined in the JS
-          # bundle. NOTE: a naive `grep 127.0.0.1` would false-positive — the localhost
-          # default is a source constant always present in the bundle. The real
-          # guarantee is that production resolves to the configured origin and never the
-          # localhost fallback (see utils/gsavBridge.ts getConfiguredGsavWebUrl).
-          if ! unzip -p "$APK" 'assets/*.bundle' | grep -qF "$EXPO_PUBLIC_GSAV_WEB_URL"; then
-            echo "::error::Release APK does not bake the configured GSAV origin ($EXPO_PUBLIC_GSAV_WEB_URL)"
-            exit 1
-          fi
-          if grep -q 'usesCleartextTraffic="true"' android/app/src/main/AndroidManifest.xml; then
-            echo "::error::Merged AndroidManifest has usesCleartextTraffic=true"
-            exit 1
-          fi
+          set -o pipefail
+          npm run verify:release-artifact -- android/app/build/outputs/apk/release/app-release.apk | tee release-evidence/release-artifact.json
 
-      - name: Commit version bump (only after a verified build)
+      - name: Capture APK version metadata
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add app.json package.json
-          git commit -m "chore: bump version to v${{ steps.bump.outputs.version }} [skip ci]"
-          git push
+          npm run android:version-metadata -- \
+            --apk-path android/app/build/outputs/apk/release/app-release.apk \
+            --expected-version-code "$(node -p 'require("./app.json").expo.android.versionCode')" \
+            --output-path release-evidence/apk-version-metadata.txt
+          test -s release-evidence/apk-version-metadata.txt
+
+      - name: Capture dry-run no-publish side-effect proof
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && !inputs.publish_release) }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -o pipefail
+          gh_release_status=0
+          gh release view "v${{ steps.version.outputs.version }}" --json tagName,targetCommitish,url > release-evidence/gh-release-view.json 2> release-evidence/gh-release-view.err || gh_release_status=$?
+          {
+            echo "mode=dry-run"
+            echo "publishRelease=false"
+            echo "releaseCandidateSha=${{ steps.candidate.outputs.sha }}"
+            echo "workflowSha=${GITHUB_SHA}"
+            echo "git status --short:"
+            git status --short
+            echo "git rev-parse HEAD: $(git rev-parse HEAD)"
+            echo "remote ref HEAD: $(git ls-remote origin "${GITHUB_REF_NAME}" | awk '{print $1}')"
+            echo "gh release view v${{ steps.version.outputs.version }}:"
+            if [ "$gh_release_status" -eq 0 ]; then
+              cat release-evidence/gh-release-view.json
+              echo "githubReleaseLookup=found"
+              echo "githubReleasePresent=true"
+            elif grep -Eiq "not found|could not resolve to a release|404" release-evidence/gh-release-view.err; then
+              cat release-evidence/gh-release-view.err
+              echo "githubReleaseLookup=not_found"
+              echo "githubReleasePresent=false"
+            else
+              cat release-evidence/gh-release-view.err
+              echo "githubReleaseLookup=inconclusive"
+              echo "githubReleasePresent=inconclusive"
+              exit "$gh_release_status"
+            fi
+          } | tee release-evidence/no-publish-side-effect.txt
+          test -s release-evidence/no-publish-side-effect.txt
+
+      - name: Write release dry-run evidence summary
+        env:
+          PUBLISH_RELEASE: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+          GSAV_RANGE_PROBE_URL: ${{ secrets.GSAV_RANGE_PROBE_URL }}
+          RELEASE_CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+        run: |
+          node scripts/write-release-evidence-summary.js \
+            --evidence-dir release-evidence \
+            --apk-path android/app/build/outputs/apk/release/app-release.apk \
+            --manifest-path android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml \
+            --artifact-name "diveo-release-evidence-v${{ steps.version.outputs.version }}" \
+            --release-version "${{ steps.version.outputs.version }}"
+          test -s release-evidence/dry-run-summary.json
+          test -s release-evidence/evidence-checksums.txt
+
+      - name: Verify release evidence bundle
+        env:
+          RELEASE_EVIDENCE_MODE: ${{ (github.event_name == 'workflow_dispatch' && inputs.publish_release) && 'publish' || 'dry-run' }}
+        run: |
+          npm run verify:release-evidence-bundle -- \
+            --evidence-dir release-evidence \
+            --apk-path android/app/build/outputs/apk/release/app-release.apk \
+            --manifest-path android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml \
+            --mode "$RELEASE_EVIDENCE_MODE"
+
+      - name: Verify publish artifact identity
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        env:
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          EXPECTED_APK_SHA256_INPUT: ${{ inputs.expected_apk_sha256 }}
+          EXPECTED_PUBLISH_IDENTITY_SHA256_INPUT: ${{ inputs.expected_publish_identity_sha256 }}
+          EXPECTED_RELEASE_APK_SHA256: ${{ vars.EXPECTED_RELEASE_APK_SHA256 }}
+          EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256: ${{ vars.EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256 }}
+        run: |
+          node <<'NODE'
+          const crypto = require("node:crypto");
+          const fs = require("node:fs");
+
+          function sha256File(filePath) {
+            return crypto.createHash("sha256").update(fs.readFileSync(filePath)).digest("hex");
+          }
+
+          function sha256Text(text) {
+            return crypto.createHash("sha256").update(text).digest("hex");
+          }
+
+          function publishArtifactIdentityText(summary) {
+            return [
+              "publishArtifactIdentity:v2",
+              `releaseCandidateSha=${summary.releaseCandidateSha || ""}`,
+              `releaseVersion=${summary.releaseVersion || ""}`,
+              `appVersion=${summary.appVersion || ""}`,
+              `packageVersion=${summary.packageVersion || ""}`,
+              `androidVersionCode=${summary.androidVersionCode || ""}`,
+              `artifactName=${summary.artifactName || ""}`,
+              `apkSha256=${summary.apkSha256 || ""}`,
+              `manifestSha256=${summary.manifestSha256 || ""}`,
+              `gsavPackageProvenanceSha256=${summary.gsavPackageProvenanceSha256 || ""}`,
+            ].join("\n") + "\n";
+          }
+
+          const source = process.env.GITHUB_EVENT_NAME === "workflow_dispatch" ? "input" : "repository variable";
+          const expectedApk = ((process.env.GITHUB_EVENT_NAME === "workflow_dispatch"
+            ? process.env.EXPECTED_APK_SHA256_INPUT
+            : process.env.EXPECTED_RELEASE_APK_SHA256) || "").trim().toLowerCase();
+          const expectedIdentity = ((process.env.GITHUB_EVENT_NAME === "workflow_dispatch"
+            ? process.env.EXPECTED_PUBLISH_IDENTITY_SHA256_INPUT
+            : process.env.EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256) || "").trim().toLowerCase();
+          if (!expectedApk || !/^[0-9a-f]{64}$/.test(expectedApk)) {
+            throw new Error(`publish_release=true requires expected_apk_sha256 as a 64-hex SHA256 from the validated dry-run artifact (${source}).`);
+          }
+          if (!expectedIdentity || !/^[0-9a-f]{64}$/.test(expectedIdentity)) {
+            throw new Error(`publish_release=true requires expected_publish_identity_sha256 as a 64-hex SHA256 from the validated dry-run artifact (${source}).`);
+          }
+          const summary = JSON.parse(fs.readFileSync("release-evidence/dry-run-summary.json", "utf8"));
+          const actualApk = sha256File("android/app/build/outputs/apk/release/app-release.apk");
+          const actualManifest = sha256File("android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml");
+          const actualIdentity = sha256Text(publishArtifactIdentityText(summary));
+          if (String(summary.apkSha256 || "").toLowerCase() !== actualApk) {
+            throw new Error("Generated publish APK SHA256 does not match dry-run-summary.json apkSha256.");
+          }
+          if (String(summary.manifestSha256 || "").toLowerCase() !== actualManifest) {
+            throw new Error("Generated publish manifest SHA256 does not match dry-run-summary.json manifestSha256.");
+          }
+          if (actualApk !== expectedApk) {
+            throw new Error("Generated publish APK SHA256 does not match expected_apk_sha256 from the validated dry-run artifact.");
+          }
+          if (String(summary.publishArtifactIdentitySha256 || "").toLowerCase() !== actualIdentity) {
+            throw new Error("Generated publish artifact identity does not match dry-run-summary.json publishArtifactIdentitySha256.");
+          }
+          if (actualIdentity !== expectedIdentity) {
+            throw new Error("Generated publish artifact identity does not match expected_publish_identity_sha256 from the validated dry-run artifact.");
+          }
+          NODE
+
+      - name: Validate publish evidence path inputs
+        id: publish_evidence_paths
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        env:
+          EXTERNAL_EVIDENCE_INVENTORY_PATH: ${{ inputs.external_evidence_inventory_path }}
+          DEVICE_EVIDENCE_PACKET_PATH: ${{ inputs.device_evidence_packet_path }}
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+
+          const datedEvidencePrefixPattern = /^docs\/qa-evidence\/(\d{4}-\d{2}-\d{2})\//;
+          const planningNamePattern = /(?:scaffold|candidate|pending|example)/i;
+
+          function normalizePublishPath(envName) {
+            const value = (process.env[envName] || "").trim().replace(/\\/g, "/");
+            if (!value) {
+              throw new Error(`publish_release=true requires ${envName}.`);
+            }
+            if (path.isAbsolute(value) || /^[A-Za-z]:\//.test(value) || value.split("/").includes("..")) {
+              throw new Error(`${envName} must be a repository-relative reviewed evidence path under docs/qa-evidence/<date>/.`);
+            }
+            const match = value.match(datedEvidencePrefixPattern);
+            if (!match) {
+              throw new Error(`${envName} must be a reviewed evidence path under docs/qa-evidence/<date>/.`);
+            }
+            return { value, date: match[1], basename: path.posix.basename(value) };
+          }
+
+          const inventory = normalizePublishPath("EXTERNAL_EVIDENCE_INVENTORY_PATH");
+          const packet = normalizePublishPath("DEVICE_EVIDENCE_PACKET_PATH");
+
+          if (inventory.basename !== "external-evidence-inventory.json") {
+            throw new Error("EXTERNAL_EVIDENCE_INVENTORY_PATH must end with external-evidence-inventory.json.");
+          }
+          if (!packet.basename.endsWith(".json")) {
+            throw new Error("DEVICE_EVIDENCE_PACKET_PATH must be a JSON packet file.");
+          }
+          if (planningNamePattern.test(packet.basename)) {
+            throw new Error("DEVICE_EVIDENCE_PACKET_PATH must not reference a scaffold, candidate, pending, or example packet.");
+          }
+          if (inventory.date !== packet.date) {
+            throw new Error("EXTERNAL_EVIDENCE_INVENTORY_PATH and DEVICE_EVIDENCE_PACKET_PATH must use the same docs/qa-evidence/<date> folder.");
+          }
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `evidence_date=${inventory.date}\n`);
+          NODE
+
+      - name: Verify strict handoff receipts
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        run: npm run verify:handoff-receipts -- --date "${{ steps.publish_evidence_paths.outputs.evidence_date }}" --require-git-integrity
+
+      - name: Capture last-mile prepublish release state
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REVIEWED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          npm run release-evidence:github-release-state -- --repo "${{ github.repository }}" --output-path release-evidence/github-release-state-prepublish.json --reviewer "${{ github.actor }}" --reviewed-at "$REVIEWED_AT"
+
+      - name: Capture last-mile prepublish publish-hash guard
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          REVIEWED_AT="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          npm run release-evidence:publish-hash-guard -- --repo "${{ github.repository }}" --output-path release-evidence/publish-hash-variable-guard-prepublish.json --reviewer "${{ github.actor }}" --reviewed-at "$REVIEWED_AT"
+
+      - name: Upload verified release evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: diveo-release-evidence-v${{ steps.version.outputs.version }}
+          if-no-files-found: error
+          path: |
+            release-evidence/**
+            android/app/build/outputs/apk/release/app-release.apk
+            android/app/build/intermediates/merged_manifests/release/processReleaseManifest/AndroidManifest.xml
+
+      - name: Verify release readiness evidence
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+        env:
+          RELEASE_CANDIDATE_SHA: ${{ steps.candidate.outputs.sha }}
+          EXTERNAL_EVIDENCE_INVENTORY_PATH: ${{ inputs.external_evidence_inventory_path }}
+          DEVICE_EVIDENCE_PACKET_PATH: ${{ inputs.device_evidence_packet_path }}
+        run: npm run verify:release-readiness
+
+  publish:
+    needs: [release]
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_release }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download verified release evidence
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ needs.release.outputs.artifact_name }}
+          path: publish-release
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create "v${{ steps.bump.outputs.version }}" \
-            --title "diveo v${{ steps.bump.outputs.version }}" \
+          test -s publish-release/android/app/build/outputs/apk/release/app-release.apk
+          gh release create "v${{ needs.release.outputs.version }}" \
+            --title "diveo v${{ needs.release.outputs.version }}" \
+            --target "${{ needs.release.outputs.candidate_sha }}" \
             --generate-notes \
-            android/app/build/outputs/apk/release/app-release.apk
+            publish-release/android/app/build/outputs/apk/release/app-release.apk

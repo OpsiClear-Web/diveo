@@ -1,15 +1,18 @@
-import { describe, it, expect } from "vitest";
+import { afterEach, describe, it, expect, vi } from "vitest";
 
 import {
-  getSavedVideoIds,
-  isChannelFollowed,
+  CATALOG_SCHEMA_VERSION,
+  assertVersionedCatalogPayload,
+  createVersionedGsavCatalog,
   normalizeCatalogPage,
   normalizeContentItem,
   normalizeCreator,
   normalizeDanmaku,
-  setChannelFollowed,
-  setVideoSaved,
 } from "./gsav";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("normalizeContentItem", () => {
   it("maps a full catalog video", () => {
@@ -108,70 +111,87 @@ describe("normalizeCatalogPage", () => {
   });
 });
 
-// --- shared social client (ported into @opsiclear/gsav-client) ---
+describe("versioned catalog contract", () => {
+  it("requires schemaVersion 1 and a videos array", () => {
+    expect(() => assertVersionedCatalogPayload({
+      schemaVersion: CATALOG_SCHEMA_VERSION,
+      videos: [],
+    })).not.toThrow();
 
-type MockResult = { data?: unknown; error: { message: string } | null };
-type MockChain = {
-  select: (...a: unknown[]) => MockChain;
-  insert: (...a: unknown[]) => MockChain;
-  upsert: (...a: unknown[]) => MockChain;
-  delete: (...a: unknown[]) => MockChain;
-  eq: (...a: unknown[]) => MockChain;
-  maybeSingle: () => Promise<MockResult>;
-  single: () => Promise<MockResult>;
-  then: (onF: (v: MockResult) => unknown, onR?: (e: unknown) => unknown) => Promise<unknown>;
-};
-
-// Records the table + query-builder calls so tests assert the query shape, and
-// resolves every chain (await or maybeSingle/single) to `result`.
-function mockClient(result: MockResult) {
-  const ops: string[] = [];
-  const makeChain = (): MockChain => {
-    const chain: MockChain = {
-      select: (..._a) => (ops.push("select"), chain),
-      insert: (..._a) => (ops.push("insert"), chain),
-      upsert: (..._a) => (ops.push("upsert"), chain),
-      delete: (..._a) => (ops.push("delete"), chain),
-      eq: (..._a) => (ops.push("eq"), chain),
-      maybeSingle: () => (ops.push("maybeSingle"), Promise.resolve(result)),
-      single: () => (ops.push("single"), Promise.resolve(result)),
-      then: (onF, onR) => Promise.resolve(result).then(onF, onR),
-    };
-    return chain;
-  };
-  const client = {
-    from: (table: string) => (ops.push(`from:${table}`), makeChain()),
-  };
-  return { client, ops };
-}
-
-describe("social client (shared @opsiclear/gsav-client)", () => {
-  it("setVideoSaved(true) upserts saved_videos", async () => {
-    const { client, ops } = mockClient({ error: null });
-    await setVideoSaved(client, "u1", "v1", true);
-    expect(ops).toEqual(["from:saved_videos", "upsert"]);
+    expect(() => assertVersionedCatalogPayload({ videos: [] })).toThrow(/missing schemaVersion/);
+    expect(() => assertVersionedCatalogPayload({ schemaVersion: CATALOG_SCHEMA_VERSION + 1, videos: [] })).toThrow(/not supported/);
+    expect(() => assertVersionedCatalogPayload({ schemaVersion: CATALOG_SCHEMA_VERSION })).toThrow(/videos array/);
+    expect(() => assertVersionedCatalogPayload([])).toThrow(/must be an object/);
   });
 
-  it("setVideoSaved(false) deletes by profile + video", async () => {
-    const { client, ops } = mockClient({ error: null });
-    await setVideoSaved(client, "u1", "v1", false);
-    expect(ops).toEqual(["from:saved_videos", "delete", "eq", "eq"]);
+  it("fetches catalog pages through the versioned shared contract", async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        schemaVersion: CATALOG_SCHEMA_VERSION,
+        videos: [{ id: "scene-1", backendId: "video-uuid", title: "Scene 1", author: "Lab", gsavUrl: "https://cdn/scene.gsav" }],
+        creators: [{ id: "lab", handle: "lab", displayName: "Lab", avatarUrl: "https://cdn/avatar.jpg" }],
+        page: { nextCursor: "30", total: 42 },
+      }),
+    }));
+    const catalog = createVersionedGsavCatalog({
+      catalogUrl: "https://api.example.com/functions/v1/catalog",
+      anonKey: "anon-key",
+    }, fetchMock);
+
+    await expect(catalog.search("capture", { cursor: "10" })).resolves.toMatchObject({
+      videos: [{ id: "scene-1", backendId: "video-uuid" }],
+      creators: [{ id: "lab" }],
+      nextCursor: "30",
+      total: 42,
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.example.com/functions/v1/catalog?q=capture&limit=30&cursor=10",
+      {
+        headers: {
+          Accept: "application/json",
+          apikey: "anon-key",
+          Authorization: "Bearer anon-key",
+        },
+      },
+    );
   });
 
-  it("getSavedVideoIds maps rows to id strings", async () => {
-    const { client } = mockClient({ data: [{ video_id: "a" }, { video_id: 2 }], error: null });
-    expect(await getSavedVideoIds(client, "u1")).toEqual(["a", "2"]);
+  it("rejects unversioned or invalid catalog rows before native UI receives them", async () => {
+    const missingVersionFetch = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ videos: [{ id: "scene-1", gsavUrl: "https://cdn/scene.gsav" }] }),
+    }));
+    const invalidRowFetch = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({
+        schemaVersion: CATALOG_SCHEMA_VERSION,
+        videos: [{ id: "missing-gsav-url" }],
+      }),
+    }));
+
+    await expect(createVersionedGsavCatalog({
+      catalogUrl: "https://api.example.com/functions/v1/catalog",
+    }, missingVersionFetch).feed()).rejects.toThrow(/missing schemaVersion/);
+
+    await expect(createVersionedGsavCatalog({
+      catalogUrl: "https://api.example.com/functions/v1/catalog",
+    }, invalidRowFetch).feed()).rejects.toThrow(/invalid video entries/);
   });
 
-  it("isChannelFollowed reflects row presence", async () => {
-    const present = mockClient({ data: { channel_id: "c1" }, error: null });
-    const absent = mockClient({ data: null, error: null });
-    expect(await isChannelFollowed(present.client, "u1", "c1")).toBe(true);
-    expect(await isChannelFollowed(absent.client, "u1", "c1")).toBe(false);
-  });
+  it("surfaces non-ok catalog responses with the shared client error shape", async () => {
+    const fetchMock = vi.fn(async () => ({
+      ok: false,
+      status: 503,
+      json: async () => ({}),
+    }));
 
-  it("propagates backend errors with a labeled message", async () => {
-    const { client } = mockClient({ error: { message: "denied" } });
-    await expect(setChannelFollowed(client, "u1", "c1", true)).rejects.toThrow("follow channel: denied");
+    await expect(createVersionedGsavCatalog({
+      catalogUrl: "https://api.example.com/functions/v1/catalog",
+    }, fetchMock).feed()).rejects.toThrow(/GSAV catalog 503/);
   });
 });

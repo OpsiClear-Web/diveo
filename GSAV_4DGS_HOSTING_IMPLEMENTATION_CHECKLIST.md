@@ -1,11 +1,23 @@
 # diveo GSAV Native Shell Checklist
 
-This checklist tracks only the diveo native-shell responsibilities for the
-GSAV hosting product. The public website, catalog, Supabase backend, CDN/R2
-URLs, browser playback, viewer controls, and diagnostics are owned by
-`../gsav-hosting`.
+Status: superseded historical checklist. The active release plan is
+`docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md`; release evidence belongs in
+`docs/GSAV_NATIVE_QA.md`; current blockers and signoff live in
+`docs/IMPLEMENTATION_VALIDATION_AUDIT.md`; the native/web boundary decision is
+ADR 0002. Keep this file only as background while those active docs remain the
+source of truth.
 
-Canonical product checklist:
+This checklist originally tracked diveo native-shell responsibilities for the
+GSAV hosting product. The current architecture is broader: React Native owns
+native browse, social, settings, auth, saved/follow, and navigation surfaces,
+while `../gsav-hosting/apps/web` owns GSAV decode/render/playback/runtime
+diagnostics.
+Historical ownership warning: ADR 0002 supersedes any launcher/no-catalog
+guidance below. React Native now owns native browse/search/creator/library
+product UX as a consumer of shared GSAV catalog contracts; gsav-hosting owns
+decode/render/playback/runtime. Do not use this file for ownership decisions.
+
+Historical upstream reference:
 
 ```text
 ../gsav-hosting/docs/GSAV_VIDEO_HOSTING_IMPLEMENTATION_CHECKLIST.md
@@ -15,7 +27,8 @@ Canonical product checklist:
 
 - [x] Keep GSAV rendering, decoding, catalog, playback controls, and browser
   diagnostics out of diveo.
-- [x] Keep diveo as a React Native WebView shell and design reference.
+- [x] Keep diveo as a React Native native product shell with a hosted GSAV
+  runtime/player boundary.
 - [x] Do not import `@opsiclear/gsav-viewer` or parse `.gsav` files in diveo.
 - [x] Build native routes by loading the hosted web app with `?embed=native`.
 - [x] Treat native playback as beta until device QA is recorded.
@@ -58,7 +71,7 @@ npx expo run:android
 
 ## Implemented Native Shell Surface
 
-- [x] `components/GsavWebView.tsx` owns WebView loading, retry, back, reload,
+- [x] `features/player/GsavWebView.tsx` owns WebView loading, retry, back, reload,
   safe-area behavior, and bridge handling.
 - [x] `app/watch/[id].tsx` loads `/watch/:id?embed=native`.
 - [x] `app/gsav/[id].tsx` aliases GSAV scene routes.

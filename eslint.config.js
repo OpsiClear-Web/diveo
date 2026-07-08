@@ -1,8 +1,6 @@
 // Flat ESLint config (ESLint 9 + eslint-config-expo).
 //
-// Enforcement is scoped in CI to the diveo/GSAV surface + utils + scripts (the new and
-// surviving code), not the frozen Bilibili legacy — see .github/workflows/quality.yml.
-// Linting the legacy is low value: it is frozen and slated for deletion (ADR 0001).
+// Enforcement is scoped in CI to the diveo/GSAV surface + utils + scripts.
 // This config defines the rules + global ignores; the CI step passes the scoped paths.
 const expoConfig = require("eslint-config-expo/flat");
 
@@ -33,7 +31,7 @@ module.exports = [
   },
   {
     // Node CommonJS scripts + root config files.
-    files: ["scripts/**/*.js", "*.config.js", "metro.config.js", "dev-proxy.js"],
+    files: ["scripts/**/*.js", "*.config.js", "metro.config.js"],
     languageOptions: { sourceType: "commonjs", globals: nodeGlobals },
   },
   {

@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-07-01T23:31:49.287Z",
+  "status": "pass",
+  "ok": true,
+  "checkedFiles": [
+    ".github/workflows/ci.yml",
+    ".github/workflows/close-invalid-issues.yml",
+    ".github/workflows/device-validation.yml",
+    ".github/workflows/quality.yml",
+    ".github/workflows/release.yml"
+  ],
+  "errors": [],
+  "warnings": []
+}

@@ -1,0 +1,54 @@
+{
+  "checkedAt": "2026-07-03T01:28:44.523Z",
+  "status": "no-publish",
+  "ok": false,
+  "errors": [
+    "could not prove publish hash repository variable is absent: EXPECTED_RELEASE_APK_SHA256",
+    "could not prove publish hash repository variable is absent: EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256"
+  ],
+  "repository": "OpsiClear-Web/diveo",
+  "variables": [
+    "EXPECTED_RELEASE_APK_SHA256",
+    "EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256"
+  ],
+  "review": {
+    "reviewer": "codex-local-verifier",
+    "reviewedAt": "2026-07-03T01:29:00Z"
+  },
+  "variableQueries": [
+    {
+      "name": "EXPECTED_RELEASE_APK_SHA256",
+      "status": "unknown",
+      "present": false,
+      "absent": false,
+      "unknown": true,
+      "command": "gh variable get EXPECTED_RELEASE_APK_SHA256 --repo OpsiClear-Web/diveo --json name,value,updatedAt",
+      "exitCode": 1,
+      "stderr": "failed to get variable EXPECTED_RELEASE_APK_SHA256: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/variables/EXPECTED_RELEASE_APK_SHA256\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "message": "failed to get variable EXPECTED_RELEASE_APK_SHA256: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/variables/EXPECTED_RELEASE_APK_SHA256\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "output": null,
+      "error": null
+    },
+    {
+      "name": "EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256",
+      "status": "unknown",
+      "present": false,
+      "absent": false,
+      "unknown": true,
+      "command": "gh variable get EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256 --repo OpsiClear-Web/diveo --json name,value,updatedAt",
+      "exitCode": 1,
+      "stderr": "failed to get variable EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/variables/EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "message": "failed to get variable EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256: Get \"https://api.github.com/repos/OpsiClear-Web/diveo/actions/variables/EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256\": dial tcp 140.82.114.5:443: connectex: An attempt was made to access a socket in a way forbidden by its access permissions.",
+      "output": null,
+      "error": null
+    }
+  ],
+  "releaseReadinessImpact": {
+    "status": "no-publish",
+    "auditBlocker": "Publish expected-hash variable guard",
+    "requiredBeforePass": [
+      "could not prove publish hash repository variable is absent: EXPECTED_RELEASE_APK_SHA256",
+      "could not prove publish hash repository variable is absent: EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256"
+    ]
+  }
+}

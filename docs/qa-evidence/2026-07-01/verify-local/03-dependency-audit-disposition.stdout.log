@@ -1,0 +1,110 @@
+{
+  "checkedAt": "2026-07-01T15:41:43.429Z",
+  "status": "pass",
+  "ok": true,
+  "errors": [],
+  "acceptedRisk": {
+    "owner": "native release owner",
+    "reason": "Remaining advisories are Expo/Sentry tooling-chain findings after patch-level updates inside the current Expo SDK 55 range.",
+    "revisitBy": "2026-07-31"
+  },
+  "accepted": [
+    {
+      "name": "@expo/cli",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/metro-config",
+        "@expo/prebuild-config"
+      ]
+    },
+    {
+      "name": "@expo/config",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "@expo/config-plugins"
+      ]
+    },
+    {
+      "name": "@expo/config-plugins",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "xcode"
+      ]
+    },
+    {
+      "name": "@expo/local-build-cache-provider",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "@expo/config"
+      ]
+    },
+    {
+      "name": "@expo/metro-config",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "@expo/config"
+      ]
+    },
+    {
+      "name": "@expo/prebuild-config",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "@expo/config",
+        "@expo/config-plugins"
+      ]
+    },
+    {
+      "name": "@sentry/react-native",
+      "severity": "moderate",
+      "direct": true,
+      "via": [
+        "expo"
+      ]
+    },
+    {
+      "name": "expo",
+      "severity": "moderate",
+      "direct": true,
+      "via": [
+        "@expo/cli",
+        "@expo/config",
+        "@expo/config-plugins",
+        "@expo/local-build-cache-provider",
+        "@expo/metro-config"
+      ]
+    },
+    {
+      "name": "uuid",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "uuid"
+      ]
+    },
+    {
+      "name": "xcode",
+      "severity": "moderate",
+      "direct": false,
+      "via": [
+        "uuid"
+      ]
+    }
+  ],
+  "missingAcceptedNames": [],
+  "counts": {
+    "info": 0,
+    "low": 0,
+    "moderate": 10,
+    "high": 0,
+    "critical": 0,
+    "total": 10
+  }
+}

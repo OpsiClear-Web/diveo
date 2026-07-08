@@ -1,5 +1,12 @@
 # diveo — Remaining Gaps Plan
 
+> Superseded by `docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md`.
+> This file is historical and is not the active validation plan.
+> Historical ownership warning: ADR 0002 supersedes the launcher/no-catalog
+> guidance below. React Native now owns native browse/search/creator/library
+> product UX as a consumer of shared GSAV catalog contracts; gsav-hosting owns
+> decode/render/playback/runtime. Do not use this file for ownership decisions.
+
 Goal: take the diveo native shell from "wired but nothing to point at" to a **complete,
 tested, shippable product**. Scope is *closing gaps in the current shell*, not building
 the platform features (tiering / embed / supply motion) — those are the separate product

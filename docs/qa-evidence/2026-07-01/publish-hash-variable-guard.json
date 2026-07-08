@@ -1,0 +1,48 @@
+{
+  "checkedAt": "2026-07-01T20:34:20.932Z",
+  "status": "pass",
+  "ok": true,
+  "errors": [],
+  "repository": "OpsiClear-Web/diveo",
+  "variables": [
+    "EXPECTED_RELEASE_APK_SHA256",
+    "EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256"
+  ],
+  "review": {
+    "reviewer": "codex-local-verifier",
+    "reviewedAt": "2026-07-01T20:34:20Z"
+  },
+  "variableQueries": [
+    {
+      "name": "EXPECTED_RELEASE_APK_SHA256",
+      "status": "absent",
+      "present": false,
+      "absent": true,
+      "unknown": false,
+      "command": "gh variable get EXPECTED_RELEASE_APK_SHA256 --repo OpsiClear-Web/diveo --json name,value,updatedAt",
+      "exitCode": 1,
+      "stderr": "variable EXPECTED_RELEASE_APK_SHA256 was not found",
+      "message": "variable EXPECTED_RELEASE_APK_SHA256 was not found",
+      "output": null,
+      "error": null
+    },
+    {
+      "name": "EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256",
+      "status": "absent",
+      "present": false,
+      "absent": true,
+      "unknown": false,
+      "command": "gh variable get EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256 --repo OpsiClear-Web/diveo --json name,value,updatedAt",
+      "exitCode": 1,
+      "stderr": "variable EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256 was not found",
+      "message": "variable EXPECTED_RELEASE_PUBLISH_IDENTITY_SHA256 was not found",
+      "output": null,
+      "error": null
+    }
+  ],
+  "releaseReadinessImpact": {
+    "status": "ready",
+    "auditBlocker": "Publish expected-hash variable guard",
+    "requiredBeforePass": []
+  }
+}

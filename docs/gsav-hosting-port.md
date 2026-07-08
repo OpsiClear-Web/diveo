@@ -1,5 +1,14 @@
 # gsav-hosting port: data-saver (web half of diveo `feat/native-feed` 43354b1)
 
+Historical note: this file is a preserved patch-transfer record for an older
+sibling `gsav-hosting` change. It is not the canonical native/web contract.
+`gsav-hosting` is now under local git as of
+`8c34bca78067f732e09307e4c833038e9637b0b4`; use real hosting SHAs for new
+release evidence instead of this patch-transfer note.
+Use ADR 0002, `docs/GSAV_NATIVE_SHELL_ARCHITECTURE.md`,
+`docs/GSAV_NATIVE_QA.md`, `npm run gsav:runtime-smoke`, and the vendored
+`@opsiclear/gsav-bridge` package as the current contract sources.
+
 The diveo native commit **43354b1** added a data-saver feature whose native half
 (`GsavWebView` appends `?dataSaver=1` to the WebView URL when the "Data saver"
 setting is on) is committed in *this* repo. The **web half that honors it** lives

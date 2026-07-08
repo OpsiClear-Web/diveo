@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "fixture-manifest/v1",
+  "evidenceDate": "2026-07-01",
+  "gsavHostUrl": "https://<production-gsav-host>",
+  "gsavHostingCommit": "<GSAV_HOSTING_COMMIT>",
+  "fixtureAccountAlias": "<redacted-fixture-account-alias>",
+  "resetCommand": "<fixture reset command>",
+  "searchQuery": "<search query>",
+  "creatorHandle": "<creator handle>",
+  "sceneIds": {
+    "watchTest": "<scene id for /watch/test>",
+    "aliasStartTime": "<scene id for /gsav/test?t=2.5>"
+  },
+  "savedFollowPreset": "<saved/follow preset description>",
+  "expectedStates": {
+    "emptyState": "<expected empty state>",
+    "errorState": "<expected error state>"
+  },
+  "expectedFinalEmbeddedUrls": {
+    "/explore": "https://<production-gsav-host>/explore?embed=native&dataSaver=1",
+    "/gsav-diagnostics": "https://<production-gsav-host>/native-diagnostics?embed=native",
+    "/watch/test": "https://<production-gsav-host>/watch/<scene-id>?embed=native",
+    "/gsav/test?t=2.5": "https://<production-gsav-host>/watch/<scene-id>?t=2.5&embed=native"
+  },
+  "redactionNotes": "<redaction notes>"
+}

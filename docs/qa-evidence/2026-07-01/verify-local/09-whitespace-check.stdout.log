@@ -1,0 +1,387 @@
+{
+  "checkedAt": "2026-07-01T15:41:51.997Z",
+  "status": "pass",
+  "ok": true,
+  "gitDiff": {
+    "status": 0,
+    "stdout": "",
+    "stderr": "warning: in the working copy of '.env.example', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.github/PULL_REQUEST_TEMPLATE.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.github/workflows/quality.yml', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.github/workflows/release.yml', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of '.gitignore', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'CONTRIBUTING.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'IMPROVEMENT_CHECKLIST.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'IMPROVEMENT_PLAN.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'README.en.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'REMAINING_GAPS_PLAN.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/_layout.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/creator/[handle].tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/creator/_layout.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/explore.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/gsav-diagnostics.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/gsav/[id].tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/index.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/library.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/login.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/search.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/settings.tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'app/watch/[id].tsx', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'docs/GSAV_NATIVE_QA.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'docs/GSAV_NATIVE_SHELL_ARCHITECTURE.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'docs/adr/0001-gsav-pivot.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'docs/gsav-hosting-port.md', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'eslint.config.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'metro.config.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/bump-version.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/gsav-native-preflight.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/verify-native-production-config.js', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'scripts/verify-native-production-config.test.mjs', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'services/gsav.test.ts', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'services/gsav.ts', LF will be replaced by CRLF the next time Git touches it\nwarning: in the working copy of 'services/supabase.ts', LF will be replaced by CRLF the next time Git touches it\n",
+    "error": null
+  },
+  "checkedUntrackedFiles": [
+    ".github/workflows/device-validation.yml",
+    "AGENTS.md",
+    "docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md",
+    "docs/IMPLEMENTATION_VALIDATION_AUDIT.md",
+    "docs/adr/0002-native-app-with-web-player.md",
+    "docs/qa-evidence/2026-07-01/device-evidence-packet-scaffold.json",
+    "docs/qa-evidence/2026-07-01/diveo-gsav-local-preflight-runtime-smoke-2026-07-01.md",
+    "docs/qa-evidence/2026-07-01/github-release-state-blocker.json",
+    "docs/qa-evidence/2026-07-01/master-branch-protection-blocker.json",
+    "docs/qa-evidence/2026-07-01/master-branch-protection-prechange.json",
+    "docs/qa-evidence/2026-07-01/master-branch-protection.json",
+    "docs/qa-evidence/2026-07-01/no-publish-baseline.json",
+    "docs/qa-evidence/2026-07-01/publish-hash-variable-guard.json",
+    "docs/qa-evidence/2026-07-01/validation-prereqs-blocker.json",
+    "docs/qa-evidence/2026-07-01/verify-release-candidate/verification-summary.json",
+    "features/app-shell/AppStack.tsx",
+    "features/app-shell/CreatorLayout.tsx",
+    "features/app-shell/RootLayout.tsx",
+    "features/app-shell/useAppBootstrap.ts",
+    "features/app-update/index.ts",
+    "features/app-update/updateAccess.ts",
+    "features/app-update/useCheckUpdate.ts",
+    "features/catalog/CreatorScreen.tsx",
+    "features/catalog/HomeScreen.tsx",
+    "features/catalog/SearchScreen.tsx",
+    "features/catalog/catalogAdapter.test.ts",
+    "features/catalog/catalogAdapter.ts",
+    "features/catalog/index.ts",
+    "features/catalog/useGsavCreator.ts",
+    "features/catalog/useGsavFeed.ts",
+    "features/catalog/useGsavSearch.ts",
+    "features/player/ContinueWatchingPill.tsx",
+    "features/player/ExploreScreen.tsx",
+    "features/player/GsavDiagnosticsScreen.tsx",
+    "features/player/GsavScreen.tsx",
+    "features/player/GsavWebView.tsx",
+    "features/player/GsavWebView.web.tsx",
+    "features/player/bridge.test.ts",
+    "features/player/bridgeState.ts",
+    "features/player/bridgeTypes.ts",
+    "features/player/gsavEmbedNavigationRequest.ts",
+    "features/player/gsavProgressStore.test.ts",
+    "features/player/gsavProgressStore.ts",
+    "features/player/nativeBridgeMessage.ts",
+    "features/player/nativeBridgeOverlay.ts",
+    "features/player/nativeLoadState.ts",
+    "features/player/nativeNavigation.ts",
+    "features/player/nativeQaControls.ts",
+    "features/player/navGate.ts",
+    "features/player/progressBridge.test.ts",
+    "features/player/progressBridge.ts",
+    "features/player/routes.ts",
+    "features/player/sessionBridge.ts",
+    "features/player/useGsavEmbedHost.test.ts",
+    "features/player/useGsavEmbedHost.ts",
+    "features/preferences/index.ts",
+    "features/preferences/preferenceAccess.ts",
+    "features/preferences/preferencesStore.test.ts",
+    "features/preferences/preferencesStore.ts",
+    "features/scene/SceneCard.tsx",
+    "features/scene/index.ts",
+    "features/scene/sceneShare.test.ts",
+    "features/scene/sceneShare.ts",
+    "features/scene/sceneTypes.ts",
+    "features/settings/SettingsScreen.tsx",
+    "features/settings/cache.test.ts",
+    "features/settings/cache.ts",
+    "features/social/FollowButton.tsx",
+    "features/social/LibraryScreen.tsx",
+    "features/social/LoginScreen.tsx",
+    "features/social/SaveSceneButton.tsx",
+    "features/social/authQaDelay.test.ts",
+    "features/social/authQaDelay.ts",
+    "features/social/authSession.ts",
+    "features/social/gsavAuthStore.ts",
+    "features/social/index.ts",
+    "features/social/loadSavedScenesByBackendIds.test.ts",
+    "features/social/loadSavedScenesByBackendIds.ts",
+    "features/social/savedSceneAccess.ts",
+    "features/social/savedScenesStore.ts",
+    "features/social/socialAdapter.test.ts",
+    "features/social/socialAdapter.ts",
+    "features/social/useGsavFollow.ts",
+    "scripts/attach-validation-prereqs-to-release-evidence.js",
+    "scripts/attach-validation-prereqs-to-release-evidence.test.mjs",
+    "scripts/bump-version.test.mjs",
+    "scripts/capture-android-installed-smoke.js",
+    "scripts/capture-android-installed-smoke.test.mjs",
+    "scripts/capture-android-version-metadata.js",
+    "scripts/capture-android-version-metadata.test.mjs",
+    "scripts/capture-branch-protection-evidence.js",
+    "scripts/capture-branch-protection-evidence.test.mjs",
+    "scripts/capture-github-release-state-evidence.js",
+    "scripts/capture-github-release-state-evidence.test.mjs",
+    "scripts/capture-publish-hash-variable-guard.js",
+    "scripts/capture-publish-hash-variable-guard.test.mjs",
+    "scripts/device-evidence-packet.js",
+    "scripts/device-evidence-packet.test.mjs",
+    "scripts/evidence-metadata.js",
+    "scripts/evidence-metadata.test.mjs",
+    "scripts/gsav-native-preflight.test.mjs",
+    "scripts/gsav-native-runtime-smoke.js",
+    "scripts/gsav-native-runtime-smoke.test.mjs",
+    "scripts/gsav-runtime-smoke-bridge.js",
+    "scripts/materialize-ios-validation-artifact.js",
+    "scripts/materialize-ios-validation-artifact.test.mjs",
+    "scripts/run-verification-bundle.js",
+    "scripts/run-verification-bundle.test.mjs",
+    "scripts/verify-dependency-audit.js",
+    "scripts/verify-dependency-audit.test.mjs",
+    "scripts/verify-doc-drift.js",
+    "scripts/verify-doc-drift.test.mjs",
+    "scripts/verify-import-boundaries.js",
+    "scripts/verify-import-boundaries.test.mjs",
+    "scripts/verify-no-publish-baseline.js",
+    "scripts/verify-no-publish-baseline.test.mjs",
+    "scripts/verify-release-artifact.js",
+    "scripts/verify-release-artifact.test.mjs",
+    "scripts/verify-release-evidence-bundle.js",
+    "scripts/verify-release-evidence-bundle.test.mjs",
+    "scripts/verify-release-readiness.js",
+    "scripts/verify-release-readiness.test.mjs",
+    "scripts/verify-validation-prereqs.js",
+    "scripts/verify-validation-prereqs.test.mjs",
+    "scripts/verify-whitespace.js",
+    "scripts/verify-whitespace.test.mjs",
+    "scripts/verify-workflows.js",
+    "scripts/verify-workflows.test.mjs",
+    "scripts/write-release-evidence-summary.js",
+    "scripts/write-release-evidence-summary.test.mjs",
+    "shared/gsavRoutes.test.ts",
+    "shared/gsavRoutes.ts",
+    "shared/gsavWeb.test.ts",
+    "shared/gsavWeb.ts",
+    "shared/routeParams.ts",
+    "shared/theme.ts",
+    "shared/themeContext.tsx",
+    "shared/ui/Brand.tsx",
+    "shared/ui/index.ts",
+    "vitest.config.mjs"
+  ],
+  "checkedUntrackedCount": 140,
+  "skippedUntrackedFiles": [
+    {
+      "path": "docs/qa-evidence/2026-06-30/diveo-gsav-preflight-2026-06-30.txt",
+      "reason": "binary file"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/diveo-gsav-preflight-refresh-2026-06-30.txt",
+      "reason": "binary file"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/diveo-gsav-runtime-smoke-2026-06-30.txt",
+      "reason": "binary file"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/diveo-gsav-runtime-smoke-bridge-version-2026-06-30.txt",
+      "reason": "binary file"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/diveo-gsav-runtime-smoke-refresh-2026-06-30.txt",
+      "reason": "binary file"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-2026-06-30.err.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-2026-06-30.out.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-bridge-version-2026-06-30.err.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-bridge-version-2026-06-30.out.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-direct-2026-06-30.err.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-direct-2026-06-30.out.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-06-30/gsav-preview-refresh-2026-06-30.out.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/.verification-bundle.lock",
+      "reason": "not source/doc/config text"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/01-type-check.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/01-type-check.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/02-lint.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/02-lint.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/03-dependency-audit-disposition.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/03-dependency-audit-disposition.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/04-workflow-audit.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/04-workflow-audit.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/05-import-boundary-audit.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/05-import-boundary-audit.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/06-documentation-drift-audit.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/06-documentation-drift-audit.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/07-unit-tests.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/07-unit-tests.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/08-coverage.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-local/08-coverage.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/01-type-check.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/01-type-check.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/02-lint.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/02-lint.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/03-dependency-audit-disposition.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/03-dependency-audit-disposition.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/04-workflow-audit.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/04-workflow-audit.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/05-import-boundary-audit.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/05-import-boundary-audit.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/06-documentation-drift-audit.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/06-documentation-drift-audit.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/07-unit-tests.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/07-unit-tests.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/08-coverage.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/08-coverage.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/09-whitespace-check.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/09-whitespace-check.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/10-native-production-config-negative.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/10-native-production-config-negative.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/11-native-production-config-positive.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/11-native-production-config-positive.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/12-focused-release-verifier-tests.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/12-focused-release-verifier-tests.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/13-no-publish-baseline-verifier.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/13-no-publish-baseline-verifier.stdout.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/14-release-readiness-expected-blockers.stderr.log",
+      "reason": "generated evidence log"
+    },
+    {
+      "path": "docs/qa-evidence/2026-07-01/verify-release-candidate/14-release-readiness-expected-blockers.stdout.log",
+      "reason": "generated evidence log"
+    }
+  ],
+  "skippedUntrackedCount": 57,
+  "errors": []
+}
+

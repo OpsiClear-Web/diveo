@@ -1,0 +1,9 @@
+
+ RUN  v4.1.9 C:/Users/opsiclear/Projects/gsav_stack/diveo
+
+
+ Test Files  26 passed (26)
+      Tests  644 passed (644)
+   Start at  19:31:59
+   Duration  3.66s (transform 4.76s, setup 0ms, import 6.68s, tests 13.29s, environment 3ms)
+

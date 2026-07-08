@@ -1,8 +1,19 @@
 # ADR 0001 — Pivot from Bilibili client to GSAV native shell
 
+> Superseded by ADR 0002.
+> This file is historical and is not the active product contract. Use
+> `docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md`,
+> `docs/GSAV_NATIVE_QA.md`, and
+> `docs/IMPLEMENTATION_VALIDATION_AUDIT.md` for current implementation,
+> validation, and release evidence requirements.
+
 - **Status:** Accepted - **Option A (Freeze & quarantine)**
 - **Date:** 2026-06-20
 - **Deciders:** project owner
+
+> Update: ADR 0002 supersedes this document's runtime and catalog ownership
+> boundary. The current architecture is native mobile product UI plus embedded
+> GSAV web player, not a pure WebView wrapper or hosted-only catalog launcher.
 
 ## Context
 
@@ -55,9 +66,17 @@ into the APK) and needs no history rewrite.
 `RECORD_AUDIO` is dropped (nothing records audio). `MODIFY_AUDIO_SETTINGS` is kept
 for legacy native playback during the freeze (remove it with the Bilibili surface).
 `REQUEST_INSTALL_PACKAGES` is retained intentionally - it backs the in-app APK
-self-updater (`hooks/useCheckUpdate.ts`).
+self-updater (`features/app-update/useCheckUpdate.ts`).
 
 ## Ownership boundary (catalog contract) — P2-7
+
+Superseded by ADR 0002. This section is retained as legacy-quarantine history,
+not the active product contract. GSAV playback, decode/render, diagnostics, and
+runtime chrome remain owned by `../gsav-hosting`; diveo now owns the native
+mobile browse, search, creator, library, auth, saved/follow, settings, and
+navigation surfaces.
+
+Original historical rule:
 
 GSAV catalog, scene data model, CDN/R2 URLs, and playback are owned by
 `../gsav-hosting`. diveo MUST NOT own a native GSAV catalog. The native shell
@@ -65,12 +84,13 @@ only:
 
 - routes `/watch/:id`, `/gsav/:id` (deep-link alias), `/gsav-diagnostics`;
 - deep-links into scenes **by id** via `buildGsavWatchPath(sceneId)`
-  (`utils/gsavBridge.ts`) — an id passthrough, not a catalog query;
+  (`features/player/routes.ts`) - an id passthrough, not a catalog query;
 - loads the hosted web app in a `WebView`, enforcing a single allowed origin;
-- exchanges typed bridge messages (`utils/gsavBridge.ts`).
+- exchanges typed bridge messages through `features/player/` helpers.
 
-See `GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md` (ownership boundary, lines
-~16/68-69/175) for the authoritative contract.
+See ADR 0002 and `docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md` for the
+authoritative current contract. `GSAV_4DGS_HOSTING_IMPLEMENTATION_CHECKLIST.md`
+is superseded historical background only.
 
 ## Consequences
 

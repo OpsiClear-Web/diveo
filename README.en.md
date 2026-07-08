@@ -1,237 +1,178 @@
-<div align="center">
-
-<img src="https://img.shields.io/badge/diveo-4D_media_shell-2f7f80?style=for-the-badge" alt="diveo"/>
-
 # diveo
 
-**A native shell for the GSAV 4DGS web player — formerly a third-party Bilibili client (that surface is now frozen)**
+diveo is an Expo/React Native mobile app for browsing GSAV scenes and opening
+the GSAV browser runtime in an embedded native WebView. It was formerly a
+third-party Bilibili client; that surface is frozen legacy code and is not an
+active contribution target.
 
-*GSAV WebView shell · (frozen) DASH playback · danmaku · WBI signing · live · Cross-platform*
+## Current Architecture
 
-> ⚠️ **Notice:** The Bilibili-client functionality is frozen following a Bilibili
-> cease-and-desist — it is kept for reference only and no longer accepts feature
-> Issues/PRs. Active development continues as the **GSAV native shell**
-> (see [GSAV Native Shell](#gsav-native-shell)).
+React Native owns the mobile product shell: home/feed, search, creator pages,
+library, login, settings, saved/follow state, update checks, and native route
+transitions.
 
----
-
-[![React Native](https://img.shields.io/badge/React_Native-0.83-61DAFB?logo=react)](https://reactnative.dev)
-[![Expo](https://img.shields.io/badge/Expo-SDK_55-000020?logo=expo)](https://expo.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?logo=typescript)](https://www.typescriptlang.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/Platform-Android%20%7C%20iOS%20%7C%20Web-lightgrey)](README.en.md)
-
-[中文](README.md) · [Quick Start](#quick-start) · [Features](#features) · [Contributing](CONTRIBUTING.md)
-
-</div>
-
----
-
-## Screenshots
-
-<table>
-  <tr>
-    <td align="center"><img src="public/p1.jpg" width="180"/><br/><sub>Home · Inline Video · Live Cards</sub></td>
-    <td align="center"><img src="public/p2.jpg" width="180"/><br/><sub>Video Detail · Info · Recommendations</sub></td>
-    <td align="center"><img src="public/p3.jpg" width="180"/><br/><sub>Player · 4K HDR · Quality Switch</sub></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="public/p4.jpg" width="180"/><br/><sub>Downloads · LAN Share QR Code</sub></td>
-    <td align="center"><img src="public/p5.jpg" width="180"/><br/><sub>Live Tab · Followed Streamers · Categories</sub></td>
-    <td align="center"><img src="public/p6.jpg" width="180"/><br/><sub>Live Room · Real-time Danmaku · Guard Marks</sub></td>
-  </tr>
-</table>
-
----
-
-## Features
-
-🎬 **Full DASH Playback**
-Bilibili DASH stream → `buildDashMpdUri()` local MPD → ExoPlayer native decode, supports 1080P+ & 4K HDR
-
-💬 **Complete Danmaku System**
-Video danmaku with XML timeline sync + 5-lane floating overlay; Live danmaku via WebSocket with guard marks & gift counting
-
-🔐 **WBI Signing**
-Pure TypeScript MD5 implementation, zero external crypto dependencies, 12h auto-cached nav interface
-
-🏠 **Smart Home Layout**
-BigVideoCard inline DASH muted autoplay + swipe-to-seek gesture + live card interleaving + dual-column grid
-
-📺 **Global Mini Player**
-Persistent bottom overlay player survives navigation, VideoStore cross-component state sync
-
-🔑 **QR Code Login**
-QR code generation + 2s polling + automatic SESSDATA extraction from response headers
-
-📥 **Download + LAN Sharing**
-Multi-quality background download, built-in HTTP server generates LAN QR code for same-Wi-Fi playback
-
-🌐 **Cross-Platform**
-Android · iOS · Web, Expo Go scan-to-run in 5 minutes, Dev Build unlocks full DASH playback
-
----
+`../gsav-hosting/apps/web` owns the browser-only GSAV runtime: `.gsav`
+decode/render/playback, diagnostics, public web routes, and native embed bridge
+events. Native embeds hosted routes with `embed=native` so gsav-hosting hides
+desktop chrome and enables the bridge.
 
 ## Tech Stack
 
 | Layer | Technology |
-|---|---|
-| Framework | React Native 0.83 + Expo SDK 55 |
-| Navigation | expo-router v4 (file-based, Stack) |
+| --- | --- |
+| App framework | React Native 0.83 + Expo SDK 55 |
+| Routing | Expo Router |
 | State | Zustand |
-| HTTP | Axios |
-| Storage | @react-native-async-storage/async-storage |
-| Video | react-native-video (DASH MPD / HLS / MP4) |
-| Fallback | react-native-webview (HTML5 video injection) |
-| Pager | react-native-pager-view |
-| Icons | @expo/vector-icons (Ionicons) |
-
----
+| Storage | AsyncStorage / SecureStore |
+| Backend | Supabase through shared `@opsiclear/gsav-*` packages |
+| Embedded runtime | `react-native-webview` / iframe for Expo web preview |
+| Tests | Vitest |
+| Lint | ESLint 9 + `eslint-config-expo` |
 
 ## Quick Start
 
-### Option 1: Expo Go (5 minutes, no build required)
+Install dependencies:
 
-> Some quality options limited; video falls back to WebView
-
-```bash
-git clone https://github.com/OpsiClear-Web/diveo.git
-cd diveo
-npm install
-npx expo start
+```powershell
+npm ci
 ```
 
-Scan the QR code with [Expo Go](https://expo.dev/go) on Android or iOS.
+For the full local stack, start the shared backend, GSAV web app, and diveo
+preview through the stack launcher:
 
-### Option 2: Dev Build (Full features, recommended)
-
-> Supports DASH 1080P+ native playback, full danmaku system
-
-```bash
-npm install
-npx expo run:android   # Android
-npx expo run:ios       # iOS (requires macOS + Xcode)
+```powershell
+npm run dev:stack
 ```
 
-### Option 3: Web
+The launcher generates local env files from `config/stack.local.json`, reuses
+already-running services, starts missing services when possible, seeds local
+catalog public assets, and runs strict `npm run dev:doctor -- --require-assets`.
 
-```bash
-npm install
-npx expo start --web
+Open the printed URLs:
+
+```text
+diveo native preview: http://127.0.0.1:8082
+GSAV web app: http://localhost:5173
+shared backend: http://127.0.0.1:54321
 ```
 
-> Web requires a local proxy server for image anti-hotlinking: `node scripts/proxy.js` (port 3001)
+### Which app do I open?
 
-### GSAV WebView Wrapper
+Open diveo when you want the React Native shell preview: Home, Search,
+Creator, Library, Login, Settings, and native WebView player routes.
 
-diveo can host the GSAV hosting web app as a thin native shell. The product
-web app lives in `../gsav-hosting/apps/web`; diveo only owns WebView loading,
-retry, back navigation, and bridge message handling. Set the web app origin
-before starting Expo.
+Open gsav-hosting when you want the standalone web app or browser GSAV runtime.
+Both clients point at the same Supabase backend in the active stack profile.
 
-Start the local GSAV hosting preview first:
+You can stop only processes started by the launcher with:
 
-```bash
-cd ../gsav-hosting
+```powershell
+npm run dev:stop
+```
+
+To only refresh local catalog storage fixtures, run:
+
+```powershell
+npm run stack:seed-assets
+```
+
+To capture and verify a local stack architecture receipt, run:
+
+```powershell
+npm run stack:receipt
+npm run stack:receipt:check
+```
+
+Manual startup remains available when you need to control each process:
+
+```powershell
+cd ..\gsav-hosting
 npm run smoke:web:local
 ```
 
-Then start diveo against that local preview:
+If `smoke:web:local` is blocked by GSAV host asset CORS, run
+`npm run deploy:web:local` from `..\gsav-hosting` as a local preview fallback.
+That fallback is not publish evidence.
 
-```bash
-EXPO_PUBLIC_GSAV_WEB_URL=http://127.0.0.1:5191 npx expo start
+Run diveo against that local web origin:
+
+```powershell
+cd ..\diveo
+$env:EXPO_PUBLIC_GSAV_WEB_URL='http://127.0.0.1:5191'
+npm start
 ```
 
-For Android emulator testing, use the Android host alias:
+For Android emulator testing, use the emulator host alias:
 
-```bash
-EXPO_PUBLIC_GSAV_WEB_URL=http://10.0.2.2:5191 npx expo run:android
+```powershell
+$env:EXPO_PUBLIC_GSAV_WEB_URL='http://10.0.2.2:5191'
+npm run android
 ```
 
-Routes:
-
-- `/watch/:id` opens `GSAV_WEB_URL/watch/:id?embed=native`
-- `/gsav/:id` is an alias for GSAV scenes
-- `/gsav-diagnostics` opens the native diagnostics page
-
-The native app only owns WebView loading, retry, back navigation, and bridge
-message handling. Catalog, CDN URLs, controls, and playback stay in
-`gsav-hosting/apps/web`.
-
-Native device QA is documented in [docs/GSAV_NATIVE_QA.md](docs/GSAV_NATIVE_QA.md).
-
-Native GSAV shell checks:
+Other useful commands:
 
 ```bash
+npm run web
+npm run ios
 npm run gsav:preflight
-npx tsc --noEmit
-npm test
 ```
 
-### Direct Install (Android)
+## Routes
 
-Download the latest APK from [Releases](https://github.com/OpsiClear-Web/diveo/releases/latest) — no build needed.
+| Route | Owner |
+| --- | --- |
+| `/` | Native home/feed |
+| `/search` | Native search |
+| `/library` | Native saved scenes |
+| `/creator/:handle` | Native creator profile |
+| `/settings` | Native settings |
+| `/watch/:id` | Native screen embedding gsav-hosting `/watch/:id?embed=native` |
+| `/gsav/:id` | Alias for `/watch/:id` |
+| `/explore` | Hosted explore route embedded with `embed=native` |
+| `/gsav-diagnostics` | Hosted diagnostics route embedded with `embed=native` |
 
-> Enable "Install from unknown sources" in Android settings
+## Verification
 
----
+Baseline for app, feature, service, script, or dependency changes:
+
+```bash
+npm run verify:local
+```
+
+`npm run verify:local` runs typecheck, lint, dependency audit, env-example
+audit, import-boundary audit, bridge-origin audit, docs drift, unit tests,
+coverage, and `npm run verify:whitespace` (`git diff --check` plus an
+untracked source/docs/config scan).
+
+Run `npm run gsav:preflight` and `npm run gsav:runtime-smoke` when a change
+touches WebView behavior, GSAV routes, runtime URLs, or the native/web bridge.
+Device validation should also cover the manual route matrix in
+[`docs/GSAV_NATIVE_QA.md`](docs/GSAV_NATIVE_QA.md).
+The migration plan and release gates are tracked in
+[`docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md`](docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md).
+Current blockers, latest command results, evidence review signoff, and the
+publish/no-publish decision are tracked in
+[`docs/IMPLEMENTATION_VALIDATION_AUDIT.md`](docs/IMPLEMENTATION_VALIDATION_AUDIT.md).
 
 ## Project Structure
 
-```
-app/
-  index.tsx            # Home (PagerView Hot/Live tabs)
-  video/[bvid].tsx     # Video detail (player + info/comments/danmaku)
-  live/[roomId].tsx    # Live room (HLS player + real-time danmaku)
-  search.tsx           # Search page
-  downloads.tsx        # Download manager
-  settings.tsx         # Settings (quality + logout)
-
-components/            # UI components (player, danmaku, cards, etc.)
-hooks/                 # Data hooks (video list, stream URLs, danmaku, etc.)
-services/              # Bilibili API wrapper (axios + cookie interceptor)
-store/                 # Zustand stores (auth, download, playback, settings)
-utils/                 # Utilities (format, image proxy, MPD builder)
+```text
+app/          Expo Router route stubs and layout adapters
+features/     app-shell, preferences, player, catalog, social, settings, and app-update modules
+shared/       shared UI primitives, theme tokens, and GSAV accent tokens
+services/     thin GSAV client and Supabase adapters
+utils/        pure generic helpers, currently version utilities
+scripts/      preflight, verification, release, and vendor scripts
+docs/         architecture, ADRs, QA, and implementation notes
+vendor/       vendored shared GSAV packages
 ```
 
----
+## Legacy Bilibili Surface
 
-## Known Limitations
-
-| Limitation | Reason |
-|---|---|
-| 4K / 1080P+ requires premium account | Bilibili API restriction |
-| FLV live streams not supported | Neither HTML5 nor ExoPlayer support FLV; HLS auto-selected |
-| Web requires local proxy | Bilibili image Referer anti-hotlinking |
-| Feed / like / collect features | Requires `bili_jct` CSRF token, not yet implemented |
-| QR code expires after 10 minutes | Close and reopen the login modal to refresh |
-
----
-
-## Contributing
-
-The **Bilibili-client surface is frozen** (see the notice at the top) and no longer
-accepts feature Issues/PRs. The **GSAV native shell** is the active direction and
-welcomes Issues/PRs. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first.
-
----
-
-## Disclaimer
-
-This project is for personal learning and research purposes only. Not for commercial use.
-All video content copyright belongs to the original authors and Bilibili.
-This project is not affiliated with Bilibili in any way.
-
----
+Bilibili DASH playback, WBI signing, proxying, downloads, and related assets are
+legacy-only. Do not add features to that surface. Cleanup should move or delete
+Bilibili-only code after the GSAV-native path is validated.
 
 ## License
 
-[MIT](LICENSE) © 2026 diveo Contributors
-
----
-
-<div align="center">
-
-If this project helps you, please give it a ⭐ Star!
-
-</div>
+MIT. See [`LICENSE`](LICENSE).

@@ -1,0 +1,224 @@
+{
+  "checkedAt": "2026-07-01T23:31:49.372Z",
+  "status": "pass",
+  "checkedRoots": [
+    "app",
+    "features",
+    "shared",
+    "services",
+    "utils"
+  ],
+  "checkedQuarantinedLegacyRoots": [
+    "components",
+    "hooks",
+    "store"
+  ],
+  "checkedRootEntries": [
+    "App.js",
+    "App.jsx",
+    "App.ts",
+    "App.tsx",
+    "index.js",
+    "index.jsx",
+    "index.ts",
+    "index.tsx"
+  ],
+  "expectedPackageMain": "expo-router/entry",
+  "forbiddenSourceFiles": [
+    {
+      "path": "features/player/index.ts",
+      "reason": "player helper exports must stay on leaf modules so the player boundary cannot become a broad public barrel"
+    },
+    {
+      "path": "features/player/url.ts",
+      "reason": "shared GSAV web URL helpers must be imported from shared/gsavWeb, not re-exported through a player facade"
+    },
+    {
+      "path": "features/preferences/useTheme.ts",
+      "reason": "theme reads must use shared/themeContext; preferences owns state bootstrap and editing only"
+    }
+  ],
+  "checkedExternalPolicyFiles": [
+    "scripts/gsav-runtime-smoke-bridge.js"
+  ],
+  "checkedExternalPolicyRoots": [
+    "scripts"
+  ],
+  "playerHostOwnershipRules": {
+    "nativeWebViewHost": "features/player/GsavWebView.tsx",
+    "webIframeHost": "features/player/GsavWebView.web.tsx",
+    "nativeEmbedUrlOwner": "features/player"
+  },
+  "catalogCompositionBoundary": {
+    "message": "catalog must compose social/player affordances through FollowButton, SaveSceneButton, and ContinueWatchingPill; it must not read social stores, resume stores, bridge state, Supabase clients, or follow reconciliation rules directly",
+    "forbiddenTargets": [
+      "^features\\/social\\/(?:authSession|gsavAuthStore|savedSceneAccess|savedScenesStore|socialAdapter|useGsavFollow)$",
+      "^features\\/player\\/(?:bridgeState|gsavProgressStore|nativeBridgeMessage|nativeBridgeOverlay|progressBridge|sessionBridge|useGsavEmbedHost)$",
+      "^services\\/supabase$"
+    ],
+    "forbiddenPackages": [
+      "^@supabase(?:\\/|$)"
+    ]
+  },
+  "appRouteOwnerMap": {
+    "app/_layout": "^features\\/app-shell\\/RootLayout$",
+    "app/index": "^features\\/catalog\\/HomeScreen$",
+    "app/search": "^features\\/catalog\\/SearchScreen$",
+    "app/creator/_layout": "^features\\/app-shell\\/CreatorLayout$",
+    "app/creator/[handle]": "^features\\/catalog\\/CreatorScreen$",
+    "app/explore": "^features\\/player\\/ExploreScreen$",
+    "app/gsav-diagnostics": "^features\\/player\\/GsavDiagnosticsScreen$",
+    "app/gsav/[id]": "^features\\/player\\/GsavScreen$",
+    "app/watch/[id]": "^features\\/player\\/GsavScreen$",
+    "app/library": "^features\\/social\\/LibraryScreen$",
+    "app/login": "^features\\/social\\/LoginScreen$",
+    "app/settings": "^features\\/settings\\/SettingsScreen$"
+  },
+  "externalPackageImportAllowList": [
+    {
+      "packageName": "@opsiclear/gsav-bridge",
+      "importers": [
+        "^features\\/player\\/bridgeTypes$",
+        "^features\\/player\\/sessionBridge$",
+        "^scripts\\/gsav-runtime-smoke-bridge$"
+      ],
+      "reason": "bridge wire contracts must stay behind the player bridge facade and runtime smoke helper",
+      "owner": "@opsiclear/player",
+      "exitCriteria": "Remove importers only when bridge wire contracts move behind a narrower player-owned facade"
+    },
+    {
+      "packageName": "@opsiclear/gsav-client",
+      "importers": [
+        "^services\\/gsav$",
+        "^features\\/social\\/socialAdapter$"
+      ],
+      "reason": "catalog access goes through services/feature adapters; social operations go through the social adapter",
+      "owner": "@opsiclear/services",
+      "exitCriteria": "Remove importers only when catalog and social access move behind narrower app-owned APIs"
+    }
+  ],
+  "siblingAllowListBudget": 12,
+  "siblingAllowList": [
+    {
+      "from": "app-shell",
+      "to": "app-update",
+      "target": "^features\\/app-update\\/updateAccess$",
+      "kind": "access-contract",
+      "reason": "startup shell needs the app-update public check contract",
+      "owner": "@opsiclear/app-shell",
+      "exitCriteria": "Remove when app update checks move into app-shell-owned startup code",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "app-shell",
+      "to": "preferences",
+      "target": "^features\\/preferences\\/preferenceAccess$",
+      "kind": "access-contract",
+      "reason": "startup shell needs preference bootstrap through the public contract",
+      "owner": "@opsiclear/preferences",
+      "exitCriteria": "Remove when startup preference hydration no longer runs in the app shell",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "app-shell",
+      "to": "social",
+      "target": "^features\\/social\\/(authSession|savedSceneAccess)$",
+      "kind": "access-contract",
+      "reason": "startup shell needs auth bootstrap and saved-scene loading contracts",
+      "owner": "@opsiclear/social",
+      "exitCriteria": "Remove when auth restore and saved-scene preload move behind app-shell-owned bootstrap code",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "catalog",
+      "to": "player",
+      "target": "^features\\/player\\/ContinueWatchingPill$",
+      "kind": "ui-composition",
+      "reason": "catalog cards may compose the player-owned resume affordance",
+      "owner": "@opsiclear/player",
+      "exitCriteria": "Remove when catalog stops rendering the player-owned resume affordance",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "catalog",
+      "to": "scene",
+      "target": "^features\\/scene\\/(SceneCard|sceneShare)$",
+      "kind": "scene-contract",
+      "reason": "catalog screens render and share scene presentation contracts",
+      "owner": "@opsiclear/scene",
+      "exitCriteria": "Remove when scene presentation and sharing move behind a shared non-feature package",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "catalog",
+      "to": "social",
+      "target": "^features\\/social\\/(FollowButton|SaveSceneButton)$",
+      "kind": "ui-composition",
+      "reason": "catalog screens may compose social save/follow affordances",
+      "owner": "@opsiclear/social",
+      "exitCriteria": "Remove when save and follow affordances move behind narrower action props",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "player",
+      "to": "preferences",
+      "target": "^features\\/preferences\\/preferenceAccess$",
+      "kind": "access-contract",
+      "reason": "embedded player needs data-saver preference access",
+      "owner": "@opsiclear/player",
+      "exitCriteria": "Remove when embed options are passed to player route roots as props",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "player",
+      "to": "social",
+      "target": "^features\\/social\\/authSession$",
+      "kind": "access-contract",
+      "reason": "embedded player needs auth session data through the public bridge contract",
+      "owner": "@opsiclear/social",
+      "exitCriteria": "Remove when bridge session source moves into the bridge package or player-owned access contract",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "settings",
+      "to": "app-update",
+      "target": "^features\\/app-update\\/updateAccess$",
+      "kind": "access-contract",
+      "reason": "settings shows update status through the app-update public contract",
+      "owner": "@opsiclear/settings",
+      "exitCriteria": "Remove when update status becomes settings-owned or moves behind a shared app contract",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "settings",
+      "to": "preferences",
+      "target": "^features\\/preferences\\/preferenceAccess$",
+      "kind": "access-contract",
+      "reason": "settings edits preferences through the public preference contract",
+      "owner": "@opsiclear/preferences",
+      "exitCriteria": "Remove when settings owns preference editing or receives preference actions as props",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "settings",
+      "to": "social",
+      "target": "^features\\/social\\/authSession$",
+      "kind": "access-contract",
+      "reason": "settings shows account state through the auth public contract",
+      "owner": "@opsiclear/social",
+      "exitCriteria": "Remove when account status and sign-out move behind a shared account contract",
+      "expires": "2026-07-31"
+    },
+    {
+      "from": "social",
+      "to": "scene",
+      "target": "^features\\/scene\\/(SceneCard|sceneShare|sceneTypes)$",
+      "kind": "scene-contract",
+      "reason": "library renders and shares saved scenes through scene presentation contracts",
+      "owner": "@opsiclear/scene",
+      "exitCriteria": "Remove when saved-scene rendering moves behind a social-owned scene facade",
+      "expires": "2026-07-31"
+    }
+  ],
+  "violations": []
+}

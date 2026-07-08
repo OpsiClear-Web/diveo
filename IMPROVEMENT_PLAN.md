@@ -1,5 +1,12 @@
 # diveo Improvement Plan (v2 — review-hardened)
 
+> Superseded by `docs/GSAV_NATIVE_IMPLEMENTATION_PLAN.md`.
+> This file is historical and is not the active release runbook.
+> Historical ownership warning: ADR 0002 supersedes the launcher/no-catalog
+> guidance below. React Native now owns native browse/search/creator/library
+> product UX as a consumer of shared GSAV catalog contracts; gsav-hosting owns
+> decode/render/playback/runtime. Do not use this file for ownership decisions.
+
 > Produced from a verified 7-dimension maintainability audit (2026-06-20), then hardened by a 6-agent review panel (sequencing, risk/rollback, effort/scoping, completeness, technical-correctness, verifiability). Every task cites the audit finding + file:line evidence and has a **runnable** acceptance check.
 
 ## What changed from v1 (the panel's load-bearing corrections)

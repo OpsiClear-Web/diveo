@@ -1,0 +1,50 @@
+{
+  "schemaVersion": "handoff-receipts/v1",
+  "checkedAt": "2026-07-01T22:55:31.012Z",
+  "status": "blocked",
+  "ok": false,
+  "evidenceDate": "2026-07-01",
+  "allowPending": true,
+  "receiptPaths": {
+    "ownerReceiptPath": "docs/qa-evidence/2026-07-01/owner-assignment.json",
+    "fixtureManifestPath": "docs/qa-evidence/2026-07-01/fixture-manifest.json",
+    "hostReadyPath": "docs/qa-evidence/2026-07-01/gsav-host-ready.json"
+  },
+  "checked": {
+    "ownerAssignment": {
+      "path": "docs/qa-evidence/2026-07-01/owner-assignment.json",
+      "status": "missing"
+    },
+    "fixtureManifest": {
+      "path": "docs/qa-evidence/2026-07-01/fixture-manifest.json",
+      "status": "missing"
+    },
+    "hostReady": {
+      "path": "docs/qa-evidence/2026-07-01/gsav-host-ready.json",
+      "status": "missing"
+    }
+  },
+  "blockers": [
+    {
+      "id": "owner-assignment-receipt",
+      "kind": "missing",
+      "path": "docs/qa-evidence/2026-07-01/owner-assignment.json",
+      "reason": "owner assignment receipt is missing",
+      "nextAction": "Create docs/qa-evidence/2026-07-01/owner-assignment.json before promoting G3/G6 evidence."
+    },
+    {
+      "id": "fixture-manifest",
+      "kind": "missing",
+      "path": "docs/qa-evidence/2026-07-01/fixture-manifest.json",
+      "reason": "route fixture manifest is missing",
+      "nextAction": "Create docs/qa-evidence/2026-07-01/fixture-manifest.json before promoting G3/G6 evidence."
+    },
+    {
+      "id": "gsav-host-ready-receipt",
+      "kind": "missing",
+      "path": "docs/qa-evidence/2026-07-01/gsav-host-ready.json",
+      "reason": "GSAV host-ready receipt is missing",
+      "nextAction": "Create docs/qa-evidence/2026-07-01/gsav-host-ready.json before promoting G3/G6 evidence."
+    }
+  ]
+}
