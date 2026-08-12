@@ -35,7 +35,13 @@ export function SceneCard({
       <View style={[styles.thumb, { backgroundColor: colors.placeholder }]}>
         <Ionicons name="cube-outline" size={26} color={GSAV_ACCENT} />
         {item.posterUrl ? (
-          <Image source={{ uri: item.posterUrl }} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+          <Image
+            source={{ uri: item.posterUrl }}
+            style={StyleSheet.absoluteFill}
+            contentFit="cover"
+            transition={150}
+            alt={`${item.title} poster`}
+          />
         ) : null}
         {thumbnailAccessory ? (
           <View style={styles.thumbAccessory}>{thumbnailAccessory}</View>

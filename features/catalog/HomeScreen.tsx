@@ -134,7 +134,13 @@ export default function HomeScreen() {
               <View style={[styles.heroThumb, { backgroundColor: theme.placeholder }]}>
                 <Ionicons name="cube-outline" size={48} color={GSAV_ACCENT} />
                 {featured.posterUrl ? (
-                  <Image source={{ uri: featured.posterUrl }} style={StyleSheet.absoluteFill} contentFit="cover" transition={150} />
+                  <Image
+                    source={{ uri: featured.posterUrl }}
+                    style={StyleSheet.absoluteFill}
+                    contentFit="cover"
+                    transition={150}
+                    alt={`${featured.title} poster`}
+                  />
                 ) : null}
               </View>
               <View style={styles.heroOverlay}>
