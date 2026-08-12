@@ -27,7 +27,13 @@ export function NativeScreenHeader({
       >
         <Ionicons name="chevron-back" size={24} color={theme.text} />
       </Pressable>
-      <Text style={[styles.headerTitle, { color: theme.text }]} numberOfLines={1}>{title}</Text>
+      <Text
+        style={[styles.headerTitle, { color: theme.text }]}
+        numberOfLines={1}
+        accessibilityRole="header"
+      >
+        {title}
+      </Text>
       <View style={styles.headerButton} />
     </View>
   );

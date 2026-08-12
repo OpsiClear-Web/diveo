@@ -151,7 +151,7 @@ export default function HomeScreen() {
           ) : null}
 
           {gridItems.length > 0 ? (
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>Scenes</Text>
+            <Text style={[styles.sectionTitle, { color: theme.text }]} accessibilityRole="header">Scenes</Text>
           ) : null}
           <View style={styles.grid}>
             {gridItems.map((s) => (

@@ -64,7 +64,7 @@ export default function CreatorScreen() {
                 <Text style={[styles.avatarInitial, { color: GSAV_ACCENT }]}>{name.slice(0, 1).toUpperCase()}</Text>
               )}
             </View>
-            <Text style={[styles.name, { color: theme.text }]} numberOfLines={1}>{name}</Text>
+            <Text style={[styles.name, { color: theme.text }]} numberOfLines={1} accessibilityRole="header">{name}</Text>
             {creator?.bio ? (
               <Text style={[styles.bio, { color: theme.textSub }]} numberOfLines={2}>{creator.bio}</Text>
             ) : null}
@@ -102,7 +102,7 @@ export default function CreatorScreen() {
           </View>
         ) : (
           <View style={styles.body}>
-            <Text style={[styles.section, { color: theme.text }]}>Scenes</Text>
+            <Text style={[styles.section, { color: theme.text }]} accessibilityRole="header">Scenes</Text>
             {videos.length === 0 ? (
               <Text style={[styles.msg, { color: theme.textSub }]}>No scenes yet.</Text>
             ) : (
