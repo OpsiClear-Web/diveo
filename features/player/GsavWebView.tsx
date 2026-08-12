@@ -12,6 +12,7 @@ import { WebView } from "react-native-webview";
 
 import { GSAV_ACCENT, GSAV_ACCENT_CONTRAST } from "../../shared/theme";
 import { useTheme } from "../../shared/themeContext";
+import { FloatingBackButton } from "../../shared/ui/FloatingBackButton";
 import { NativeCenterState, NativeStatePanel } from "../../shared/ui/NativeScreen";
 import type { NativeQaControl } from "./nativeQaControls";
 import type { GsavEmbedRoute } from "./routes";
@@ -39,6 +40,7 @@ export function GsavWebView({ path, qaControls = [] }: GsavWebViewProps) {
           title="diveo not configured"
           message="This build has no valid GSAV web origin. Set EXPO_PUBLIC_GSAV_WEB_URL to the GSAV web app origin and rebuild."
         />
+        <FloatingBackButton />
       </SafeAreaView>
     );
   }
@@ -47,6 +49,7 @@ export function GsavWebView({ path, qaControls = [] }: GsavWebViewProps) {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]}>
         <NativeCenterState loading />
+        <FloatingBackButton />
       </SafeAreaView>
     );
   }
@@ -119,6 +122,8 @@ export function GsavWebView({ path, qaControls = [] }: GsavWebViewProps) {
             {host.qaStatus && <Text style={[styles.qaStatus, { color: theme.textSub }]}>{host.qaStatus}</Text>}
           </View>
         )}
+
+        <FloatingBackButton />
       </View>
     </SafeAreaView>
   );

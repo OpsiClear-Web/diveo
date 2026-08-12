@@ -4,6 +4,7 @@ import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 import { getConfiguredGsavWebUrl, getOrigin } from "../../shared/gsavWeb";
 import { GSAV_ACCENT } from "../../shared/theme";
 import { useTheme } from "../../shared/themeContext";
+import { FloatingBackButton } from "../../shared/ui/FloatingBackButton";
 import { usePlayerEmbedPreferences } from "../preferences/preferenceAccess";
 import { useAuthBridgeSession } from "../social/authSession";
 import type { NativeQaControl } from "./nativeQaControls";
@@ -62,6 +63,7 @@ export function GsavWebView({ path }: GsavWebViewProps) {
         <Text style={[styles.text, { color: theme.textSub }]}>
           Set EXPO_PUBLIC_GSAV_WEB_URL to the GSAV web app origin.
         </Text>
+        <FloatingBackButton />
       </View>
     );
   }
@@ -70,6 +72,7 @@ export function GsavWebView({ path }: GsavWebViewProps) {
     return (
       <View style={[styles.center, { backgroundColor: theme.bg }]}>
         <ActivityIndicator color={GSAV_ACCENT} />
+        <FloatingBackButton />
       </View>
     );
   }
@@ -83,6 +86,7 @@ export function GsavWebView({ path }: GsavWebViewProps) {
         allow="autoplay; fullscreen; xr-spatial-tracking; accelerometer; gyroscope; magnetometer"
         style={{ border: 0, width: "100%", height: "100%", display: "block", backgroundColor: "#050505" }}
       />
+      <FloatingBackButton />
     </View>
   );
 }

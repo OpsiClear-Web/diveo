@@ -4,6 +4,7 @@ import { useLocalSearchParams } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useTheme } from "../../shared/themeContext";
+import { FloatingBackButton } from "../../shared/ui/FloatingBackButton";
 import { NativeCenterState } from "../../shared/ui/NativeScreen";
 import { GsavWebView } from "./GsavWebView";
 import { useGsavProgressStore } from "./gsavProgressStore";
@@ -55,6 +56,7 @@ export default function GsavScreen() {
           title="Scene unavailable"
           message="This link is missing a GSAV scene id."
         />
+        <FloatingBackButton />
       </SafeAreaView>
     );
   }
@@ -63,6 +65,7 @@ export default function GsavScreen() {
     return (
       <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]}>
         <NativeCenterState loading message="Preparing playback..." />
+        <FloatingBackButton />
       </SafeAreaView>
     );
   }
