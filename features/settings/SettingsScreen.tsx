@@ -56,32 +56,50 @@ export default function SettingsScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]}>
       <View style={[styles.topBar, { backgroundColor: theme.card, borderBottomColor: theme.border }]}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backBtn}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+        >
           <Ionicons name="chevron-back" size={24} color={theme.text} />
         </TouchableOpacity>
-        <Text style={[styles.topTitle, { color: theme.text }]}>Settings</Text>
+        <Text style={[styles.topTitle, { color: theme.text }]} accessibilityRole="header">Settings</Text>
         <View style={styles.spacer} />
       </View>
 
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Account</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Account</Text>
           {user ? (
             <View style={styles.versionRow}>
               <Text style={[styles.versionLabel, { color: theme.text }]} numberOfLines={1}>{user.email}</Text>
-              <TouchableOpacity onPress={handleLogout} activeOpacity={0.7}>
+              <TouchableOpacity
+                onPress={handleLogout}
+                activeOpacity={0.7}
+                style={styles.inlineAction}
+                accessibilityRole="button"
+                accessibilityLabel="Log out"
+              >
                 <Text style={[styles.updateBtnText, { color: theme.danger }]}>Log out</Text>
               </TouchableOpacity>
             </View>
           ) : (
-            <TouchableOpacity style={styles.updateBtn} onPress={() => router.push(createLoginHref("/settings") as never)} activeOpacity={0.7}>
+            <TouchableOpacity
+              style={styles.updateBtn}
+              onPress={() => router.push(createLoginHref("/settings") as never)}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Log in"
+            >
               <Text style={styles.updateBtnText}>Log in</Text>
             </TouchableOpacity>
           )}
         </View>
 
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Version</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Version</Text>
           <View style={styles.versionRow}>
             <Text style={[styles.versionLabel, { color: theme.text }]}>Current version</Text>
             <Text style={[styles.versionValue, { color: theme.textSub }]}>v{currentVersion}</Text>
@@ -89,12 +107,15 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Updates</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Updates</Text>
           <TouchableOpacity
             style={styles.updateBtn}
             onPress={() => checkUpdate()}
             activeOpacity={0.7}
             disabled={isChecking || downloadProgress !== null}
+            accessibilityRole="button"
+            accessibilityLabel="Check for updates"
+            accessibilityState={{ disabled: isChecking || downloadProgress !== null }}
           >
             {isChecking ? (
               <>
@@ -110,12 +131,14 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Appearance</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Appearance</Text>
           <View style={styles.optionRow}>
             <TouchableOpacity
               style={[styles.option, { borderColor: theme.border }, !darkMode && styles.optionActive]}
               onPress={() => setDarkMode(false)}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityState={{ selected: !darkMode }}
             >
               <Text style={[styles.optionText, { color: theme.text }, !darkMode && styles.optionTextActive]}>Light</Text>
             </TouchableOpacity>
@@ -123,6 +146,8 @@ export default function SettingsScreen() {
               style={[styles.option, { borderColor: theme.border }, darkMode && styles.optionActive]}
               onPress={() => setDarkMode(true)}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityState={{ selected: darkMode }}
             >
               <Text style={[styles.optionText, { color: theme.text }, darkMode && styles.optionTextActive]}>Dark</Text>
             </TouchableOpacity>
@@ -130,12 +155,14 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Data</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Data</Text>
           <View style={styles.optionRow}>
             <TouchableOpacity
               style={[styles.option, { borderColor: theme.border }, !trafficSaving && styles.optionActive]}
               onPress={() => setTrafficSaving(false)}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityState={{ selected: !trafficSaving }}
             >
               <Text style={[styles.optionText, { color: theme.text }, !trafficSaving && styles.optionTextActive]}>Standard</Text>
             </TouchableOpacity>
@@ -143,6 +170,8 @@ export default function SettingsScreen() {
               style={[styles.option, { borderColor: theme.border }, trafficSaving && styles.optionActive]}
               onPress={() => setTrafficSaving(true)}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityState={{ selected: trafficSaving }}
             >
               <Text style={[styles.optionText, { color: theme.text }, trafficSaving && styles.optionTextActive]}>Data saver</Text>
             </TouchableOpacity>
@@ -155,7 +184,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Storage</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Storage</Text>
           <View style={styles.cacheRow}>
             <View>
               <Text style={[styles.cacheLabel, { color: theme.text }]}>Cache size</Text>
@@ -168,6 +197,9 @@ export default function SettingsScreen() {
               onPress={handleClearCache}
               disabled={clearingCache}
               activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Clear cache"
+              accessibilityState={{ disabled: clearingCache }}
             >
               {clearingCache ? (
                 <ActivityIndicator size="small" color={GSAV_ACCENT_CONTRAST} />
@@ -179,11 +211,13 @@ export default function SettingsScreen() {
         </View>
 
         <View style={[styles.section, { backgroundColor: theme.card }]}>
-          <Text style={[styles.sectionLabel, { color: theme.textSub }]}>Diagnostics</Text>
+          <Text style={[styles.sectionLabel, { color: theme.textSub }]} accessibilityRole="header">Diagnostics</Text>
           <TouchableOpacity
             style={styles.updateBtn}
             onPress={() => router.push("/gsav-diagnostics" as never)}
             activeOpacity={0.7}
+            accessibilityRole="button"
+            accessibilityLabel="Open diagnostics"
           >
             <Ionicons name="pulse-outline" size={18} color={GSAV_ACCENT} style={styles.actionIcon} />
             <Text style={styles.updateBtnText}>Open diagnostics</Text>
@@ -203,8 +237,8 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
-  backBtn: { padding: 4, width: 32 },
-  spacer: { width: 32 },
+  backBtn: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
+  spacer: { width: 44 },
   topTitle: {
     flex: 1,
     fontSize: 16,
@@ -220,11 +254,14 @@ const styles = StyleSheet.create({
   sectionLabel: { fontSize: 13, marginBottom: 10, fontFamily: "Roboto_500Medium" },
   optionRow: { flexDirection: "row", gap: 10 },
   option: {
-    paddingHorizontal: 12,
+    minHeight: 44,
+    paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: radius.md,
     borderWidth: StyleSheet.hairlineWidth,
     backgroundColor: "transparent",
+    alignItems: "center",
+    justifyContent: "center",
   },
   optionActive: { backgroundColor: GSAV_ACCENT, borderColor: GSAV_ACCENT },
   optionText: { fontSize: 13, fontFamily: "Roboto_500Medium" },
@@ -240,8 +277,10 @@ const styles = StyleSheet.create({
   updateBtn: {
     flexDirection: "row",
     alignItems: "center",
+    minHeight: 44,
     paddingVertical: 6,
   },
+  inlineAction: { minHeight: 44, justifyContent: "center", paddingHorizontal: 4 },
   actionIcon: { marginRight: 8 },
   updateBtnText: { fontSize: 14, color: GSAV_ACCENT, fontFamily: "Roboto_700Bold" },
   cacheRow: {
@@ -253,11 +292,13 @@ const styles = StyleSheet.create({
   cacheValue: { fontSize: 12, marginTop: 2, fontFamily: "Roboto_400Regular" },
   clearBtn: {
     backgroundColor: GSAV_ACCENT,
-    paddingHorizontal: 14,
+    paddingHorizontal: 16,
     paddingVertical: 6,
     borderRadius: radius.md,
     minWidth: 80,
+    minHeight: 44,
     alignItems: "center",
+    justifyContent: "center",
   },
   clearBtnText: { color: GSAV_ACCENT_CONTRAST, fontSize: 13, fontFamily: "Roboto_700Bold" },
 });
