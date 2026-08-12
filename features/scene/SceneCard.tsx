@@ -24,12 +24,13 @@ export function SceneCard({
   onAuthorPress?: () => void;
   thumbnailAccessory?: React.ReactNode;
 }) {
+  // No button role on the card: it contains real buttons (author, save) and
+  // nested <button> elements are invalid HTML on web.
   return (
     <Pressable
       style={[styles.card, { backgroundColor: colors.card }]}
       onPress={onPress}
       onLongPress={onLongPress}
-      accessibilityRole="button"
       accessibilityLabel={`Open ${item.title}`}
     >
       <View style={[styles.thumb, { backgroundColor: colors.placeholder }]}>

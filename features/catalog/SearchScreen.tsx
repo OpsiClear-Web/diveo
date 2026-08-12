@@ -121,12 +121,13 @@ export default function SearchScreen() {
                 <Text style={[styles.recentClear, { color: theme.textSub }]}>Clear</Text>
               </Pressable>
             </View>
+            {/* No button role on history rows: each contains the remove button
+                and nested <button> elements are invalid HTML on web. */}
             {history.map((entry) => (
               <Pressable
                 key={entry}
                 style={styles.recentRow}
                 onPress={() => runQuery(entry)}
-                accessibilityRole="button"
                 accessibilityLabel={`Search ${entry}`}
               >
                 <Ionicons name="time-outline" size={16} color={theme.textSub} />
