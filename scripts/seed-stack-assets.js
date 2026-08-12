@@ -121,10 +121,15 @@ function objectPathFromPublicUrl(urlValue) {
 }
 
 function fixtureSourceForObjectPath(paths, objectPath) {
+  const perObject = path.join(paths.gsavWebRoot, "public", ...objectPath.split("/"));
   if (objectPath.toLowerCase().endsWith(".gsav")) {
+    // Per-scene captures are preferred when the fixture exists; otherwise every
+    // scene falls back to the single shared demo capture. Posters must match
+    // whichever capture actually seeds (see gsav-hosting posters/generated).
+    if (fs.existsSync(perObject)) return perObject;
     return path.join(paths.gsavWebRoot, "public", "test.gsav");
   }
-  return path.join(paths.gsavWebRoot, "public", ...objectPath.split("/"));
+  return perObject;
 }
 
 function collectCatalogAssets(catalogPayload) {

@@ -21,6 +21,7 @@ const { expoArgsForNativePreview } = devStack;
 const {
   collectCatalogAssets,
   contentTypeForPath,
+  fixtureSourceForObjectPath,
   objectPathFromPublicUrl,
   parseEnvOutput,
 } = assetSeeder;
@@ -137,6 +138,29 @@ describe("stack asset seeding helpers", () => {
   it("maps common fixture content types", () => {
     expect(contentTypeForPath("poster.webp")).toBe("image/webp");
     expect(contentTypeForPath("scene.gsav")).toBe("application/octet-stream");
+  });
+
+  it("prefers a per-scene gsav fixture and falls back to the shared demo capture", async () => {
+    const { mkdtemp, mkdir, writeFile, rm } = await import("node:fs/promises");
+    const { tmpdir } = await import("node:os");
+    const path = await import("node:path");
+    const webRoot = await mkdtemp(path.join(tmpdir(), "seed-fixture-"));
+    try {
+      const paths = { gsavWebRoot: webRoot };
+      const objectPath = "videos/channel/video/scene.gsav";
+      const fallback = path.join(webRoot, "public", "test.gsav");
+      expect(fixtureSourceForObjectPath(paths, objectPath)).toBe(fallback);
+
+      const perScene = path.join(webRoot, "public", "videos", "channel", "video", "scene.gsav");
+      await mkdir(path.dirname(perScene), { recursive: true });
+      await writeFile(perScene, "per-scene");
+      expect(fixtureSourceForObjectPath(paths, objectPath)).toBe(perScene);
+
+      expect(fixtureSourceForObjectPath(paths, "posters/generated/elly.jpg"))
+        .toBe(path.join(webRoot, "public", "posters", "generated", "elly.jpg"));
+    } finally {
+      await rm(webRoot, { recursive: true, force: true });
+    }
   });
 
   it("parses quoted Supabase CLI env output", () => {
