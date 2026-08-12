@@ -21,9 +21,16 @@ export function FollowButton({
   const theme = useTheme();
   const follow = useGsavFollow(channelId, initialFollowerCount);
 
+  // Notify through a ref so the effect tracks the count, not the callback
+  // identity — an inline parent callback otherwise re-arms this effect every
+  // render and the notify/setState cycle never settles (max update depth).
+  const onFollowerCountChangeRef = React.useRef(onFollowerCountChange);
   React.useEffect(() => {
-    onFollowerCountChange?.(follow.followerCount);
-  }, [follow.followerCount, onFollowerCountChange]);
+    onFollowerCountChangeRef.current = onFollowerCountChange;
+  });
+  React.useEffect(() => {
+    onFollowerCountChangeRef.current?.(follow.followerCount);
+  }, [follow.followerCount]);
 
   if (!channelId) return null;
 
