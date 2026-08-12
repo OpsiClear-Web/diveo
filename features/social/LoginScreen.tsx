@@ -51,39 +51,47 @@ export default function LoginScreen() {
 
       <View style={styles.body}>
         <View style={styles.brandWrap}><Brand logoSize={34} fontSize={26} color={theme.text} /></View>
-        <TextInput
-          style={[styles.input, { backgroundColor: theme.inputBg, color: theme.text }]}
-          value={email}
-          onChangeText={setEmail}
-          placeholder="Email"
-          placeholderTextColor={theme.textSub}
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="email-address"
-          inputMode="email"
-        />
-        <TextInput
-          style={[styles.input, { backgroundColor: theme.inputBg, color: theme.text }]}
-          value={password}
-          onChangeText={setPassword}
-          placeholder="Password"
-          placeholderTextColor={theme.textSub}
-          secureTextEntry
-          autoCapitalize="none"
-          onSubmitEditing={submit}
-          returnKeyType="go"
-        />
-        {error ? <Text style={[styles.error, { color: theme.danger }]}>{error}</Text> : null}
+        <View style={styles.field}>
+          <Text style={[styles.inputLabel, { color: theme.textSub }]}>Email</Text>
+          <TextInput
+            style={[styles.input, { backgroundColor: theme.inputBg, color: theme.text }]}
+            value={email}
+            onChangeText={setEmail}
+            accessibilityLabel="Email"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            inputMode="email"
+          />
+        </View>
+        <View style={styles.field}>
+          <Text style={[styles.inputLabel, { color: theme.textSub }]}>Password</Text>
+          <TextInput
+            style={[styles.input, { backgroundColor: theme.inputBg, color: theme.text }]}
+            value={password}
+            onChangeText={setPassword}
+            accessibilityLabel="Password"
+            secureTextEntry
+            autoCapitalize="none"
+            onSubmitEditing={submit}
+            returnKeyType="go"
+          />
+        </View>
+        {error ? (
+          <Text style={[styles.error, { color: theme.danger }]} accessibilityRole="alert">{error}</Text>
+        ) : null}
         <Pressable
           style={[styles.cta, busy && styles.ctaBusy]}
           onPress={submit}
           disabled={busy}
-          accessibilityLabel={mode === "signin" ? "Log in" : "Create account"}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: busy }}
+          accessibilityLabel={mode === "signin" ? "Log in" : "Sign up"}
         >
           {busy ? (
             <ActivityIndicator color={GSAV_ACCENT_CONTRAST} />
           ) : (
-            <Text style={styles.ctaText}>{mode === "signin" ? "Log in" : "Create account"}</Text>
+            <Text style={styles.ctaText}>{mode === "signin" ? "Log in" : "Sign up"}</Text>
           )}
         </Pressable>
         <Pressable
@@ -92,6 +100,9 @@ export default function LoginScreen() {
             setError(null);
           }}
           hitSlop={8}
+          style={styles.toggleBtn}
+          accessibilityRole="button"
+          accessibilityLabel={mode === "signin" ? "Switch to sign up" : "Switch to log in"}
         >
           <Text style={[styles.toggle, { color: theme.textSub }]}>
             {mode === "signin" ? "Need an account? Sign up" : "Have an account? Log in"}
@@ -106,10 +117,13 @@ const styles = StyleSheet.create({
   safe: { flex: 1 },
   body: { flex: 1, padding: 24, gap: 12, justifyContent: "center" },
   brandWrap: { alignItems: "center", marginBottom: 12 },
+  field: { gap: 6 },
+  inputLabel: { fontFamily: FONT.medium, fontSize: 13 },
   input: { height: 46, borderRadius: radius.md, paddingHorizontal: 14, fontFamily: FONT.regular, fontSize: 15 },
   error: { fontFamily: FONT.regular, fontSize: 13 },
   cta: { height: 46, borderRadius: radius.md, backgroundColor: GSAV_ACCENT, alignItems: "center", justifyContent: "center", marginTop: 4 },
   ctaBusy: { opacity: 0.6 },
   ctaText: { color: GSAV_ACCENT_CONTRAST, fontFamily: FONT.bold, fontSize: 15 },
-  toggle: { textAlign: "center", fontFamily: FONT.medium, fontSize: 13, marginTop: 8 },
+  toggleBtn: { minHeight: 44, justifyContent: "center", marginTop: 4 },
+  toggle: { textAlign: "center", fontFamily: FONT.medium, fontSize: 13 },
 });
