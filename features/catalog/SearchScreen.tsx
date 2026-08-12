@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   input: { flex: 1, fontFamily: "Roboto_400Regular", fontSize: 14, padding: 0 },
-  recent: { padding: 16, gap: 2 },
+  recent: { padding: 16, gap: 2, width: "100%", maxWidth: 1120, alignSelf: "center" },
   recentHeader: {
     flexDirection: "row",
     alignItems: "center",
@@ -202,6 +202,6 @@ const styles = StyleSheet.create({
   recentClear: { fontFamily: "Roboto_400Regular", fontSize: 13 },
   recentRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10 },
   recentText: { flex: 1, fontFamily: "Roboto_400Regular", fontSize: 14 },
-  scroll: { padding: 16 },
+  scroll: { padding: 16, width: "100%", maxWidth: 1120, alignSelf: "center" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
 });

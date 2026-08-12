@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   statNum: { fontFamily: FONT.bold, fontSize: 18 },
   statLabel: { fontFamily: FONT.regular, fontSize: 12, marginTop: 2 },
   statDiv: { width: StyleSheet.hairlineWidth, height: 28 },
-  body: { padding: 16, gap: 12 },
+  body: { padding: 16, gap: 12, width: "100%", maxWidth: 1120, alignSelf: "center" },
   section: { fontFamily: FONT.bold, fontSize: 16 },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
   fill: { padding: 32, alignItems: "center", justifyContent: "center" },

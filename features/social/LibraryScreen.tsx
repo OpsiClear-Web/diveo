@@ -96,6 +96,6 @@ export default function LibraryScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  scroll: { padding: 16 },
+  scroll: { padding: 16, width: "100%", maxWidth: 1120, alignSelf: "center" },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 12 },
 });

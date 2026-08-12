@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   },
   topNavActions: { flexDirection: "row", alignItems: "center", gap: 6 },
   iconBtn: { width: 34, height: 34, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
-  scroll: { padding: 16, gap: 16 },
+  scroll: { padding: 16, gap: 16, width: "100%", maxWidth: 1120, alignSelf: "center" },
   hero: {
     borderRadius: radius.md,
     overflow: "hidden",
