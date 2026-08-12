@@ -20,9 +20,9 @@ export function AppStack() {
       <Stack.Screen name="explore" options={slideFromRight} />
       <Stack.Screen name="settings" options={slideFromRight} />
       <Stack.Screen name="creator" options={slideFromRight} />
-      <Stack.Screen name="gsav" options={slideFromRight} />
+      <Stack.Screen name="gsav/[id]" options={slideFromRight} />
       <Stack.Screen name="gsav-diagnostics" options={slideFromRight} />
-      <Stack.Screen name="watch" options={slideFromRight} />
+      <Stack.Screen name="watch/[id]" options={slideFromRight} />
     </Stack>
   );
 }
