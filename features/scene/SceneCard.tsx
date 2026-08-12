@@ -29,6 +29,7 @@ export function SceneCard({
       style={[styles.card, { backgroundColor: colors.card }]}
       onPress={onPress}
       onLongPress={onLongPress}
+      accessibilityRole="button"
       accessibilityLabel={`Open ${item.title}`}
     >
       <View style={[styles.thumb, { backgroundColor: colors.placeholder }]}>
@@ -43,7 +44,7 @@ export function SceneCard({
       <View style={styles.info}>
         <Text numberOfLines={1} style={[styles.title, { color: colors.text }]}>{item.title}</Text>
         {onAuthorPress ? (
-          <Pressable onPress={onAuthorPress} hitSlop={4} accessibilityLabel={`Open ${item.author}`}>
+          <Pressable onPress={onAuthorPress} hitSlop={8} accessibilityRole="button" accessibilityLabel={`Open ${item.author}`}>
             <Text numberOfLines={1} style={[styles.sub, { color: colors.textSub }]}>{item.author}</Text>
           </Pressable>
         ) : (

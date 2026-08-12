@@ -60,6 +60,7 @@ export default function HomeScreen() {
             onPress={() => router.push("/explore" as never)}
             hitSlop={8}
             style={styles.iconBtn}
+            accessibilityRole="button"
             accessibilityLabel="Explore"
           >
             <Ionicons name="play-circle-outline" size={22} color={theme.text} />
@@ -68,6 +69,7 @@ export default function HomeScreen() {
             onPress={() => router.push("/search" as never)}
             hitSlop={8}
             style={styles.iconBtn}
+            accessibilityRole="button"
             accessibilityLabel="Search"
           >
             <Ionicons name="search" size={20} color={theme.text} />
@@ -76,6 +78,7 @@ export default function HomeScreen() {
             onPress={() => router.push("/library" as never)}
             hitSlop={8}
             style={styles.iconBtn}
+            accessibilityRole="button"
             accessibilityLabel="Library"
           >
             <Ionicons name="bookmark-outline" size={19} color={theme.text} />
@@ -84,6 +87,7 @@ export default function HomeScreen() {
             onPress={() => router.push("/settings" as never)}
             hitSlop={8}
             style={styles.iconBtn}
+            accessibilityRole="button"
             accessibilityLabel="Settings"
           >
             <Ionicons name="settings-outline" size={20} color={theme.text} />
@@ -99,7 +103,7 @@ export default function HomeScreen() {
         <View style={styles.fill}>
           <Text style={[styles.msgTitle, { color: theme.text }]}>Unable to load the catalog</Text>
           <Text style={[styles.msgSub, { color: theme.textSub }]}>{error}</Text>
-          <Pressable style={styles.retry} onPress={reload} accessibilityLabel="Retry">
+          <Pressable style={styles.retry} onPress={reload} accessibilityRole="button" accessibilityLabel="Retry">
             <Text style={styles.retryText}>Retry</Text>
           </Pressable>
         </View>
@@ -124,6 +128,7 @@ export default function HomeScreen() {
             <Pressable
               style={[styles.hero, { backgroundColor: theme.card }]}
               onPress={() => openScene(featured.id)}
+              accessibilityRole="button"
               accessibilityLabel={`Play ${featured.title}`}
             >
               <View style={[styles.heroThumb, { backgroundColor: theme.placeholder }]}>
@@ -174,7 +179,7 @@ const styles = StyleSheet.create({
   retry: {
     marginTop: 8,
     minWidth: 100,
-    minHeight: 36,
+    minHeight: 44,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 16,

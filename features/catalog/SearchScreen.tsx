@@ -59,7 +59,13 @@ export default function SearchScreen() {
   return (
     <SafeAreaView style={[styles.safe, { backgroundColor: theme.bg }]} edges={["top", "left", "right"]}>
       <View style={[styles.header, { backgroundColor: theme.card, borderBottomColor: theme.border }]}>
-        <Pressable style={styles.iconBtn} onPress={() => router.back()} accessibilityLabel="Back">
+        <Pressable
+          style={styles.iconBtn}
+          onPress={() => router.back()}
+          hitSlop={8}
+          accessibilityRole="button"
+          accessibilityLabel="Back"
+        >
           <Ionicons name="chevron-back" size={22} color={theme.text} />
         </Pressable>
         <View style={[styles.inputWrap, { backgroundColor: theme.inputBg }]}>
@@ -76,7 +82,12 @@ export default function SearchScreen() {
             autoCorrect={false}
           />
           {text.length > 0 ? (
-            <Pressable onPress={() => onChange("")} hitSlop={8} accessibilityLabel="Clear search">
+            <Pressable
+              onPress={() => onChange("")}
+              hitSlop={12}
+              accessibilityRole="button"
+              accessibilityLabel="Clear search"
+            >
               <Ionicons name="close-circle" size={16} color={theme.textSub} />
             </Pressable>
           ) : null}
@@ -100,7 +111,12 @@ export default function SearchScreen() {
           <ScrollView contentContainerStyle={styles.recent} keyboardShouldPersistTaps="handled">
             <View style={styles.recentHeader}>
               <Text style={[styles.recentTitle, { color: theme.textSub }]}>Recent</Text>
-              <Pressable onPress={clearHistory} hitSlop={8} accessibilityLabel="Clear search history">
+              <Pressable
+                onPress={clearHistory}
+                hitSlop={12}
+                accessibilityRole="button"
+                accessibilityLabel="Clear search history"
+              >
                 <Text style={[styles.recentClear, { color: theme.textSub }]}>Clear</Text>
               </Pressable>
             </View>
@@ -109,13 +125,19 @@ export default function SearchScreen() {
                 key={entry}
                 style={styles.recentRow}
                 onPress={() => runQuery(entry)}
+                accessibilityRole="button"
                 accessibilityLabel={`Search ${entry}`}
               >
                 <Ionicons name="time-outline" size={16} color={theme.textSub} />
                 <Text style={[styles.recentText, { color: theme.text }]} numberOfLines={1}>
                   {entry}
                 </Text>
-                <Pressable onPress={() => removeHistory(entry)} hitSlop={8} accessibilityLabel={`Remove ${entry}`}>
+                <Pressable
+                  onPress={() => removeHistory(entry)}
+                  hitSlop={12}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Remove ${entry}`}
+                >
                   <Ionicons name="close" size={15} color={theme.textSub} />
                 </Pressable>
               </Pressable>
