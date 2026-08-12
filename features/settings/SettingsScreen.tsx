@@ -94,6 +94,7 @@ export default function SettingsScreen() {
               accessibilityLabel="Log in"
             >
               <Text style={styles.updateBtnText}>Log in</Text>
+              <Ionicons name="chevron-forward" size={16} color={theme.textSub} style={styles.rowChevron} />
             </TouchableOpacity>
           )}
         </View>
@@ -221,6 +222,7 @@ export default function SettingsScreen() {
           >
             <Ionicons name="pulse-outline" size={18} color={GSAV_ACCENT} style={styles.actionIcon} />
             <Text style={styles.updateBtnText}>Open diagnostics</Text>
+            <Ionicons name="chevron-forward" size={16} color={theme.textSub} style={styles.rowChevron} />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -282,6 +284,7 @@ const styles = StyleSheet.create({
   },
   inlineAction: { minHeight: 44, justifyContent: "center", paddingHorizontal: 4 },
   actionIcon: { marginRight: 8 },
+  rowChevron: { marginLeft: "auto" },
   updateBtnText: { fontSize: 14, color: GSAV_ACCENT, fontFamily: "Roboto_700Bold" },
   cacheRow: {
     flexDirection: "row",
