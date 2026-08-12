@@ -6,15 +6,14 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 import { buildGsavWatchPath } from "../../shared/gsavRoutes";
-import { GSAV_ACCENT } from "../../shared/theme";
 import { useTheme } from "../../shared/themeContext";
+import { NativeCenterState } from "../../shared/ui/NativeScreen";
 import { SceneCard } from "../scene/SceneCard";
 import { shareScene } from "../scene/sceneShare";
 import { SaveSceneButton } from "../social/SaveSceneButton";
@@ -75,7 +74,7 @@ export default function SearchScreen() {
             value={text}
             onChangeText={onChange}
             onSubmitEditing={submit}
-            placeholder="Search diveo scenes"
+            placeholder="Search scenes"
             placeholderTextColor={theme.textSub}
             autoFocus
             returnKeyType="search"
@@ -95,17 +94,19 @@ export default function SearchScreen() {
       </View>
 
       {loading ? (
-        <View style={styles.fill}>
-          <ActivityIndicator color={GSAV_ACCENT} />
-        </View>
+        <NativeCenterState loading />
       ) : error ? (
-        <View style={styles.fill}>
-          <Text style={[styles.msg, { color: theme.textSub }]}>{error}</Text>
-        </View>
+        <NativeCenterState
+          message={error}
+          actionLabel="Retry"
+          onAction={() => search(text)}
+        />
       ) : searched && results.length === 0 ? (
-        <View style={styles.fill}>
-          <Text style={[styles.msg, { color: theme.textSub }]}>No scenes match {text.trim()}.</Text>
-        </View>
+        <NativeCenterState
+          message={`No scenes match “${text.trim()}”.`}
+          actionLabel="Clear search"
+          onAction={() => onChange("")}
+        />
       ) : results.length === 0 ? (
         history.length > 0 ? (
           <ScrollView contentContainerStyle={styles.recent} keyboardShouldPersistTaps="handled">
@@ -144,7 +145,7 @@ export default function SearchScreen() {
             ))}
           </ScrollView>
         ) : (
-          <View style={styles.fill} />
+          <NativeCenterState message="Search by scene title or creator name." />
         )
       ) : (
         <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
@@ -190,8 +191,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   input: { flex: 1, fontFamily: "Roboto_400Regular", fontSize: 14, padding: 0 },
-  fill: { flex: 1, alignItems: "center", justifyContent: "center", padding: 24 },
-  msg: { fontFamily: "Roboto_400Regular", fontSize: 13, textAlign: "center" },
   recent: { padding: 16, gap: 2 },
   recentHeader: {
     flexDirection: "row",
