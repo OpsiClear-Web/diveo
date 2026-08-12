@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto_700Bold",
     textAlign: "center",
   },
-  content: { paddingBottom: 24 },
+  content: { paddingBottom: 24, width: "100%", maxWidth: 720, alignSelf: "center" },
   section: {
     marginTop: 16,
     paddingHorizontal: 16,

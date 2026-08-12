@@ -115,7 +115,7 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   safe: { flex: 1 },
-  body: { flex: 1, padding: 24, gap: 12, justifyContent: "center" },
+  body: { flex: 1, padding: 24, gap: 12, justifyContent: "center", width: "100%", maxWidth: 560, alignSelf: "center" },
   brandWrap: { alignItems: "center", marginBottom: 12 },
   field: { gap: 6 },
   inputLabel: { fontFamily: FONT.medium, fontSize: 13 },
