@@ -58,11 +58,10 @@ export default function CreatorScreen() {
           <View style={[styles.heroOverlay, { backgroundColor: theme.card }]} />
           <View style={styles.heroContent}>
             <View style={[styles.avatar, { backgroundColor: theme.placeholder, borderColor: theme.border }]}>
+              <Text style={[styles.avatarInitial, { color: GSAV_ACCENT }]}>{name.slice(0, 1).toUpperCase()}</Text>
               {creator?.avatarUrl ? (
                 <Image source={{ uri: creator.avatarUrl }} style={StyleSheet.absoluteFill} contentFit="cover" />
-              ) : (
-                <Text style={[styles.avatarInitial, { color: GSAV_ACCENT }]}>{name.slice(0, 1).toUpperCase()}</Text>
-              )}
+              ) : null}
             </View>
             <Text style={[styles.name, { color: theme.text }]} numberOfLines={1} accessibilityRole="header">{name}</Text>
             {creator?.bio ? (
@@ -71,12 +70,16 @@ export default function CreatorScreen() {
             <View style={styles.stats}>
               <View style={styles.statItem}>
                 <Text style={[styles.statNum, { color: theme.text }]}>{formatCount(displayFollowerCount)}</Text>
-                <Text style={[styles.statLabel, { color: theme.textSub }]}>Followers</Text>
+                <Text style={[styles.statLabel, { color: theme.textSub }]}>
+                  {displayFollowerCount === 1 ? "Follower" : "Followers"}
+                </Text>
               </View>
               <View style={[styles.statDiv, { backgroundColor: theme.border }]} />
               <View style={styles.statItem}>
                 <Text style={[styles.statNum, { color: theme.text }]}>{formatCount(sceneCount)}</Text>
-                <Text style={[styles.statLabel, { color: theme.textSub }]}>Scenes</Text>
+                <Text style={[styles.statLabel, { color: theme.textSub }]}>
+                  {sceneCount === 1 ? "Scene" : "Scenes"}
+                </Text>
               </View>
             </View>
             {creator ? (
