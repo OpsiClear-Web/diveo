@@ -70,5 +70,5 @@ const styles = StyleSheet.create({
   },
   info: { padding: 8 },
   title: { fontFamily: "Roboto_500Medium", fontSize: 13 },
-  sub: { fontFamily: "Roboto_400Regular", fontSize: 11, marginTop: 2 },
+  sub: { fontFamily: "Roboto_400Regular", fontSize: 12, marginTop: 2 },
 });
