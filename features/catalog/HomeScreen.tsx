@@ -42,6 +42,9 @@ export default function HomeScreen() {
 
   const openScene = (id: string) => router.push(buildGsavWatchPath(id) as never);
   const featured = items[0];
+  // The featured scene already fills the hero; the grid lists the rest so one
+  // scene never appears twice in the same viewport.
+  const gridItems = items.slice(1);
 
   return (
     <View style={[styles.root, { backgroundColor: theme.bg }]}>
@@ -136,9 +139,11 @@ export default function HomeScreen() {
             </Pressable>
           ) : null}
 
-          <Text style={[styles.sectionTitle, { color: theme.text }]}>Scenes</Text>
+          {gridItems.length > 0 ? (
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>Scenes</Text>
+          ) : null}
           <View style={styles.grid}>
-            {items.map((s) => (
+            {gridItems.map((s) => (
               <SceneCard
                 colors={theme}
                 key={s.id}
