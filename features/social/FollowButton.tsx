@@ -45,6 +45,8 @@ export function FollowButton({
         follow.toggle();
       }}
       disabled={follow.busy}
+      accessibilityRole="button"
+      accessibilityState={{ disabled: follow.busy, selected: follow.following }}
       accessibilityLabel={follow.following ? "Unfollow" : "Follow"}
     >
       <Text style={[styles.followText, { color: follow.following ? theme.text : GSAV_ACCENT_CONTRAST }]}>
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   followBtn: {
     marginTop: 14,
     minWidth: 130,
-    height: 34,
+    height: 44,
     borderRadius: 8,
     alignItems: "center",
     justifyContent: "center",

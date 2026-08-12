@@ -17,7 +17,9 @@ export function SaveSceneButton({ backendId }: { backendId?: string }) {
     <Pressable
       style={styles.saveBtn}
       onPress={() => toggleSave(backendId)}
-      hitSlop={6}
+      hitSlop={8}
+      accessibilityRole="button"
+      accessibilityState={{ selected: saved }}
       accessibilityLabel={saved ? "Remove from library" : "Save to library"}
     >
       <Ionicons name={saved ? "bookmark" : "bookmark-outline"} size={15} color={saved ? GSAV_ACCENT : "#ededed"} />
