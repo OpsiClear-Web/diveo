@@ -9,6 +9,11 @@ dist/
 web-build/
 expo-env.d.ts
 
+# Local dev-server console logs (root-level redirects; not QA evidence)
+/.expo-*.log
+/.gsav-web.*.log
+/.supabase-functions.*.log
+
 # Native
 .kotlin/
 *.orig.*
